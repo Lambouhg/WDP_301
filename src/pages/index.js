@@ -1,9 +1,15 @@
 "use client";
-import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import './globals.css'
+// import Link from "next/link";
+import "./globals.css";
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
@@ -17,119 +23,171 @@ export default function Home() {
             headers: { "Content-Type": "application/json" },
           });
           const data = await response.json();
-          console.log("Thông tin người dùng đã được lưu:", data);
-  
-          // Chỉ điều hướng nếu người dùng đăng nhập và không ở dashboard
+          console.log("User info saved:", data);
           if (!window.location.pathname.startsWith("/dashboard")) {
             router.push("/dashboard");
           }
         } catch (error) {
-          console.error("Lỗi khi lưu người dùng vào database:", error);
+          console.error("Error saving user to database:", error);
         }
       };
       saveUserToDatabase();
     }
   }, [user, router]);
-  
+
+  const categories = [
+    { name: "Design", count: "1.2k+ Jobs" },
+    { name: "Sales", count: "800+ Jobs" },
+    { name: "Marketing", count: "1.4k+ Jobs" },
+    { name: "Finance", count: "900+ Jobs" },
+    { name: "Technology", count: "2k+ Jobs" },
+    { name: "Engineering", count: "1.5k+ Jobs" },
+    { name: "Business", count: "1.1k+ Jobs" },
+    { name: "Human Resource", count: "700+ Jobs" },
+  ];
+
+  const featuredJobs = [
+    {
+      title: "Lead Marketing",
+      company: "Apple Inc.",
+      location: "California, USA",
+      salary: "$50k-$70k",
+      type: "Full Time",
+    },
+    {
+      title: "Brand Designer",
+      company: "Google LLC",
+      location: "New York, USA",
+      salary: "$60k-$80k",
+      type: "Full Time",
+    },
+    {
+      title: "Front Marketing",
+      company: "Netflix",
+      location: "Remote",
+      salary: "$45k-$65k",
+      type: "Full Time",
+    },
+    {
+      title: "Visual Designer",
+      company: "Microsoft",
+      location: "Seattle, USA",
+      salary: "$55k-$75k",
+      type: "Full Time",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-      <div className="max-w-4xl w-full bg-white/95 backdrop-blur-lg shadow-2xl rounded-3xl p-8 border border-white/20">
-        {/* Glass effect header with decorative elements */}
-        <div className="relative text-center space-y-4 mb-12">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-          <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 pt-8">
-            Welcome Back
-          </h1>
-          <p className="text-lg text-gray-600">
-            Đăng nhập để trải nghiệm những tính năng tuyệt vời
-          </p>
+    <div className="min-h-screen bg-[#0F0F1A] text-white p-6">
+      {/* Header */}
+      <nav className="flex justify-between items-center mb-12">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+          <span className="font-bold text-2xl">Job Finder</span>
+          <span className="text-1xl pl-9">Find Jobs</span>
+          <span className="text-1xl ">Browse Companies</span>
         </div>
-
-        {/* Authentication Cards */}
-        <div className="mt-8 max-w-md mx-auto">
+        <div className="flex items-center space-x-4">
           <SignedIn>
-            <div className="flex flex-col items-center space-y-8">
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-75"></div>
-                <div className="relative p-4 bg-white rounded-full shadow-xl">
-                  <UserButton />
-                </div>
-              </div>
-              <Link href="/dashboard" className="w-full">
-                <button className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl
-                  font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300
-                  hover:scale-105 active:scale-95">
-                  Truy cập Dashboard
-                </button>
-              </Link>
-            </div>
+            <UserButton />
           </SignedIn>
-
           <SignedOut>
-            <div className="space-y-6">
-              <SignInButton mode="modal">
-                <button className="w-full px-8 py-4 bg-white rounded-xl font-semibold text-lg
-                  border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-300
-                  hover:scale-105 active:scale-95 group">
-                  <div className="flex items-center justify-center space-x-3">
-                    <svg className="w-6 h-6 text-gray-800" viewBox="0 0 24 24">
-                      <path
-                        fill="currentColor"
-                        d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1Z"
-                      />
-                    </svg>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 group-hover:text-gray-800 transition-colors">
-                      Đăng nhập với Google
-                    </span>
-                  </div>
-                </button>
-              </SignInButton>
-            </div>
+            <SignInButton mode="modal">
+              <button className="bg-blue-600 px-4 py-2 rounded-lg">
+                Sign In
+              </button>
+            </SignInButton>
           </SignedOut>
         </div>
+      </nav>
 
-        {/* Features Grid with Glass Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-          {[
-            {
-              icon: "🛡️",
-              title: "Bảo mật tối đa",
-              description: "Bảo vệ dữ liệu của bạn với công nghệ mã hóa tiên tiến"
-            },
-            {
-              icon: "⚡",
-              title: "Trải nghiệm mượt mà",
-              description: "Giao diện được tối ưu cho trải nghiệm người dùng tốt nhất"
-            },
-            {
-              icon: "🎯",
-              title: "Tính năng thông minh",
-              description: "Các công cụ hiện đại giúp nâng cao hiệu suất làm việc"
-            }
-          ].map((feature, index) => (
+      {/* Hero Section */}
+      <div className="mb-16">
+        <h1 className="text-8xl font-bold pb-9">
+          Discover
+          <br />
+          more than
+          <br />
+          <span className="text-blue-500 border-b-2 border-blue-500 height-full">
+            5000+ Jobs
+          </span>
+        </h1>
+        <p className="text-gray-400 mb-8">
+          Great platform for the job seeker that searching for
+          <br />
+          new career heights and passionate about startups
+        </p>
+
+        {/* Search Bar */}
+        <div className="flex gap-4 mb-8">
+          <input
+            type="text"
+            placeholder="Job title or keyword"
+            className="flex-1 bg-[#1C1C27] p-4 rounded-lg"
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            className="flex-1 bg-[#1C1C27] p-4 rounded-lg"
+          />
+          <button className="bg-blue-600 px-8 rounded-lg">
+            Search for jobs
+          </button>
+        </div>
+
+        {/* Company Logos */}
+        <div className="flex items-center space-x-8 opacity-50">
+          <span className="text-sm">Companies we helped grow:</span>
+          {["Coinbase", "Intel", "Tesla", "AMD", "Talkit"].map((company) => (
+            <span key={company} className="text-lg font-semibold">
+              {company}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="mb-16">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Explore by category</h2>
+          <button className="text-blue-500">Show all jobs</button>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          {categories.map((category) => (
             <div
-              key={index}
-              className="p-6 bg-white/40 backdrop-blur-md rounded-2xl border border-white/20
-                hover:bg-white/60 transition-all duration-300 hover:shadow-xl group"
+              key={category.name}
+              className="bg-[#1C1C27] p-6 rounded-xl hover:bg-blue-600 transition-colors"
             >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <span className="text-4xl transform group-hover:scale-110 transition-transform">
-                  {feature.icon}
+              <h3 className="font-semibold mb-2">{category.name}</h3>
+              <p className="text-sm text-gray-400">{category.count}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Featured Jobs */}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Featured jobs</h2>
+          <button className="text-blue-500">Show all jobs</button>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          {featuredJobs.map((job, index) => (
+            <div key={index} className="bg-[#1C1C27] p-6 rounded-xl">
+              <div className="w-12 h-12 bg-gray-700 rounded-lg mb-4"></div>
+              <h3 className="font-semibold mb-2">{job.title}</h3>
+              <p className="text-sm text-gray-400 mb-4">
+                {job.company} • {job.location}
+              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-400">{job.salary}</span>
+                <span className="text-sm bg-blue-600/20 text-blue-500 px-3 py-1 rounded-full">
+                  {job.type}
                 </span>
-                <h3 className="text-xl font-semibold text-gray-800">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600">
-                  {feature.description}
-                </p>
               </div>
             </div>
           ))}
         </div>
-
-        {/* Decorative bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       </div>
     </div>
   );
