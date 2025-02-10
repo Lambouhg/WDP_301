@@ -83,18 +83,18 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0F0F1A] text-white p-6">
       {/* Header */}
-      <nav className="flex justify-between items-center mb-12">
+      <nav className="flex justify-between items-center mb-12 ml-6 mr-5">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
           <span
-            className="font-bold text-2xl"
+            className="font-bold text-3xl"
             style={{ cursor: "pointer" }}
             onClick={dashboard}
           >
             Job Finder
           </span>
           <span className="text-1xl pl-9">Find Jobs</span>
-          <span className="text-1xl ">Browse Companies</span>
+          <span className="text-1xl pl-2">Browse Companies</span>
         </div>
         <div className="flex items-center space-x-4">
           <SignedIn>
@@ -111,7 +111,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="mb-16">
+      <div className="mb-16 ml-9 mr-5">
         <h1 className="text-8xl font-bold pb-9">
           Discover
           <br />
@@ -121,10 +121,10 @@ export default function Home() {
             5000+ Jobs
           </span>
         </h1>
-        <p className="text-gray-400 mb-8">
+        <p className="text-gray-400 mb-8 text-xl">
           Great platform for the job seeker that searching for
           <br />
-          new career heights and passionate about startups
+          new career heights and passionate about startups.
         </p>
 
         {/* Search Bar */}
@@ -145,18 +145,23 @@ export default function Home() {
         </div>
 
         {/* Company Logos */}
-        <div className="flex items-center space-x-8 opacity-50">
-          <span className="text-sm">Companies we helped grow:</span>
-          {["Coinbase", "Intel", "Tesla", "AMD", "Talkit"].map((company) => (
-            <span key={company} className="text-lg font-semibold">
-              {company}
-            </span>
-          ))}
+        <div className="flex flex-col space-y-4 opacity-50 ">
+          <span className="text-lg">Companies we helped grow:</span>
+          <div className="flex items-center justify-between space-x-8 cursor-pointer">
+            {["Coinbase", "Intel", "Tesla", "AMD", "Talkit"].map((company) => (
+              <span
+                key={company}
+                className="text-4xl font-mono font-semibold tracking-widest uppercase"
+              >
+                {company}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Categories */}
-      <div className="mb-16">
+      <div className="mb-16 ml-9 mr-5">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Explore by category</h2>
           <button className="text-blue-500">Show all jobs</button>
@@ -165,9 +170,9 @@ export default function Home() {
           {categories.map((category) => (
             <div
               key={category.name}
-              className="bg-[#1C1C27] p-6 rounded-xl hover:bg-blue-600 transition-colors"
+              className="bg-[#1C1C27] p-6 rounded-xl hover:bg-blue-600 hover:text-white transition-colors cursor-pointer bg-white"
             >
-              <h3 className="font-semibold mb-2">{category.name}</h3>
+              <h3 className="font-semibold mb-2 text-black">{category.name}</h3>
               <p className="text-sm text-gray-400">{category.count}</p>
             </div>
           ))}
@@ -175,17 +180,20 @@ export default function Home() {
       </div>
 
       {/* Featured Jobs */}
-      <div>
+      <div className="mb-16 ml-9 mr-5">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Featured jobs</h2>
           <button className="text-blue-500">Show all jobs</button>
         </div>
         <div className="grid grid-cols-4 gap-4">
           {featuredJobs.map((job, index) => (
-            <div key={index} className="bg-[#1C1C27] p-6 rounded-xl">
+            <div
+              key={index}
+              className="hover:bg-blue-600 bg-white p-6 rounded-xl cursor-pointer"
+            >
               <div className="w-12 h-12 bg-gray-700 rounded-lg mb-4"></div>
               <h3 className="font-semibold mb-2">{job.title}</h3>
-              <p className="text-sm text-gray-400 mb-4">
+              <p className="text-sm text-black mb-4">
                 {job.company} • {job.location}
               </p>
               <div className="flex justify-between items-center">
