@@ -24,9 +24,9 @@ export default function Home() {
           });
           const data = await response.json();
           console.log("User info saved:", data);
-          if (!window.location.pathname.startsWith("/dashboard")) {
-            router.push("/dashboard");
-          }
+          // if (!window.location.pathname.startsWith("/dashboard")) {
+          //   router.push("/dashboard");
+          // }
         } catch (error) {
           console.error("Error saving user to database:", error);
         }
@@ -34,6 +34,9 @@ export default function Home() {
       saveUserToDatabase();
     }
   }, [user, router]);
+  const dashboard = () => {
+    router.push("/dashboard");
+  };
 
   const categories = [
     { name: "Design", count: "1.2k+ Jobs" },
@@ -83,7 +86,13 @@ export default function Home() {
       <nav className="flex justify-between items-center mb-12">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-          <span className="font-bold text-2xl">Job Finder</span>
+          <span
+            className="font-bold text-2xl"
+            style={{ cursor: "pointer" }}
+            onClick={dashboard}
+          >
+            Job Finder
+          </span>
           <span className="text-1xl pl-9">Find Jobs</span>
           <span className="text-1xl ">Browse Companies</span>
         </div>
