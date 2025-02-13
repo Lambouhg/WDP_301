@@ -10,7 +10,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Lấy thông tin user từ Clerk
     const userResponse = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
       headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
     });
@@ -29,13 +28,14 @@ export default async function handler(req, res) {
         email: userData.email_addresses[0].email_address,
         name: userData.first_name + " " + userData.last_name,
         avatar: userData.image_url,
-        password: userData.password,
         role: role,
       });
       await user.save();
     }
+
     res.status(200).json({ user });
   } catch (error) {
+    console.error("Error in API route:", error);
     res.status(500).json({ message: "Lỗi server", error });
   }
 }
