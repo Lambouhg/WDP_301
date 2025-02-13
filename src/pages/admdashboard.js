@@ -54,12 +54,22 @@ export default function AdminDashboard() {
   }, [hasAccess]);
 
   if (loading) {
-    return <div className="p-6">Đang tải...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <div className="text-white text-lg">Đang tải...</div>
+      </div>
+    );
   }
 
   if (!hasAccess) {
-    return <div className="p-6">Bạn không có quyền truy cập vào trang này.</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <div className="text-white text-lg">Bạn không có quyền truy cập vào trang này.</div>
+      </div>
+    );
   }
+
+  const filteredUsers = users.filter((user) => user.role !== "admin");
 
   const handleRoleChange = async (userId, newRole) => {
     try {
@@ -85,51 +95,60 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-900 min-h-screen text-white">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-blue-400">Admin Dashboard</h1>
         <button
           onClick={() => signOut({ redirectUrl: "/" })}
-          className="flex items-center space-x-2 bg-red-500 text-white px-4 py-2 rounded-lg"
+          className="flex items-center space-x-2 bg-red-500 hover:bg-red-600 transition-colors text-white px-4 py-2 rounded-lg shadow-md"
         >
           <FiLogOut className="text-lg" />
           <span className="text-sm font-medium">Đăng xuất</span>
         </button>
       </div>
+
       {/* Danh sách user */}
-      <h2 className="text-xl font-semibold mb-4">Danh sách người dùng:</h2>
-      {users.length === 0 ? (
-        <p>Không có người dùng nào.</p>
+      <h2 className="text-xl font-semibold mb-4 text-gray-300">Danh sách người dùng:</h2>
+      {filteredUsers.length === 0 ? (
+        <div className="text-gray-400">Không có người dùng nào.</div>
       ) : (
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Email</th>
-              <th className="border p-2">Tên</th>
-              <th className="border p-2">Vai trò</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td className="border p-2">{user.clerkId}</td>
-                <td className="border p-2">{user.email}</td>
-                <td className="border p-2">{user.name}</td>
-                <td className="border p-2"><select
-                    value={user.role}
-                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    className="bg-gray-100 border border-gray-300 rounded px-2 py-1"
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                    <option value="company">Company</option>
-                  </select></td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+            <thead className="bg-gray-700">
+              <tr>
+                <th className="px-4 py-2 text-left text-gray-300 font-semibold">ID</th>
+                <th className="px-4 py-2 text-left text-gray-300 font-semibold">Email</th>
+                <th className="px-4 py-2 text-left text-gray-300 font-semibold">Tên</th>
+                <th className="px-4 py-2 text-left text-gray-300 font-semibold">Role</th>
+                <th className="px-4 py-2 text-left text-gray-300 font-semibold">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <tr
+                  key={user._id}
+                  className="border-b border-gray-700 hover:bg-gray-700 transition-colors"
+                >
+                  <td className="px-4 py-2 text-gray-400">{user.clerkId}</td>
+                  <td className="px-4 py-2 text-gray-400">{user.email}</td>
+                  <td className="px-4 py-2 text-gray-400">{user.name}</td>
+                  <td className="px-4 py-2 text-gray-400">{user.role}</td>
+                  <td className="px-4 py-2">
+                    <select
+                      value={user.role}
+                      onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                      className="bg-gray-700 text-gray-300 border border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="user">User</option>
+                      <option value="company">Company</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
