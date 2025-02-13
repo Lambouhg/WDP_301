@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/pages/MessageCenter.jsx", "src/components/MessageContent.jsx", "src/components/Sidebar.jsx", "src/components/MessageListItem.jsx", "src/components/MessageList.jsx", "src/components/MessageInput.jsx", "src/components/MessageHeader.jsx", "src/components/MessageDetail.jsx", "src/components/SidebarSettingsSection.jsx", "src/components/SidebarLink.jsx"],
   "exclude": ["node_modules"]
 }
