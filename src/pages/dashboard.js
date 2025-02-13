@@ -1,35 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useUser, UserButton, useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/router"; // Thêm useRouter để redirect
-import { useEffect } from "react";
-
-import {
-  FiMessageSquare,
-  FiBriefcase,
-  FiSearch,
-  FiHome,
-  FiSettings,
-  FiLogOut,
-} from "react-icons/fi";
+import DashboardHeader from "../components/DashboardHeader";
 import "./globals.css";
-import NotificationIcon from "../component/NotificationIcon";
+import Sidebar from "../components/Sidebar";
+import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
-  const { user } = useUser();
-  const { signOut } = useClerk();
-  const router = useRouter(); // Khai báo useRouter để điều hướng
-  const returnToHome = () => {
-    router.push("/"); // Chuyển hướng về trang chủ
-  };
-  useEffect(() => {
-    if (!user) {
-      router.push("/");
-    }
-  }, [user, router]); // Chạy khi user thay đổi
+  const { user, isLoaded } = useUser();
 
-  if (!user) {
-    return <div>Loading...</div>; // Hiển thị trạng thái loading trong khi chuyển hướng
+  if (!isLoaded) {
+    return <p>Loading...</p>;
   }
 
   const applications = [
@@ -63,64 +43,13 @@ export default function Dashboard() {
   ];
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <aside className="w-64 bg-white shadow-md p-6 flex flex-col justify-between">
-        <div>
-          <h2
-            className="text-2xl font-bold text-blue-600 mb-8 cursor-pointer"
-            onClick={returnToHome}
-          >
-            Job Finder
-          </h2>
-          <nav className="space-y-4">
-            <NavItem icon={<FiHome />} label="Dashboard" active />
-            <NavItem icon={<FiMessageSquare />} label="Messages" />
-            <NavItem icon={<FiBriefcase />} label="My Applications" />
-            <NavItem icon={<FiSearch />} label="Find Jobs" />
-            <NavItem icon={<FiSettings />} label="Settings" />
-          </nav>
-        </div>
-
-        {/* User Info & Logout */}
-        <div className="space-y-4">
-          <div className="flex items-center space-x-3">
-            <UserButton />
-            <div>
-              <p className="text-sm font-semibold">{user.fullName}</p>
-              <p className="text-xs text-gray-500">
-                {user.primaryEmailAddress?.emailAddress}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              signOut({ redirectUrl: "/" }); // Redirect to the homepage (index.js) after sign out
-            }}
-            className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-100 w-full"
-          >
-            <FiLogOut className="text-lg" />
-            <span className="text-sm font-medium">Đăng xuất</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
+      <Sidebar />
       <main className="flex-1 p-8 ">
-        <div className="flex items-center justify-between border-b-2 gray-600 m-1">
-          <h1 className="text-2xl font-bold text-gray-600">Dashboard</h1>
-          <div className="flex ">
-            <span
-              className="p-2 border-2 gray-900 mb-2 mr-9 text-blue-800 font-semibold cursor-pointer rounded-md"
-              onClick={returnToHome}
-            >
-              Back to Homepage
-            </span>
-            <NotificationIcon />
-          </div>
-        </div>
-
+        <DashboardHeader dashboardHeaderName="Dashboard" />
         <h1 className="text-xl font-bold mt-5">
           Welcome back, {user.fullName}!
         </h1>
+
         <p className="text-gray-600">
           Here is what is happening with your job search applications from
           today.
@@ -294,23 +223,6 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
-    </div>
-  );
-}
-
-// Navigation Item Component
-function NavItem({ icon, label, active }) {
-  return (
-    <div
-      className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300
-        ${
-          active
-            ? "bg-blue-100 text-blue-600"
-            : "text-gray-700 hover:bg-gray-200"
-        }`}
-    >
-      <span className="text-lg">{icon}</span>
-      <span className="text-sm font-medium">{label}</span>
     </div>
   );
 }

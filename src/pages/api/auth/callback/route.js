@@ -11,10 +11,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Lấy thông tin người dùng từ Clerk
-    const userResponse = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
-      headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` }, // Cung cấp key bảo mật từ Clerk
-    });
+    const userResponse = await fetch(
+      `https://api.clerk.dev/v1/users/${userId}`,
+      {
+        headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` }, // Cung cấp key bảo mật từ Clerk
+      }
+    );
 
     const userData = await userResponse.json(); // Dữ liệu người dùng
 
