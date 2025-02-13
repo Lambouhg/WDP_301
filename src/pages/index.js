@@ -8,8 +8,8 @@ import {
 } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-// import Link from "next/link";
 import "./globals.css";
+
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
@@ -24,9 +24,13 @@ export default function Home() {
           });
           const data = await response.json();
           console.log("User info saved:", data);
-          // if (!window.location.pathname.startsWith("/dashboard")) {
-          //   router.push("/dashboard");
-          // }
+
+          // Kiểm tra vai trò từ API
+          if (data.user && data.user.role === "admin") {
+            router.push("/admdashboard");
+          } else {
+            router.push("/");
+          }
         } catch (error) {
           console.error("Error saving user to database:", error);
         }
@@ -34,9 +38,15 @@ export default function Home() {
       saveUserToDatabase();
     }
   }, [user, router]);
+
   const dashboard = () => {
-    router.push("/dashboard");
+    if (user) {
+      router.push("/dashboard"); // Mặc định chuyển hướng đến /dashboard
+    } else {
+      router.push("/sign-in");
+    }
   };
+
 
   const categories = [
     { name: "Design", count: "1.2k+ Jobs" },
