@@ -3,15 +3,25 @@
 import DashboardHeader from "../components/DashboardHeader";
 import "./globals.css";
 import Sidebar from "../components/Sidebar";
+import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-
+import { useRouter } from "next/router";
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
+  const router = useRouter();
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   if (!isLoaded) {
     return <p>Loading...</p>;
   }
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
   const applications = [
     {
       id: 1,

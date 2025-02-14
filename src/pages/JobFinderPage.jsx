@@ -1,24 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-
+import Sidebar from "../components/Sidebar";
+import DashboardHeader from "../components/DashboardHeader";
 import img1 from "../assets/image.png";
 import { Search, MapPin } from "lucide-react";
 const JobFinderPage = () => {
   return (
-    <div className="max-w-6xl mx-auto p-6 ml-22 mt-11 mb-11">
-      <div className="text-center mb-8">
-        <h1 className="text-6xl font-bold mb-2">
-          Find your{" "}
-          <span className="border-b-4 border-yellow-400 text-yellow-400 text-5xl">
-            dream job
-          </span>
-        </h1>
-        <p className="text-gray-600 mb-6 mt-9 mb-9 text-xl">
-          Find your next career at companies like HubSpot, Nike, and Dropbox
-        </p>
-      </div>
+    <div className="flex bg-white h-screen w-full overflow-hidden">
+      <Sidebar />
 
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Header */}
+        <div className="w-full mt-6 px-4">
+          <DashboardHeader dashboardHeaderName={"Messages"} />
+        </div>
+      </div>
       <div className="flex gap-2 mr-16">
         <div className="flex-1 relative ml-3">
           <Search
@@ -39,7 +36,7 @@ const JobFinderPage = () => {
           />
         </div>
         <div className="w-2 flex items-center justify-center pb-5">
-          <Button className="bg-green-600 hover:bg-green-700 text-white pl-6 pr-6 h-9 pt-2 pb-9">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white pl-6 pr-6 h-9 pt-2 pb-9">
             Search
           </Button>
         </div>
@@ -58,32 +55,32 @@ const JobFinderPage = () => {
             <div className="space-y-3 text-gray-500">
               <div className="flex items-center gap-2 ">
                 {/* <Checkbox id="full-time" /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
 
                 <label htmlFor="full-time" className="text-md">
                   Full-Time (2)
                 </label>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="part-time" className="text-md">
                   Part-Time (5)
                 </label>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="remote" className="text-md">
                   Remote (2)
                 </label>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="remote" className="text-md">
                   Internship (24)
                 </label>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="remote" className="text-md">
                   Contract (3)
                 </label>
@@ -96,56 +93,56 @@ const JobFinderPage = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="design" /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="design" className="text-md">
                   Design (24)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="sales" /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="sales" className="text-md">
                   Sales (5)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Marketing (3)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Finance (3)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Business (3)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Human Resource (6)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Engineering (4)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Technology (5)
                 </label>
@@ -157,35 +154,35 @@ const JobFinderPage = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="design" /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="design" className="text-md">
                   Entry Level (57)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="sales" /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="sales" className="text-md">
                   Mid Level (3)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Senior Level (5)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   Director (12)
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 {/* <Checkbox id="marketing" checked /> */}
-                <input type="checkbox" className="w-5 h-5 accent-green-500" />
+                <input type="checkbox" className="w-5 h-5 accent-blue-500" />
                 <label htmlFor="marketing" className="text-md">
                   VP or above (8)
                 </label>
@@ -290,7 +287,7 @@ const JobFinderPage = () => {
                     </div>
                   </div>
                   <div className="text-right flex flex-col text-center">
-                    <Button className="bg-green-600 hover:bg-green-700 pt-2 pb-2 text-white font-bold text-md mb-2 mt-2">
+                    <Button className="bg-blue-600 hover:bg-blue-700 pt-2 pb-2 text-white font-bold text-md mb-2 mt-2">
                       Apply
                     </Button>
                     <div className="relative w-full bg-gray-300 rounded h-2 mb-2">
@@ -328,7 +325,7 @@ const JobFinderPage = () => {
                 variant={page === 1 ? "default" : "ghost"}
                 className={
                   page === 1
-                    ? "bg-green-600 hover:bg-green-700 h-10 w-10 text-white rounded-md"
+                    ? "bg-blue-600 hover:bg-blue-700 h-10 w-10 text-white rounded-md"
                     : ""
                 }
               >

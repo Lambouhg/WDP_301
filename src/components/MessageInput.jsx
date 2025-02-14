@@ -8,7 +8,7 @@ const MessageInput = () => {
           type="text"
           id="messageInput"
           placeholder="Reply message"
-          className="p-2 flex-1 bg-transparent border border-solid rounded-lg"
+          className="p-1 flex-1 bg-transparent border border-solid rounded-lg"
         />
       </div>
       <div className="flex gap-4 items-center">
@@ -18,7 +18,7 @@ const MessageInput = () => {
           className="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
           alt="Attachment"
         />
-        <button className="flex gap-2.5 justify-center items-center self-stretch p-2.5 my-auto bg-indigo-600 w-[73px] text-white rounded-lg">
+        <button className="flex gap-2.5 justify-center items-center self-stretch h-10 w-5 my-auto bg-indigo-600 w-[73px] text-white rounded-lg">
           📩 Send
         </button>
       </div>
