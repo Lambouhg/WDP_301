@@ -8,7 +8,7 @@ const DashboardHeader = ({ dashboardHeaderName }) => {
   };
 
   return (
-    <div className="flex items-center justify-between border-b-2 gray-600 m-1">
+    <div className="flex items-center justify-between  m-1">
       <h1 className="text-3xl font-bold text-gray-600">
         {dashboardHeaderName}
       </h1>

@@ -47,7 +47,6 @@ export default function Home() {
     }
   };
 
-
   const categories = [
     { name: "Design", count: "1.2k+ Jobs" },
     { name: "Sales", count: "800+ Jobs" },
@@ -149,7 +148,7 @@ export default function Home() {
             placeholder="Location"
             className="flex-1 bg-[#1C1C27] p-4 rounded-lg"
           />
-          <button className="bg-blue-600 px-8 rounded-lg">
+          <button className="bg-blue-600 px-8 rounded-lg cursor-pointer">
             Search for jobs
           </button>
         </div>

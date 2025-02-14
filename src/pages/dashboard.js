@@ -55,7 +55,9 @@ export default function Dashboard() {
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-1 p-8 ">
-        <DashboardHeader dashboardHeaderName="Dashboard" />
+        <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
+          <DashboardHeader dashboardHeaderName={"Dashboard"} />
+        </div>
         <h1 className="text-xl font-bold mt-5">
           Welcome back, {user.fullName}!
         </h1>

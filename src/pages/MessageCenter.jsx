@@ -8,10 +8,9 @@ const MessageCenter = () => {
     <div className="flex bg-white h-screen w-full overflow-hidden">
       <Sidebar />
 
-      {/* Phần nội dung bên phải */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
-        <div className="w-full mt-6 px-4">
+        <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
           <DashboardHeader dashboardHeaderName={"Messages"} />
         </div>
 
