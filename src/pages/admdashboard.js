@@ -119,7 +119,7 @@ export default function AdminDashboard() {
               <tr>
                 <th className="px-4 py-2 text-left text-gray-300 font-semibold">ID</th>
                 <th className="px-4 py-2 text-left text-gray-300 font-semibold">Email</th>
-                <th className="px-4 py-2 text-left text-gray-300 font-semibold">Tên</th>
+                <th className="px-4 py-2 text-left text-gray-300 font-semibold">Name</th>
                 <th className="px-4 py-2 text-left text-gray-300 font-semibold">Role</th>
                 <th className="px-4 py-2 text-left text-gray-300 font-semibold">Action</th>
               </tr>
