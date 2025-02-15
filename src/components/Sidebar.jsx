@@ -1,7 +1,6 @@
 import { useUser, UserButton, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
 import {
   FiMessageSquare,
   FiBriefcase,
@@ -54,8 +53,8 @@ const Sidebar = () => {
           <NavItem
             icon={<FiBriefcase />}
             label="My Applications"
-            href="/applications"
-            active={router.pathname === "/applications"}
+            href="/UserMyApplication"
+            active={router.pathname === "/UserMyApplication"}
           />
           <NavItem
             icon={<FiSearch />}
@@ -66,8 +65,8 @@ const Sidebar = () => {
           <NavItem
             icon={<FiSettings />}
             label="Settings"
-            href="/settings"
-            active={router.pathname === "/settings"}
+            href="/settings/Profile"
+            active={router.pathname === "/settings/Profile"}
           />
         </nav>
       </div>

@@ -2,7 +2,10 @@
 // import { useParams } from "next/navigation";
 import Siderbar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
+import JobApplicationPopup from "../components/PopupApply_user";
+import { useState } from "react";
 const JobDetail = () => {
+  const [isOpen, setIsOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   //   const id = useParams().id;
   return (
@@ -26,9 +29,16 @@ const JobDetail = () => {
                 Stripe • Paris, France • Full-Time
               </p>
             </div>
-            <button className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg">
+            <button
+              className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+              onClick={() => setIsOpen(true)}
+            >
               Apply
             </button>
+            <JobApplicationPopup
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+            />
           </div>
         </div>
 
