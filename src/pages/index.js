@@ -25,11 +25,9 @@ export default function Home() {
           const data = await response.json();
           console.log("User info saved:", data);
 
-          // Kiểm tra vai trò từ API
           if (data.user && data.user.role === "admin") {
             router.push("/admdashboard");
           } else {
-            router.push("/");
           }
         } catch (error) {
           console.error("Error saving user to database:", error);
@@ -41,7 +39,7 @@ export default function Home() {
 
   const dashboard = () => {
     if (user) {
-      router.push("/dashboard"); // Mặc định chuyển hướng đến /dashboard
+      router.push("/dashboard");
     } else {
       router.push("/sign-in");
     }
