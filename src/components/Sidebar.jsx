@@ -42,8 +42,8 @@ const Sidebar = () => {
           <NavItem
             icon={<FiHome />}
             label="Dashboard"
-            href="/dashboard"
-            active={router.pathname === "/dashboard"}
+            href="users/dashboard"
+            active={router.pathname === "users/dashboard"}
           />
           <NavItem
             icon={<FiMessageSquare />}
