@@ -13,7 +13,7 @@ import "./globals.css";
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
-
+  
   useEffect(() => {
     if (user) {
       const saveUserToDatabase = async () => {
@@ -26,7 +26,7 @@ export default function Home() {
           console.log("User info saved:", data);
 
           if (data.user && data.user.role === "admin") {
-            router.push("/admdashboard");
+            router.push("/admin/admdashboard");
           } else {
           }
         } catch (error) {
@@ -39,7 +39,7 @@ export default function Home() {
 
   const dashboard = () => {
     if (user) {
-      router.push("/dashboard");
+      router.push("users/dashboard");
     } else {
       router.push("/sign-in");
     }

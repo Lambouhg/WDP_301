@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import DashboardHeader from "../components/DashboardHeader";
-import "./globals.css";
-import Sidebar from "../components/Sidebar";
+import DashboardHeader from "../../components/DashboardHeader";
+import Sidebar from "../../components/Sidebar";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
