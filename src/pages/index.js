@@ -6,36 +6,44 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "./globals.css";
 
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
-  
-  useEffect(() => {
-    if (user) {
-      const saveUserToDatabase = async () => {
-        try {
-          const response = await fetch("/api/auth/callback/route", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          });
-          const data = await response.json();
-          console.log("User info saved:", data);
 
-          if (data.user && data.user.role === "admin") {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const checkRoleAndRedirect = async () => {
+    if (user && !isLoading) {
+      setIsLoading(true); // Prevent multiple calls
+
+      try {
+        const response = await fetch("/api/auth/callback/route", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
+        console.log("User info saved:", data);
+
+        if (data.user) {
+          if (data.user.role === "admin") {
             router.push("/admin/admdashboard");
+          } else if (data.user.role === "company") {
+            router.push("/company/companydashboard");
           } else {
+            router.push("/"); // Default
           }
-        } catch (error) {
-          console.error("Error saving user to database:", error);
         }
-      };
-      saveUserToDatabase();
+      } catch (error) {
+        console.error("Error saving user to database:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, [user, router]);
+  };
 
   const dashboard = () => {
     if (user) {
@@ -101,7 +109,12 @@ export default function Home() {
             Job Finder
           </span>
           <span className="text-1xl pl-9">Find Jobs</span>
-          <span className="text-1xl pl-2">Browse Companies</span>
+          <span
+            className="text-1xl pl-2 cursor-pointer"
+            onClick={checkRoleAndRedirect}
+          >
+            Browse Companies
+          </span>
         </div>
         <div className="flex items-center space-x-4">
           <SignedIn>
@@ -116,7 +129,6 @@ export default function Home() {
           </SignedOut>
         </div>
       </nav>
-
 
       {/* Hero Section */}
       <div className="mb-16 ml-9 mr-5">
