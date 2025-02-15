@@ -11,25 +11,21 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Chưa đăng nhập" });
     }
 
-    // ✅ Lấy token từ Clerk (Bearer Token)
     const token = await getToken();
     if (!token) {
       return res.status(401).json({ message: "Không thể lấy token" });
     }
 
-    // ✅ Gọi API Clerk để lấy thông tin user
     const userResponse = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    // ✅ Kiểm tra response từ Clerk
     if (!userResponse.ok) {
       return res.status(userResponse.status).json({ message: "Lỗi khi lấy dữ liệu từ Clerk" });
     }
 
     const userData = await userResponse.json();
 
-    // ✅ Kiểm tra dữ liệu hợp lệ trước khi lưu
     if (!userData.id || !userData.email_addresses || !userData.email_addresses.length) {
       return res.status(400).json({ message: "Dữ liệu người dùng không hợp lệ" });
     }
