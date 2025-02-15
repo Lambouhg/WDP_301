@@ -111,7 +111,7 @@ export default function Home() {
           <span className="text-1xl pl-9">Find Jobs</span>
           <span
             className="text-1xl pl-2 cursor-pointer"
-            onClick={checkRoleAndRedirect}
+            onClick={() => router.push("/company/companydashboard")}
           >
             Browse Companies
           </span>
