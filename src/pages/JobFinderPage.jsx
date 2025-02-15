@@ -5,7 +5,12 @@ import Sidebar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import img1 from "../assets/image.png";
 import { Search, MapPin } from "lucide-react";
+import { useRouter } from "next/router";
 const JobFinderPage = () => {
+  const router = useRouter();
+  const toDetailJob = () => {
+    router.push("/JobDetail");
+  };
   return (
     <div className="flex bg-white h-screen w-full overflow-hidden">
       <Sidebar />
@@ -259,7 +264,10 @@ const JobFinderPage = () => {
                 },
               ].map((job, index) => (
                 <Card key={index} className="gap-1">
-                  <div className="flex justify-between items-start border-2 border-gray-200 p-4 cursor-pointer hover:border-blue-300">
+                  <div
+                    className="flex justify-between items-start border-2 border-gray-200 p-4 cursor-pointer hover:border-blue-300"
+                    onClick={toDetailJob}
+                  >
                     <div className="flex gap-4 ">
                       <div className="w-18 h-18 bg-gray-100 rounded-lg">
                         <img
