@@ -17,6 +17,18 @@ const Sidebar = () => {
   const returnToHome = () => {
     router.push("/");
   };
+  const toDashboard = () => {
+    router.push("/users/dashboard");
+  };
+  const toMessageCenter = () => {
+    router.push("/MessageCenter");
+  };
+  const toMyApplication = () => {
+    router.push("/UserMyApplication");
+  };
+  const toJobFinder = () => {
+    router.push("/JobFinderPage");
+  };
 
   useEffect(() => {
     if (!user) {
@@ -41,7 +53,7 @@ const Sidebar = () => {
           <NavItem
             icon={<FiHome />}
             label="Dashboard"
-            href="users/dashboard"
+            href="/users/dashboard"
             active={router.pathname === "users/dashboard"}
           />
           <NavItem

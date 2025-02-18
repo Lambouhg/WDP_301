@@ -1,31 +1,35 @@
-'use client';
+"use client";
 
-import { UserButton, useUser } from '@clerk/nextjs';
-import Sidebar from '../../components/SidebarCompany';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { useState } from 'react';
-import Link from 'next/link';
+import Sidebar from "../../components/SidebarCompany";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import { useState } from "react";
+import Link from "next/link";
 
+import HeaderCompany from "../../components/HeaderCompany";
 ChartJS.register(BarElement, CategoryScale, LinearScale);
 
 export default function CompanyDashboard() {
-  const { user } = useUser();
-  const [selectedRange, setSelectedRange] = useState('Week');
+  const [selectedRange, setSelectedRange] = useState("Week");
 
   // Dữ liệu cho biểu đồ
   const chartData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     datasets: [
       {
-        label: 'Job View',
+        label: "Job View",
         data: [122, 34, 56, 78, 90, 45, 67],
-        backgroundColor: '#fbbf24',
+        backgroundColor: "#fbbf24",
       },
       {
-        label: 'Job Applied',
+        label: "Job Applied",
         data: [34, 56, 78, 90, 45, 67, 89],
-        backgroundColor: '#6366f1',
+        backgroundColor: "#6366f1",
       },
     ],
   };
@@ -60,7 +64,6 @@ export default function CompanyDashboard() {
 
   console.log(jobOpenAndApplicantsSummary);
 
-
   // Dữ liệu cho Job Updates
   const jobUpdates = [
     {
@@ -90,23 +93,21 @@ export default function CompanyDashboard() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 w-screen overflow-hidden">
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold">Good morning, {user?.firstName}</h2>
-            <p className="text-gray-600">Here is your job listings statistic report.</p>
-          </div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">+ Post a job</button>
-        </div>
-
+      <div className="flex-1 p-6 overflow-y-auto">
+        <HeaderCompany />
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           {stats.map((stat, index) => (
-            <StatCard key={index} title={stat.title} value={stat.value} color={stat.color} />
+            <StatCard
+              key={index}
+              title={stat.title}
+              value={stat.value}
+              color={stat.color}
+            />
           ))}
         </div>
 
@@ -117,10 +118,14 @@ export default function CompanyDashboard() {
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Job Statistics</h3>
               <div className="flex space-x-4">
-                {['Week', 'Month', 'Year'].map((range) => (
+                {["Week", "Month", "Year"].map((range) => (
                   <button
                     key={range}
-                    className={`px-3 py-1 rounded-lg ${selectedRange === range ? 'bg-blue-600 text-white' : 'text-gray-600 hover:text-blue-600'}`}
+                    className={`px-3 py-1 rounded-lg ${
+                      selectedRange === range
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-600 hover:text-blue-600"
+                    }`}
                     onClick={() => setSelectedRange(range)}
                   >
                     {range}
@@ -135,37 +140,52 @@ export default function CompanyDashboard() {
 
           {/* Job Open & Applicants Summary */}
           <div className="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">{jobOpenAndApplicantsSummary.jobOpen.title}</h3>
+            <h3 className="text-lg font-semibold">
+              {jobOpenAndApplicantsSummary.jobOpen.title}
+            </h3>
             <div className="mt-4">
-              <h3 className="text-7xl font-bold">{jobOpenAndApplicantsSummary.jobOpen.count}</h3>
-              <p className="text-gray-600">{jobOpenAndApplicantsSummary.jobOpen.description}</p>
+              <h3 className="text-7xl font-bold">
+                {jobOpenAndApplicantsSummary.jobOpen.count}
+              </h3>
+              <p className="text-gray-600">
+                {jobOpenAndApplicantsSummary.jobOpen.description}
+              </p>
             </div>
             <div className="mt-6">
-              <h3 className="text-lg font-semibold">{jobOpenAndApplicantsSummary.applicantsSummary.title}</h3>
+              <h3 className="text-lg font-semibold">
+                {jobOpenAndApplicantsSummary.applicantsSummary.title}
+              </h3>
               <div className="mt-4">
-                <h3 className="text-7xl font-bold">{jobOpenAndApplicantsSummary.applicantsSummary.count}</h3>
-                <p className="text-gray-600">{jobOpenAndApplicantsSummary.applicantsSummary.description}</p>
+                <h3 className="text-7xl font-bold">
+                  {jobOpenAndApplicantsSummary.applicantsSummary.count}
+                </h3>
+                <p className="text-gray-600">
+                  {jobOpenAndApplicantsSummary.applicantsSummary.description}
+                </p>
                 <div className="mt-4">
-                  {jobOpenAndApplicantsSummary.applicantsSummary.applicantTypes.map((applicant, index) => (
-                    <ApplicantItem
-                      key={index}
-                      color={applicant.color}
-                      label={applicant.label}
-                      value={applicant.value}
-                    />
-                  ))}
+                  {jobOpenAndApplicantsSummary.applicantsSummary.applicantTypes.map(
+                    (applicant, index) => (
+                      <ApplicantItem
+                        key={index}
+                        color={applicant.color}
+                        label={applicant.label}
+                        value={applicant.value}
+                      />
+                    )
+                  )}
                 </div>
               </div>
             </div>
           </div>
-
         </div>
 
         {/* Job Updates */}
         <div className="bg-white p-6 rounded-lg shadow-md mt-6">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Job Updates</h3>
-            <Link href="/job-updates" className="text-blue-600 hover:underline">View All →</Link>
+            <Link href="/job-updates" className="text-blue-600 hover:underline">
+              View All →
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
             {jobUpdates.map((update, index) => (
@@ -186,7 +206,9 @@ export default function CompanyDashboard() {
 
 function StatCard({ title, value, color }) {
   return (
-    <div className={`${color} text-white p-6 rounded-lg shadow-md hover:shadow-lg transition`}>
+    <div
+      className={`${color} text-white p-6 rounded-lg shadow-md hover:shadow-lg transition`}
+    >
       <h3 className="text-3xl font-bold">{value}</h3>
       <p className="mt-2">{title}</p>
     </div>
@@ -197,7 +219,9 @@ function ApplicantItem({ color, label, value }) {
   return (
     <div className="flex items-center mt-2">
       <span className={`w-3 h-3 ${color} rounded-full mr-2`}></span>
-      <span className="text-gray-600">{label}: {value}</span>
+      <span className="text-gray-600">
+        {label}: {value}
+      </span>
     </div>
   );
 }
@@ -208,8 +232,13 @@ function JobUpdateCard({ title, location, capacity, tags }) {
       <h4 className="font-semibold">{title}</h4>
       <p className="text-gray-600 text-sm">{location}</p>
       <div className="flex flex-wrap gap-2 mt-2">
-        {tags.map(tag => (
-          <span key={tag} className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full">{tag}</span>
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full"
+          >
+            {tag}
+          </span>
         ))}
       </div>
       <p className="text-gray-600 text-sm mt-4">{capacity}</p>

@@ -51,10 +51,13 @@ const UserMyApplication = () => {
   ];
 
   return (
-    <div className="mx-auto bg-white flex overflow-hidden rounded-lg shadow-lg w-screen h-screen">
+    <div className="bg-white flex overflow-hidden rounded-lg shadow-lg w-screen h-screen">
       <Sidebar />
-      <div className="p-6 w-full">
-        <DashboardHeader dashboardHeaderName={"My Applications"} />
+      <div className="w-full overflow-y-auto pb-6">
+        <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
+          <DashboardHeader dashboardHeaderName={"My Applications"} />
+        </div>
+
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-semibold">Keep it up, Jake</h1>
           <select className="border rounded-md px-3 py-1">
