@@ -68,8 +68,8 @@ const CompanySidebar = () => {
                     <NavItem
                         icon={<FiBriefcase />}
                         label="Job Listings"
-                        href="/company/companyjobs"
-                        active={router.pathname === "/company/jobs"}
+                        href="/company/JobListingCompany"
+                        active={router.pathname === "/company/JobListingCompany"}
                     />
                     <NavItem
                         icon={<FiCalendar />}
