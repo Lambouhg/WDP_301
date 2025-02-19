@@ -25,7 +25,7 @@ export default function Home() {
           console.log("User info saved:", data);
 
           if (data.user && data.user.role === "admin") {
-            router.push("/admin/dashboard");
+            router.push("/admin/admdashboard");
           } else if (data.user.role === "company") {
             router.push("/company/companydashboard");
           } else {
