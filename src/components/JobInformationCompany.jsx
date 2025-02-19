@@ -8,6 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 
 const JobInformationCompany = () => {
+  const [salaryMin, setSalaryMin] = useState(5000);
+  const [salaryMax, setSalaryMax] = useState(22000);
+  const removeSkill = (skillToRemove) => {
+    setSkills(skills.filter((skill) => skill !== skillToRemove));
+  };
   const [step, setStep] = useState(1);
   const [skills, setSkills] = useState([
     "Graphic Design",
@@ -78,26 +83,38 @@ const JobInformationCompany = () => {
           </div>
 
           {/* Job Title */}
-          <div className="space-y-2">
-            <Label htmlFor="jobTitle">Job Title</Label>
-            <Input
-              id="jobTitle"
-              placeholder="e.g. Software Engineer"
-              className="w-full"
-            />
-            <p className="text-sm text-gray-500">At least 80 characters</p>
+          <div className=" flex">
+            <div style={{ flex: 1 }}>
+              <Label className="jobTitle font-semibold h-full">Job Title</Label>
+              <p className="text-gray-400 h-full">
+                Job title must be description one position
+              </p>
+            </div>
+            <div style={{ flex: 3 }}>
+              <Input
+                id="jobTitle"
+                placeholder="e.g. Software Engineer"
+                className="w-full p-2 border-2 border-gray-300 rounded-sm w-3/5"
+              />
+              <p className="text-sm text-gray-500">At least 80 characters</p>
+            </div>
           </div>
 
           {/* Employment Type */}
-          <div className="space-y-2">
-            <Label>Type of Employment</Label>
-            <p className="text-sm text-gray-500 mb-2">
-              You can select multiple type of employment
-            </p>
-            <div className="space-y-2">
+          <div className="space-y-2 flex">
+            <div style={{ flex: 1 }}>
+              <Label>Type of Employment</Label>
+              <p className="text-sm text-gray-500 mb-2">
+                You can select multiple type of employment
+              </p>
+            </div>
+            <div className="space-y-5" style={{ flex: 3 }}>
               {employmentTypes.map((type) => (
                 <div key={type} className="flex items-center space-x-2">
-                  <Checkbox id={type} />
+                  <Checkbox
+                    id={type}
+                    className="w-6 h-6 border border-gray-300 rounded"
+                  />
                   <label
                     htmlFor={type}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -110,89 +127,109 @@ const JobInformationCompany = () => {
           </div>
 
           {/* Salary Range */}
-          <div className="space-y-2">
-            <Label>Salary</Label>
-            <p className="text-sm text-gray-500 mb-2">
-              Please specify the estimated salary range for the role. *You can
-              leave this blank
-            </p>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <span className="mr-2">$</span>
-                <Input
-                  type="number"
-                  value={salary.min}
-                  onChange={(e) =>
-                    setSalary({ ...salary, min: e.target.value })
-                  }
-                  className="w-24"
-                />
-              </div>
-              <span>to</span>
-              <div className="flex items-center">
-                <span className="mr-2">$</span>
-                <Input
-                  type="number"
-                  value={salary.max}
-                  onChange={(e) =>
-                    setSalary({ ...salary, max: e.target.value })
-                  }
-                  className="w-24"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Categories */}
-          <div className="space-y-2">
-            <Label>Categories</Label>
-            <p className="text-sm text-gray-500 mb-2">
-              You can select multiple job categories
-            </p>
-            <Input placeholder="This is placeholder" />
-          </div>
-
-          {/* Required Skills */}
-          <div className="space-y-2">
-            <Label>Required Skills</Label>
-            <p className="text-sm text-gray-500 mb-2">
-              Add required skills for the job
-            </p>
-            <form onSubmit={handleAddSkill} className="flex space-x-2">
-              <Input
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                placeholder="Add Skills"
-              />
-              <Button type="submit" variant="outline">
-                Add Skills
-              </Button>
-            </form>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {skills.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="secondary"
-                  className="flex items-center space-x-1"
-                >
-                  <span>{skill}</span>
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => handleRemoveSkill(skill)}
+          <div className="max-w-2xl p-6 space-y-8">
+            {/* Salary Section */}
+            <div className="space-y-2">
+              <label className="text-lg font-medium text-gray-700">
+                Salary
+              </label>
+              <p className="text-sm text-gray-500">
+                Please specify the estimated salary range for the role. *You can
+                leave this blank
+              </p>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <span className="px-3 py-2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    value={salaryMin}
+                    onChange={(e) => setSalaryMin(e.target.value)}
+                    className="w-24 p-2 border rounded"
                   />
-                </Badge>
-              ))}
+                </div>
+                <span className="text-gray-500">to</span>
+                <div className="flex items-center">
+                  <span className="px-3 py-2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    value={salaryMax}
+                    onChange={(e) => setSalaryMax(e.target.value)}
+                    className="w-24 p-2 border rounded"
+                  />
+                </div>
+              </div>
+              <div className="relative pt-4">
+                <div className="h-2 bg-gray-200 rounded">
+                  <div
+                    className="absolute h-2 bg-blue-600 rounded"
+                    style={{
+                      left: "20%",
+                      right: "20%",
+                    }}
+                  />
+                  <div
+                    className="absolute w-4 h-4 bg-blue-600 rounded-full -left-2 top-1/2 -translate-y-1/2"
+                    style={{ left: "20%" }}
+                  />
+                  <div
+                    className="absolute w-4 h-4 bg-blue-600 rounded-full -right-2 top-1/2 -translate-y-1/2"
+                    style={{ right: "20%" }}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Next Step Button */}
-          <div className="flex justify-end">
-            <Button
-              onClick={() => setStep(Math.min(step + 1, 3))}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              Next Step
-            </Button>
+            {/* Categories Section */}
+            <div className="space-y-2">
+              <label className="text-lg font-medium text-gray-700">
+                Categories
+              </label>
+              <p className="text-sm text-gray-500">
+                You can select multiple job categories
+              </p>
+              <input
+                type="text"
+                placeholder="This is placeholder"
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            {/* Required Skills Section */}
+            <div className="space-y-2">
+              <label className="text-lg font-medium text-gray-700">
+                Required Skills
+              </label>
+              <p className="text-sm text-gray-500">
+                Add required skills for the job
+              </p>
+              <button className="flex items-center text-blue-600 space-x-1">
+                <span className="text-xl">+</span>
+                <span>Add Skills</span>
+              </button>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <div
+                    key={skill}
+                    className="flex items-center px-3 py-1 bg-gray-100 rounded-full"
+                  >
+                    <span>{skill}</span>
+                    <button
+                      onClick={() => removeSkill(skill)}
+                      className="ml-2 text-gray-500 hover:text-gray-700"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Next Step Button */}
+            <div className="flex justify-end">
+              <button className="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+                Next Step
+              </button>
+            </div>
           </div>
         </div>
       </Card>
