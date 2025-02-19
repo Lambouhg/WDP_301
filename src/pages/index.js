@@ -6,44 +6,38 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "./globals.css";
-
+import Footer from "../components/Footer";
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
+  useEffect(() => {
+    if (user) {
+      const saveUserToDatabase = async () => {
+        try {
+          const response = await fetch("/api/auth/callback/route", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          const data = await response.json();
+          console.log("User info saved:", data);
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const checkRoleAndRedirect = async () => {
-    if (user && !isLoading) {
-      setIsLoading(true); // Prevent multiple calls
-
-      try {
-        const response = await fetch("/api/auth/callback/route", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        const data = await response.json();
-        console.log("User info saved:", data);
-
-        if (data.user) {
-          if (data.user.role === "admin") {
-            router.push("/admin/admdashboard");
+          if (data.user && data.user.role === "admin") {
+            router.push("/admin/dashboard");
           } else if (data.user.role === "company") {
             router.push("/company/companydashboard");
           } else {
-            router.push("/"); // Default
+            router.push("/");
           }
+        } catch (error) {
+          console.error("Error saving user to database:", error);
         }
-      } catch (error) {
-        console.error("Error saving user to database:", error);
-      } finally {
-        setIsLoading(false);
-      }
+      };
+      saveUserToDatabase();
     }
-  };
+  }, [user, router]); // Đóng useEffect đúng cách
 
   const dashboard = () => {
     if (user) {
@@ -226,6 +220,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
