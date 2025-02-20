@@ -1,4 +1,4 @@
-import { connectDB } from "../../../lib/mongodb";
+import connectDB from "../../../lib/mongodb";
 import User from "../../../models/User";
 
 export default async function handler(req, res) {
@@ -18,12 +18,10 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: "Không tìm thấy người dùng" });
       }
 
-      res.status(200).json({ message: "Cập nhật rolerole thành công", user: updatedUser });
+      res.status(200).json({ message: "Cập nhật role thành công", user: updatedUser });
     } catch (error) {
       console.error("Error updating role:", error);
       res.status(500).json({ message: "Lỗi server", error });
     }
-  } else {
-    res.status(405).json({ message: "Phương thức không được hỗ trợ" });
   }
 }
