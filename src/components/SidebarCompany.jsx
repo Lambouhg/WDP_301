@@ -74,8 +74,8 @@ const CompanySidebar = () => {
           <NavItem
             icon={<FiCalendar />}
             label="My Schedule"
-            href="/company/companyschedule"
-            active={router.pathname === "/company/companyschedule"}
+            href="/company/Calender"
+            active={router.pathname === "/company/Calender"}
           />
           <NavItem
             icon={<FiSettings />}

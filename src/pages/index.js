@@ -47,6 +47,11 @@ export default function Home() {
     }
   };
 
+  const toUserSearch = () => {
+    router.push({
+      pathname: "/FindJob",
+    });
+  };
   const categories = [
     { name: "Design", count: "1.2k+ Jobs" },
     { name: "Sales", count: "800+ Jobs" },
@@ -102,7 +107,9 @@ export default function Home() {
           >
             Job Finder
           </span>
-          <span className="text-1xl pl-9">Find Jobs</span>
+          <span className="text-1xl pl-9 cursor-pointer" onClick={toUserSearch}>
+            Find Jobs
+          </span>
           <span
             className="text-1xl pl-2 cursor-pointer"
             onClick={() => router.push("/company/companydashboard")}

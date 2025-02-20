@@ -12,7 +12,7 @@ const Profile = () => {
       <Sidebar />
       <div className="flex flex-col border-b pb-2 border-l-2 gray-500 pl-5 h-full w-full overflow-y-auto">
         <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
-          <DashboardHeader dashboardHeaderName={"Profile"} />
+          <DashboardHeader dashboardHeaderName={"Setting"} />
         </div>
 
         <div className="gap-x-4 flex mt-5">
