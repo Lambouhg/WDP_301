@@ -8,6 +8,7 @@ import {
   FiHome,
   FiSettings,
   FiLogOut,
+  FiUser,
 } from "react-icons/fi";
 
 const Sidebar = () => {
@@ -73,6 +74,12 @@ const Sidebar = () => {
             label="Find Jobs"
             href="/JobFinderPage"
             active={router.pathname === "/JobFinderPage"}
+          />
+          <NavItem
+            icon={<FiUser />}
+            label="My Public Profile"
+            href="/users/UserProfile"
+            active={router.pathname === "/users/UserProfile"}
           />
           <NavItem
             icon={<FiSettings />}

@@ -10,23 +10,24 @@ import { X } from "lucide-react";
 const JobInformationCompany = () => {
   const [salaryMin, setSalaryMin] = useState(5000);
   const [salaryMax, setSalaryMax] = useState(22000);
-  const removeSkill = (skillToRemove) => {
-    setSkills(skills.filter((skill) => skill !== skillToRemove));
-  };
   const [step, setStep] = useState(1);
   const [skills, setSkills] = useState([
     "Graphic Design",
     "Communication",
     "Illustrator",
+    "Illustrator",
+    "Illustrator",
+    "Illustrator",
   ]);
   const [newSkill, setNewSkill] = useState("");
   const [salary, setSalary] = useState({ min: 5000, max: 22000 });
-
-  const steps = [
-    { number: 1, title: "Job Information", icon: "📋" },
-    { number: 2, title: "Job Description", icon: "📝" },
-    { number: 3, title: "Perks & Benefit", icon: "🎁" },
-  ];
+  const removeSkill = (skillToRemove) => {
+    setSkills(skills.filter((skill) => skill !== skillToRemove));
+  };
+  const minSalary = 0;
+  const maxSalary = 50000; // Maximum possible salary
+  const minPosition = ((salaryMin - minSalary) / (maxSalary - minSalary)) * 100;
+  const maxPosition = ((salaryMax - minSalary) / (maxSalary - minSalary)) * 100;
 
   const employmentTypes = [
     "Full-Time",
@@ -48,30 +49,21 @@ const JobInformationCompany = () => {
     setSkills(skills.filter((skill) => skill !== skillToRemove));
   };
 
+  const handleSliderChange = (e, isMin) => {
+    const value = parseInt(e.target.value);
+    if (isMin) {
+      if (value < salaryMax) {
+        setSalaryMin(value);
+      }
+    } else {
+      if (value > salaryMin) {
+        setSalaryMax(value);
+      }
+    }
+  };
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full p-6">
       {/* Progress Steps */}
-      <div className="flex mb-3 ">
-        {steps.map((s) => (
-          <div
-            key={s.number}
-            className={`flex flex-1 items-center p-2 ${
-              step === s.number ? "text-blue-600" : "text-gray-400"
-            }`}
-          >
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center mr-2
-              ${step === s.number ? "bg-blue-600 text-white" : "bg-gray-100"}`}
-            >
-              {s.icon}
-            </div>
-            <div>
-              <div className="text-sm">Step {s.number}/3</div>
-              <div className="font-medium ">{s.title}</div>
-            </div>
-          </div>
-        ))}
-      </div>
 
       <Card className="p-3">
         <div className="space-y-6">
@@ -127,100 +119,139 @@ const JobInformationCompany = () => {
           </div>
 
           {/* Salary Range */}
-          <div className="max-w-2xl p-6 space-y-8">
+          <div className="p-6 space-y-8">
             {/* Salary Section */}
-            <div className="space-y-2">
-              <label className="text-lg font-medium text-gray-700">
-                Salary
-              </label>
-              <p className="text-sm text-gray-500">
-                Please specify the estimated salary range for the role. *You can
-                leave this blank
-              </p>
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center">
-                  <span className="px-3 py-2 text-gray-500">$</span>
-                  <input
-                    type="number"
-                    value={salaryMin}
-                    onChange={(e) => setSalaryMin(e.target.value)}
-                    className="w-24 p-2 border rounded"
-                  />
-                </div>
-                <span className="text-gray-500">to</span>
-                <div className="flex items-center">
-                  <span className="px-3 py-2 text-gray-500">$</span>
-                  <input
-                    type="number"
-                    value={salaryMax}
-                    onChange={(e) => setSalaryMax(e.target.value)}
-                    className="w-24 p-2 border rounded"
-                  />
-                </div>
+            <div className="space-y-2 flex">
+              <div style={{ flex: 1 }} className="w-full h-full mr-10">
+                <label className="text-lg font-medium text-gray-700">
+                  Salary
+                </label>
+                <p className="text-sm text-gray-500">
+                  Please specify the estimated salary range for the role. *You
+                  can leave this blank
+                </p>
               </div>
-              <div className="relative pt-4">
-                <div className="h-2 bg-gray-200 rounded">
+              <div style={{ flex: 3 }}>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center">
+                    <span className="px-3 py-2 text-gray-500">$</span>
+                    <input
+                      type="number"
+                      value={salaryMin}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (value < salaryMax) setSalaryMin(value);
+                      }}
+                      className="w-24 p-2 border rounded"
+                    />
+                  </div>
+                  <span className="text-gray-500">to</span>
+                  <div className="flex items-center">
+                    <span className="px-3 py-2 text-gray-500">$</span>
+                    <input
+                      type="number"
+                      value={salaryMax}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (value > salaryMin) setSalaryMax(value);
+                      }}
+                      className="w-24 p-2 border rounded"
+                    />
+                  </div>
+                </div>
+                <div className="relative pt-6 pb-2">
+                  {/* Background track */}
+                  <div className="absolute w-full h-2 bg-gray-200 rounded" />
+
+                  {/* Active track */}
                   <div
                     className="absolute h-2 bg-blue-600 rounded"
                     style={{
-                      left: "20%",
-                      right: "20%",
+                      left: `${minPosition}%`,
+                      right: `${100 - maxPosition}%`,
                     }}
                   />
-                  <div
-                    className="absolute w-4 h-4 bg-blue-600 rounded-full -left-2 top-1/2 -translate-y-1/2"
-                    style={{ left: "20%" }}
+
+                  {/* Min handle */}
+                  <input
+                    type="range"
+                    min={minSalary}
+                    max={maxSalary}
+                    value={salaryMin}
+                    onChange={(e) => handleSliderChange(e, true)}
+                    className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none"
+                    style={{
+                      "--thumb-size": "16px",
+                      "--thumb-color": "#2563eb",
+                    }}
                   />
-                  <div
-                    className="absolute w-4 h-4 bg-blue-600 rounded-full -right-2 top-1/2 -translate-y-1/2"
-                    style={{ right: "20%" }}
+
+                  {/* Max handle */}
+                  <input
+                    type="range"
+                    min={minSalary}
+                    max={maxSalary}
+                    value={salaryMax}
+                    onChange={(e) => handleSliderChange(e, false)}
+                    className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none"
+                    style={{
+                      "--thumb-size": "16px",
+                      "--thumb-color": "#2563eb",
+                    }}
                   />
                 </div>
               </div>
             </div>
 
             {/* Categories Section */}
-            <div className="space-y-2">
-              <label className="text-lg font-medium text-gray-700">
-                Categories
-              </label>
-              <p className="text-sm text-gray-500">
-                You can select multiple job categories
-              </p>
+            <div className="space-y-2 flex">
+              <div style={{ flex: 1 }} className="mr-10">
+                <label className="text-lg font-medium text-gray-700">
+                  Categories
+                </label>
+                <p className="text-sm text-gray-500">
+                  You can select multiple job categories
+                </p>
+              </div>
               <input
                 type="text"
                 placeholder="This is placeholder"
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded ml-10"
+                style={{ flex: 3 }}
               />
             </div>
 
             {/* Required Skills Section */}
-            <div className="space-y-2">
-              <label className="text-lg font-medium text-gray-700">
-                Required Skills
-              </label>
-              <p className="text-sm text-gray-500">
-                Add required skills for the job
-              </p>
-              <button className="flex items-center text-blue-600 space-x-1">
-                <span className="text-xl">+</span>
-                <span>Add Skills</span>
-              </button>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <div
-                    key={skill}
-                    className="flex items-center px-3 py-1 bg-gray-100 rounded-full"
-                  >
-                    <span>{skill}</span>
-                    <button
-                      onClick={() => removeSkill(skill)}
-                      className="ml-2 text-gray-500 hover:text-gray-700"
+            <div className="space-y-2 flex w-full">
+              <div style={{ flex: 1 }} className="mr-10">
+                <label className="text-lg font-medium text-gray-700">
+                  Required Skills
+                </label>
+                <p className="text-sm text-gray-500">
+                  Add required skills for the job
+                </p>
+              </div>
+              <div style={{ flex: 3 }} className="h-full w-screen">
+                <button className="flex items-center text-blue-800 border-2 border-gray-300 rounded px-3 py-1 hover:bg-gray-300">
+                  <span className="text-xl">+</span>
+                  <span>Add Skills</span>
+                </button>
+                <div className="flex flex-wrap gap-2 max-w-3xl">
+                  {skills.map((skill) => (
+                    <div
+                      key={skill}
+                      className="flex items-center px-3 py-1 bg-gray-100 rounded-full"
                     >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
+                      <span>{skill}</span>
+                      <button
+                        onClick={() => removeSkill(skill)}
+                        className="ml-2 text-gray-500 hover:text-gray-700"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -230,6 +261,33 @@ const JobInformationCompany = () => {
                 Next Step
               </button>
             </div>
+
+            <style jsx>{`
+              input[type="range"] {
+                -webkit-appearance: none;
+                pointer-events: auto;
+              }
+
+              input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: var(--thumb-size);
+                width: var(--thumb-size);
+                border-radius: 50%;
+                background: var(--thumb-color);
+                cursor: pointer;
+                pointer-events: auto;
+              }
+
+              input[type="range"]::-moz-range-thumb {
+                height: var(--thumb-size);
+                width: var(--thumb-size);
+                border-radius: 50%;
+                background: var(--thumb-color);
+                cursor: pointer;
+                border: none;
+                pointer-events: auto;
+              }
+            `}</style>
           </div>
         </div>
       </Card>
