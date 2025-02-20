@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ArrowRight,
   MapPin,
@@ -10,13 +10,59 @@ import {
   Instagram,
 } from "lucide-react";
 import SidebarUser from "../../components/Sidebar";
-import HeaderCompany from "../../components/HeaderCompany";
+import HeaderCompany from "../../components/DashboardHeader";
+import { useRouter } from "next/router";
 const UserProfile = () => {
+  const router = useRouter();
+  const { role } = router.query;
+  const [showOptions, setShowOptions] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(
+    "OPEN FOR OPPORTUNITIES"
+  );
+
+  const statuses = [
+    { label: "In-Review", color: "text-blue-500 bg-blue-100" },
+    { label: "Shortlisted", color: "text-blue-500 bg-blue-100" },
+    { label: "Interview", color: "text-white bg-blue-500" },
+    { label: "Hired / Declined", color: "text-gray-500 bg-gray-100" },
+  ];
+  const OptionOfCompanytoUser = (role) => {
+    return `{role}` !== "company" ? null : (
+      <div className="relative inline-block">
+        {/* Button */}
+        <div
+          onClick={() => setShowOptions(!showOptions)}
+          className="inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer bg-emerald-50 text-emerald-700"
+        >
+          {selectedStatus}
+        </div>
+
+        {/* Dropdown */}
+        {showOptions && (
+          <div className=" left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg flex">
+            {statuses.map((status, index) => (
+              <div
+                key={index}
+                className={`px-4 py-2 cursor-pointer ${status.color} hover:bg-gray-200`}
+                onClick={() => {
+                  setSelectedStatus(status.label);
+                  setShowOptions(false);
+                }}
+              >
+                {status.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="flex w-screen h-screen overflow-hidden p-4 font-sans">
       <SidebarUser />
       <div className="overflow-y-auto max-w-xxl p-6">
-        <HeaderCompany />
+        <HeaderCompany dashboardHeaderName={"Profile"} />
         {/* Header Section */}
         <div className="rounded-lg overflow-hidden mb-6">
           <div className="h-32 bg-gradient-to-r from-pink-200 to-purple-600"></div>
@@ -40,15 +86,14 @@ const UserProfile = () => {
                     <span>Manchester, UK</span>
                   </div>
                 </div>
-                <button className="px-4 py-2 border rounded-lg text-blue-600 hover:bg-blue-50">
-                  Edit Profile
-                </button>
+                {role !== "company" && (
+                  <button className="px-4 py-2 border rounded-lg text-blue-600 hover:bg-blue-50">
+                    Edit Profile
+                  </button>
+                )}
               </div>
-              <div className="mt-3">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-emerald-50 text-emerald-700">
-                  OPEN FOR OPPORTUNITIES
-                </span>
-              </div>
+              {/* option */}
+              <OptionOfCompanytoUser role={role} />
             </div>
           </div>
         </div>
@@ -56,9 +101,9 @@ const UserProfile = () => {
         {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Left Column */}
-          <div className="md:col-span-2 space-y-6">
+          <div className="md:col-span-2 space-y-4">
             {/* About Section */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="bg-white p-6 pt-2 rounded-lg shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">About Me</h2>
                 <ArrowRight className="w-5 h-5 text-gray-400" />

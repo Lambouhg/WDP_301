@@ -1,16 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Filter, MoreVertical, ChevronDown } from "lucide-react";
 import DasborderHeader from "../../components/HeaderCompany";
 import SidebarCompany from "../../components/SidebarCompany";
 import { useRouter } from "next/router";
+import { useUser } from "@clerk/nextjs";
 const ApplicantList = () => {
   const router = useRouter();
-  const toUserProfile = () => {
-    // const userData = { name: "John Doe", age: 25 }; // Dữ liệu bạn muốn gửi
+  const { user } = useUser();
+  const [role, setRole] = useState(null);
 
+  useEffect(() => {
+    if (user) {
+      const fetchUserRole = async () => {
+        try {
+          const response = await fetch("/api/auth/callback/route", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          const data = await response.json();
+
+          if (data.user && data.user.role) {
+            setRole(data.user.role); // Cập nhật role vào state
+            // if (data.user.role !== "company") {
+            //   router.push("/"); // Nếu không phải admin, điều hướng về trang chủ
+            // }
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+        }
+      };
+      fetchUserRole();
+    }
+  }, [user, router]);
+
+  const toUserProfile = () => {
     router.push({
       pathname: "/users/UserProfile",
-      // query: userData, // Gửi dữ liệu qua query
+      query: { role },
     });
   };
   const applicants = [
