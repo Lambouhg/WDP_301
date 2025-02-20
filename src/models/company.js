@@ -1,11 +1,10 @@
-//model/company.js
+// src/models/company.js
 import mongoose from "mongoose";
 
 const CompanySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    website: { type: String },
     location: { type: String },
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }]
@@ -14,4 +13,3 @@ const CompanySchema = new mongoose.Schema(
 );
 
 export default mongoose.models.Company || mongoose.model("Company", CompanySchema);
-
