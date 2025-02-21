@@ -3,14 +3,15 @@ import { ArrowLeft, ChevronDown, Eye, Mail } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import SidebarCompany from "../../components/SidebarCompany";
 import HeaderCompany from "../../components/HeaderCompany";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 const Analytics = () => {
 
-    const router = useRouter();
-            const JobDetails = () => {
-                router.push("/company/JobDetails");
-            }
+  const router = useRouter();
+
+  const handleNavigation = (path) => {
+    router.push(path);
+  };
     
   const viewData = [
     { date: '19 Jul', views: 350 },
@@ -54,11 +55,23 @@ const Analytics = () => {
 
       {/* Tabs */}
       <div className="border-b mb-6">
-        <div className="flex gap-8">
-          <button type="button" className="px-1 py-4 text-gray-500">Applicants</button>
-          <button type="button" className="px-1 py-4 text-gray-500" onClick={JobDetails}>Job Details</button>
-          <button type="button" className="px-1 py-4 border-b-2 border-blue-600 text-blue-600">Analytics</button>
-        </div>
+        <header className="bg-white rounded-2xl shadow-sm mb-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Settings</h1>
+
+            <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
+            <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600" 
+              onClick={() => handleNavigation("/company/ApplicantsTracking")}>
+                Applicants
+              </button>
+              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600"
+                onClick={() => handleNavigation("/company/JobDetails")}>
+                Job Details
+              </button>
+              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-white text-blue-600 shadow-sm" >
+                Analytics
+              </button>
+            </nav>
+          </header>
       </div>
 
       {/* Stats Overview */}

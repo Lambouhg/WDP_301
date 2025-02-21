@@ -80,8 +80,8 @@ const CompanySidebar = () => {
           <NavItem
             icon={<FiSettings />}
             label="Settings"
-            href="/company/settings"
-            active={router.pathname === "/company/settings"}
+            href="/company/Settings"
+            active={router.pathname === "/company/Settings"}
           />
         </nav>
       </div>

@@ -2,14 +2,16 @@ import React from 'react';
 import { ArrowLeft, MoreHorizontal, Search, ChevronDown, Filter } from 'lucide-react';
 import SidebarCompany from "../../components/SidebarCompany";
 import HeaderCompany from "../../components/HeaderCompany";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/router';
 
 const ApplicantTracking = () => {
 
   const router = useRouter();
-  const JobDetails = () => {
-    router.push("/company/JobDetails");
-  }
+
+    const handleNavigation = (path) => {
+      router.push(path);
+    };
+
   const applicants = {
     inReview: [
       { name: 'Jake Gyll', appliedDate: '13 July, 2021', score: 4.0 },
@@ -88,11 +90,23 @@ const ApplicantTracking = () => {
 
       {/* Tabs */}
       <div className="border-b mb-6">
-        <div className="flex gap-8">
-          <button className="px-1 py-4 border-b-2 border-blue-600 text-blue-600">Applicants</button>
-          <button className="px-1 py-4 text-gray-500" onClick={JobDetails}>Job Details</button>
-          <button className="px-1 py-4 text-gray-500">Analytics</button>
-        </div>
+        <header className="bg-white rounded-2xl shadow-sm mb-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Settings</h1>
+
+            <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
+              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-white text-blue-600 shadow-sm">
+                Applicants
+              </button>
+              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600"
+                onClick={() => handleNavigation("/company/JobDetails")}>
+                Job Details
+              </button>
+              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600" 
+              onClick={() => handleNavigation("/company/Analytics")}>
+                Analytics
+              </button>
+            </nav>
+          </header>
       </div>
 
       {/* Search and View Toggle */}
