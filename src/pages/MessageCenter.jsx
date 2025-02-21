@@ -15,8 +15,8 @@ const MessageCenter = () => {
         </div>
 
         {/* Nội dung tin nhắn */}
-        <div className="flex flex-row flex-1 w-full ml-1 overflow-hidden">
-          <MessageList className="flex-1 max-w-xs border-r border-gray-300 overflow-y-auto" />
+        <div className="flex flex-row flex-1 w-screen ml-1 overflow-hidden">
+          <MessageList className="flex-1 w-full border-r border-gray-300 overflow-y-auto" />
           <MessageDetail className="flex-1 overflow-y-auto" />
         </div>
       </div>

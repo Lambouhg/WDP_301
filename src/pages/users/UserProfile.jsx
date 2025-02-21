@@ -21,13 +21,17 @@ const UserProfile = () => {
   );
 
   const statuses = [
-    { label: "In-Review", color: "text-blue-500 bg-blue-100" },
+    { label: "In_Review", color: "text-blue-500 bg-blue-100" },
     { label: "Shortlisted", color: "text-blue-500 bg-blue-100" },
-    { label: "Interview", color: "text-white bg-blue-500" },
+    { label: "Interview", color: "text-blue bg-blue-500" },
     { label: "Hired / Declined", color: "text-gray-500 bg-gray-100" },
   ];
-  const OptionOfCompanytoUser = (role) => {
-    return `{role}` !== "company" ? null : (
+  const OptionOfCompanytoUser = ({ role }) => {
+    console.log(role);
+    if (role !== "company") {
+      return null;
+    }
+    return (
       <div className="relative inline-block">
         {/* Button */}
         <div
@@ -39,11 +43,11 @@ const UserProfile = () => {
 
         {/* Dropdown */}
         {showOptions && (
-          <div className=" left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg flex">
+          <div className=" left-0 mt-2 w-auto py-3 bg-white border border-gray-200 rounded-lg shadow-lg flex text-sm ">
             {statuses.map((status, index) => (
               <div
                 key={index}
-                className={`px-4 py-2 cursor-pointer ${status.color} hover:bg-gray-200`}
+                className={`px-4 mx-4 py-2 rounded-md cursor-pointer ${status.color} hover:bg-gray-200`}
                 onClick={() => {
                   setSelectedStatus(status.label);
                   setShowOptions(false);
