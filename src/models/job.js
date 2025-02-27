@@ -1,29 +1,34 @@
-//models/jobs.js
 // src/models/job.js
 import mongoose from "mongoose";
 
 const JobSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },  // Job title
+    title: { type: String, required: true },
     employmentType: { 
       type: String, 
       enum: ["Full-Time", "Part-Time", "Remote", "Internship", "Contract"], 
       required: true 
-    },  // Type of Employment
+    },
     salaryMin: { type: Number, required: true },
     salaryMax: { type: Number, required: true },
-    categories: { type: [String], required: true },  // Categories
-    requiredSkills: { type: [String], required: true },  // Required Skills
-    jobDescription: { type: String, required: true },  // Job Descriptions
-    responsibilities: { type: String, required: true },  // Responsibilities
-    whoYouAre: { type: String, required: true },  // Who You Are
-    niceToHaves: { type: String },  // Nice-To-Haves
+    categories: { type: [String], required: true },
+    requiredSkills: { type: [String], required: true },
+    jobDescription: { type: String, required: true },
+    responsibilities: { type: String, required: true },  
+    whoYouAre: { type: String, required: true },
+    niceToHaves: { type: String },
     perksAndBenefits: { 
       type: [String], 
       enum: ["Full Healthcare", "Unlimited Vacation", "Skill Development"], 
       default: [] 
-    },  // Perks and Benefits
-    companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company", required: true },  // Reference to the Company
+    },
+    status: { type: String, enum: ["Live", "Draft", "Closed"], default: "Live" },
+    datePosted: { type: Date, required: true },
+    dueDate: { type: Date, required: true },
+    jobType: { type: String, enum: ["Full-Time", "Part-Time", "Remote", "Internship", "Contract"], required: true },
+    applicants: { type: Number, default: 0 },
+    needs: { type: Number, default: 0 },
+    companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company", required: true },
   },
   { timestamps: true }
 );
