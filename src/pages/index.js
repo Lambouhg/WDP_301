@@ -8,7 +8,7 @@ import {
 } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import "./globals.css";
+
 import Footer from "../components/Footer";
 export default function Home() {
   const { user } = useUser();
