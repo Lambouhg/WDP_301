@@ -13,27 +13,36 @@ function UserTable({ users, onRoleChange }) {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr
-              key={user._id}
-              className="border-b border-gray-700 hover:bg-gray-700 transition-colors"
-            >
-              <td className="px-4 py-2 text-gray-400 truncate">{user.email}</td>
-              <td className="px-4 py-2 text-gray-400 truncate">{user.name}</td>
-              <td className="px-4 py-2 text-gray-400">{user.role}</td>
-              <td className="px-4 py-2">
-                <select
-                  value={user.role}
-                  onChange={(e) => onRoleChange(user._id, e.target.value)}
-                  className="bg-gray-700 text-gray-300 border border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500"
-                >
-                  <option value="user">User</option>
-                  <option value="company">Company</option>
-                </select>
+          {users && Array.isArray(users) ? (
+            users.map((user) => (
+              <tr
+                key={user._id}
+                className="border-b border-gray-700 hover:bg-gray-700 transition-colors"
+              >
+                <td className="px-4 py-2 text-gray-400 truncate">{user.email}</td>
+                <td className="px-4 py-2 text-gray-400 truncate">{user.name}</td>
+                <td className="px-4 py-2 text-gray-400">{user.role}</td>
+                <td className="px-4 py-2">
+                  <select
+                    value={user.role}
+                    onChange={(e) => onRoleChange(user._id, e.target.value)}
+                    className="bg-gray-700 text-gray-300 border border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="user">User</option>
+                    <option value="company">Company</option>
+                  </select>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" className="px-4 py-2 text-gray-400 text-center">
+                No users found.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
+
       </table>
     </div>
   );

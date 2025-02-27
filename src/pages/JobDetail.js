@@ -1,23 +1,26 @@
-/* eslint-disable @next/next/no-img-element */
-// import { useParams } from "next/navigation";
 import Siderbar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import JobApplicationPopup from "../components/PopupApply_user";
 import { useState } from "react";
+
 const JobDetail = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const id = useParams().id;
+
   return (
     <div className="flex min-h-screen bg-gray-100 font-sans w-full h-screen overflow-hidden">
+      {/* Sidebar */}
       <Siderbar />
 
+      {/* Main Content */}
       <div className="overflow-y-auto w-full p-6">
         <div>
+          {/* Header Section */}
           <div className="border-b-2 border-gray-200 pb-4 flex-1">
             <DashboardHeader dashboardHeaderName={"Job Detail"} />
           </div>
-          <div className="flex items-center mb-6 mx-auto bg-white p-6 rounded-lg shadow-md ">
+
+          {/* Job Header */}
+          <div className="flex items-center mb-6 mx-auto bg-white p-6 rounded-lg shadow-md">
             <img
               src="https://placehold.co/60x60"
               alt="Company logo"
@@ -26,7 +29,7 @@ const JobDetail = () => {
             <div>
               <h2 className="text-xl font-bold">Social Media Assistant</h2>
               <p className="text-gray-500">
-                Stripe • Paris, France • Full-Time
+                Stripe • Paris, France • Full&#39;Time
               </p>
             </div>
             <button
@@ -42,9 +45,12 @@ const JobDetail = () => {
           </div>
         </div>
 
+        {/* Job Details */}
         <div className="flex p-8 space-y-8 text-base">
+          {/* Left Column */}
           <div>
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+              {/* Description */}
               <div className="mb-6">
                 <h3 className="text-2xl font-semibold mb-2">Description</h3>
                 <p className="text-gray-700">
@@ -55,6 +61,8 @@ const JobDetail = () => {
                   others to engage on our channels.
                 </p>
               </div>
+
+              {/* Responsibilities */}
               <div className="mb-6">
                 <h3 className="text-2xl font-semibold mb-2">
                   Responsibilities
@@ -75,6 +83,8 @@ const JobDetail = () => {
                   <li>Engage with online communities</li>
                 </ul>
               </div>
+
+              {/* Who You Are */}
               <div className="mb-6">
                 <h3 className="text-2xl font-semibold mb-2">Who You Are</h3>
                 <ul className="list-disc list-inside text-gray-700">
@@ -89,12 +99,14 @@ const JobDetail = () => {
                     You are a confident office manager, ready for added
                     responsibilities
                   </li>
-                  <li>You're detail-oriented and creative</li>
+                  <li>You&#39;re detail-oriented and creative</li>
                   <li>
-                    You're a growth marketer and know how to run campaigns
+                    You&#39;re a growth marketer and know how to run campaigns
                   </li>
                 </ul>
               </div>
+
+              {/* Nice-To-Haves */}
               <div>
                 <h3 className="text-2xl font-semibold mb-2">Nice-To-Haves</h3>
                 <ul className="list-disc list-inside text-gray-700">
@@ -105,13 +117,15 @@ const JobDetail = () => {
               </div>
             </div>
           </div>
+
+          {/* Right Column */}
           <div className="ml-4">
+            {/* About this Role */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-lg font-semibold mb-4">About this role</h3>
               <div className="mb-4">
                 <p className="text-gray-700">
-                  <span className="font-semibold">5 applied</span> of 10
-                  capacity
+                  <span className="font-semibold">5 applied</span> of 10 capacity
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
                   <div
@@ -134,7 +148,7 @@ const JobDetail = () => {
               </div>
               <div className="mb-4">
                 <p className="text-gray-700">
-                  <span className="font-semibold">Job Type:</span> Full-Time
+                  <span className="font-semibold">Job Type:</span> Full&#39;Time
                 </p>
               </div>
               <div>
@@ -143,6 +157,8 @@ const JobDetail = () => {
                 </p>
               </div>
             </div>
+
+            {/* Categories */}
             <div className="bg-white p-4 rounded-lg shadow-md mt-6">
               <h3 className="text-lg font-semibold mb-4">Categories</h3>
               <div className="flex space-x-2">
@@ -154,6 +170,8 @@ const JobDetail = () => {
                 </span>
               </div>
             </div>
+
+            {/* Required Skills */}
             <div className="bg-white p-2 rounded-lg shadow-md mt-6">
               <h3 className="text-lg font-semibold mb-4">Required Skills</h3>
               <div className="flex flex-wrap space-x-2">

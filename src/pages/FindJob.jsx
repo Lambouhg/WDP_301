@@ -9,7 +9,7 @@ import {
 } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import "./globals.css";
+
 import Footer from "../components/Footer";
 import ListJobSearched from "../components/ListJobSearched";
 
