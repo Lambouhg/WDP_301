@@ -13,6 +13,7 @@ import Footer from "../components/Footer";
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
+
   useEffect(() => {
     if (user) {
       const saveUserToDatabase = async () => {
@@ -21,23 +22,31 @@ export default function Home() {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           });
+
           const data = await response.json();
           console.log("User info saved:", data);
 
-          if (data.user && data.user.role === "admin") {
-            router.push("/admin/admdashboard");
-          } else if (data.user.role === "company") {
-            router.push("/company/companydashboard");
-          } else {
-            router.push("/");
+          if (data.user) {
+            // 🛑 Lưu user vào localStorage hoặc sessionStorage
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            // Điều hướng dựa trên role
+            if (data.user.role === "admin") {
+              router.push("/admin/admdashboard");
+            } else if (data.user.role === "company") {
+              router.push("/company/companydashboard");
+            } else {
+              router.push("/");
+            }
           }
         } catch (error) {
           console.error("Error saving user to database:", error);
         }
       };
+
       saveUserToDatabase();
     }
-  }, [user, router]); // Đóng useEffect đúng cách
+  }, [user, router]);; // Đóng useEffect đúng cách
 
   const dashboard = () => {
     if (user) {
