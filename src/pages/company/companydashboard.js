@@ -62,8 +62,6 @@ export default function CompanyDashboard() {
     },
   };
 
-  console.log(jobOpenAndApplicantsSummary);
-
   // Dữ liệu cho Job Updates
   const jobUpdates = [
     {
