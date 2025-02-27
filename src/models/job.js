@@ -10,7 +10,8 @@ const JobSchema = new mongoose.Schema(
       enum: ["Full-Time", "Part-Time", "Remote", "Internship", "Contract"], 
       required: true 
     },  // Type of Employment
-    salary: { type: Number, required: true },  // Salary
+    salaryMin: { type: Number, required: true },
+    salaryMax: { type: Number, required: true },
     categories: { type: [String], required: true },  // Categories
     requiredSkills: { type: [String], required: true },  // Required Skills
     jobDescription: { type: String, required: true },  // Job Descriptions
