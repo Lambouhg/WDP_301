@@ -28,9 +28,14 @@ const JobListingPage = () => {
     fetchJobs();
   }, []);
 
-  const goToApplicants = () => {
-    router.push("/company/ApplicantsTracking");
+  const goToApplicants = (job) => {
+    if (!job || !job._id) {
+      console.error("Job data is missing:", job);
+      return;
+    }
+    router.push(`/company/JobDetails?job_id=${job._id}`);
   };
+
 
   return (
     <div className="mx-auto h-screen w-screen flex overflow-hidden">
@@ -77,7 +82,8 @@ const JobListingPage = () => {
               </thead>
               <tbody>
                 {jobs.map((job, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50 cursor-pointer" onClick={goToApplicants}>
+                  <tr key={job._id} className="border-b hover:bg-gray-50 cursor-pointer" onClick={() => goToApplicants(job)}>
+
                     <td className="p-4">{job.title}</td>
                     <td className="p-4">
                       <span className="px-3 py-1 text-green-600 bg-green-100 rounded-full text-sm">
