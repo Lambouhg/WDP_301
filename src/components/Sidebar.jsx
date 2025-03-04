@@ -60,8 +60,8 @@ const Sidebar = () => {
           <NavItem
             icon={<FiMessageSquare />}
             label="Messages"
-            href="/MessageCenter"
-            active={router.pathname === "/MessageCenter"}
+            href="/messages/MessageCenter"
+            active={router.pathname === "/messages/MessageCenter"}
           />
           <NavItem
             icon={<FiBriefcase />}
