@@ -45,13 +45,13 @@ const CompanySidebar = () => {
             icon={<FiHome />}
             label="Dashboard"
             href="/company/companydashboard"
-            active={router.pathname === "/company/dashboard"}
+            active={router.pathname === "/company/companydashboard"}
           />
           <NavItem
             icon={<FiMessageSquare />}
             label="Messages"
             href="/company/companymessage"
-            active={router.pathname === "/company/message"}
+            active={router.pathname === "/company/companymessage"}
           />
           <NavItem
             icon={<FiUser />}

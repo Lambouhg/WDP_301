@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "../../components/SidebarCompany";
+import Sidebar from "../../components/Sidebar";
 import MessageList from "../../components/MessageList";
 import MessageDetail from "../../components/MessageDetail";
 import DashboardHeader from "../../components/DashboardHeader";
