@@ -38,7 +38,7 @@ const MessageCenter = () => {
             user={user}
           />
           <MessageDetail
-            className="flex-1 overflow-y-auto"
+            className="flex-1 overflow-y-auto w-full"
             conversation={selectedConversation}
             user={user}
           />

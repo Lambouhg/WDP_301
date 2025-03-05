@@ -119,9 +119,11 @@ const MessageDetail = ({ conversation, user }) => {
       </div>
     );
   }
-
+  if (!conversation || !conversation.users) {
+    return <div>Select a conversation to view messages</div>;
+  }
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full p-5" style={{ width: "50%" }}>
       <div className="h-auto">
         {loadingRecipient ? (
           <p className="text-gray-500 text-center py-2">Loading recipient...</p>
@@ -135,7 +137,7 @@ const MessageDetail = ({ conversation, user }) => {
           <p className="text-gray-500">Loading messages...</p>
         </div>
       ) : (
-        <div className="flex flex-col flex-1 justify-between gap-4 px-4 pb-4 overflow-y-auto">
+        <div className="w-full flex flex-col flex-1 justify-between gap-4 px-4 pb-4 overflow-y-auto">
           <MessageContent
             messages={messages}
             userEmail={userEmail}
