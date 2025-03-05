@@ -11,6 +11,36 @@ import HeaderCompany from "../../components/HeaderCompany";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import {PlusCircle, Trash2} from "lucide-react"
+import { toast } from "react-hot-toast";
+
+// Thêm constant cho danh sách platforms
+const SOCIAL_PLATFORMS = {
+  instagram: {
+    name: 'Instagram',
+    icon: <FaInstagram className="w-5 h-5 text-pink-600" />,
+    placeholder: 'https://instagram.com/your-profile'
+  },
+  twitter: {
+    name: 'Twitter',
+    icon: <FaTwitter className="w-5 h-5 text-blue-500" />,
+    placeholder: 'https://twitter.com/your-profile'
+  },
+  facebook: {
+    name: 'Facebook',
+    icon: <FaFacebook className="w-5 h-5 text-blue-700" />,
+    placeholder: 'https://facebook.com/your-profile'
+  },
+  linkedin: {
+    name: 'LinkedIn',
+    icon: <FaLinkedin className="w-5 h-5 text-blue-800" />,
+    placeholder: 'https://linkedin.com/company/your-company'
+  },
+  youtube: {
+    name: 'YouTube',
+    icon: <FaYoutube className="w-5 h-5 text-red-600" />,
+    placeholder: 'https://youtube.com/c/your-channel'
+  }
+};
 
 const SocialsLink = () => {
   const { user } = useUser();
@@ -19,6 +49,7 @@ const SocialsLink = () => {
   const [newPlatform, setNewPlatform] = useState("");
   const [newUrl, setNewUrl] = useState("");
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch dữ liệu công ty từ API
   useEffect(() => {
@@ -38,10 +69,10 @@ const SocialsLink = () => {
         const data = await response.json();
         setCompany(data);
 
-        // Chuyển đổi socialLinks từ object sang array
-        const linksArray = Object.entries(data.socialLinks || {}).map(
-          ([platform, url]) => ({ platform, url })
-        );
+        // Chỉ lấy những social links có giá trị (không null)
+        const linksArray = Object.entries(data.socialLinks || {})
+          .filter(([_, url]) => url !== null && url !== '')
+          .map(([platform, url]) => ({ platform, url }));
         setSocialLinks(linksArray);
       } catch (error) {
         console.error("Error fetching company data:", error);
@@ -71,51 +102,86 @@ const SocialsLink = () => {
     }
   };
 
-  // Xử lý thêm liên kết mới
-  const addSocialLink = () => {
-    if (newPlatform && newUrl) {
-      const newLink = { platform: newPlatform, url: newUrl };
-      setSocialLinks((prev) => [...prev, newLink]);
-      setNewPlatform("");
-      setNewUrl("");
+  // Sửa lại hàm addSocialLink để sử dụng tên platform từ SOCIAL_PLATFORMS
+  const addSocialLink = async () => {
+    if (!newPlatform || !newUrl || !company._id) return;
+    setIsLoading(true);
 
-      // Gọi API để cập nhật dữ liệu lên MongoDB
-      updateSocialLinks([...socialLinks, newLink]);
-    }
-  };
-
-  // Xử lý xóa liên kết
-  const removeSocialLink = (index) => {
-    const updatedLinks = socialLinks.filter((_, i) => i !== index);
-    setSocialLinks(updatedLinks);
-
-    // Gọi API để cập nhật dữ liệu lên MongoDB
-    updateSocialLinks(updatedLinks);
-  };
-
-  // Hàm cập nhật socialLinks lên MongoDB
-  const updateSocialLinks = async (updatedLinks) => {
     try {
+      const platformName = SOCIAL_PLATFORMS[newPlatform].name;
+      
+      // Tạo object mới cho socialLinks
+      const updatedSocialLinks = {
+        ...company.socialLinks,
+        [newPlatform]: newUrl
+      };
+
       const response = await fetch(`/api/company/${company._id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          socialLinks: updatedLinks.reduce((acc, { platform, url }) => {
-            acc[platform.toLowerCase()] = url;
-            return acc;
-          }, {}),
+          socialLinks: updatedSocialLinks
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update social links");
+        throw new Error('Failed to update social links');
       }
 
-      console.log("Social links updated successfully");
+      // Cập nhật state local
+      setSocialLinks(prev => [...prev, { platform: platformName, url: newUrl }]);
+      
+      // Reset form
+      setNewPlatform('');
+      setNewUrl('');
+
+      toast.success('Social link added successfully!');
+
     } catch (error) {
-      console.error("Error updating social links:", error);
+      console.error('Error adding social link:', error);
+      toast.error('Failed to add social link');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Sửa lại hàm removeSocialLink để cập nhật trực tiếp vào database
+  const removeSocialLink = async (index) => {
+    try {
+      const linkToRemove = socialLinks[index];
+      
+      // Tạo object mới cho socialLinks, set giá trị về null
+      const updatedSocialLinks = {
+        ...company.socialLinks,
+        [linkToRemove.platform.toLowerCase()]: null
+      };
+
+      // Gọi API để cập nhật
+      const response = await fetch(`/api/company/${company._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          socialLinks: updatedSocialLinks
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to remove social link');
+      }
+
+      // Cập nhật state local
+      setSocialLinks(prev => prev.filter((_, i) => i !== index));
+      
+      // Hiển thị thông báo thành công
+      toast.success('Social link removed successfully!');
+
+    } catch (error) {
+      console.error('Error removing social link:', error);
+      toast.error('Failed to remove social link');
     }
   };
 
@@ -130,7 +196,7 @@ const SocialsLink = () => {
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
               SOCIAL MEDIA LINKS
             </h1>
-            <p className="text-gray-500">Manage your company’s social media presence</p>
+            <p className="text-gray-500">Manage your company's social media presence</p>
             <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
               <button
                 className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600"
@@ -182,26 +248,57 @@ const SocialsLink = () => {
 
               {/* Add New Social Link */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-xl border">
-                <input
-                  type="text"
+                <select
                   value={newPlatform}
                   onChange={(e) => setNewPlatform(e.target.value)}
-                  placeholder="Platform (e.g. LinkedIn)"
                   className="px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
+                  disabled={isLoading}
+                >
+                  <option value="">Select Platform</option>
+                  {Object.entries(SOCIAL_PLATFORMS).map(([key, platform]) => {
+                    // Kiểm tra xem platform này đã có trong socialLinks chưa
+                    const isExisting = socialLinks.some(
+                      link => link.platform.toLowerCase() === key.toLowerCase()
+                    );
+                    
+                    // Chỉ hiển thị option nếu platform chưa được thêm
+                    if (!isExisting) {
+                      return (
+                        <option key={key} value={key}>
+                          {platform.name}
+                        </option>
+                      );
+                    }
+                    return null;
+                  })}
+                </select>
+
                 <input
                   type="url"
                   value={newUrl}
                   onChange={(e) => setNewUrl(e.target.value)}
-                  placeholder="URL (e.g. https://linkedin.com/company)"
+                  placeholder={
+                    newPlatform 
+                      ? SOCIAL_PLATFORMS[newPlatform]?.placeholder 
+                      : "Enter URL"
+                  }
                   className="px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  disabled={isLoading}
                 />
+
                 <button
                   onClick={addSocialLink}
-                  className="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center"
+                  disabled={!newPlatform || !newUrl || isLoading}
+                  className="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  <PlusCircle className="w-5 h-5 mr-2" />
-                  Add Link
+                  {isLoading ? (
+                    'Adding...'
+                  ) : (
+                    <>
+                      <PlusCircle className="w-5 h-5 mr-2" />
+                      Add Link
+                    </>
+                  )}
                 </button>
               </div>
             </div>

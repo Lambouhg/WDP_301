@@ -19,6 +19,7 @@ import { useUser } from "@clerk/nextjs";
 const Settings = () => {
   const { user } = useUser();
   const [company, setCompany] = useState(null);
+  const [newTech, setNewTech] = useState('');
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -142,6 +143,68 @@ const Settings = () => {
     } catch (error) {
       console.error("Error deleting company:", error);
       toast.error("An error occurred while deleting the company.");
+    }
+  };
+
+  // Thêm hàm xử lý thêm tech stack mới
+  const handleAddTech = async () => {
+    if (!newTech.trim() || !company._id) return;
+
+    try {
+      // Tạo mảng tech stack mới
+      const updatedTechStack = [...(company.techStack || []), newTech.trim()];
+      
+      // Gọi API để cập nhật
+      const response = await fetch(`/api/company/${company._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          techStack: updatedTechStack
+        }),
+      });
+
+      if (response.ok) {
+        // Cập nhật state local
+        handleInputChange('techStack', updatedTechStack);
+        setNewTech(''); // Reset input
+        toast.success('Technology added successfully!');
+      } else {
+        toast.error('Failed to add technology');
+      }
+    } catch (error) {
+      console.error('Error adding technology:', error);
+      toast.error('An error occurred while adding technology');
+    }
+  };
+
+  // Thêm hàm xử lý xóa tech stack
+  const handleRemoveTech = async (techToRemove) => {
+    if (!company._id) return;
+
+    try {
+      const updatedTechStack = company.techStack.filter(tech => tech !== techToRemove);
+      
+      const response = await fetch(`/api/company/${company._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          techStack: updatedTechStack
+        }),
+      });
+
+      if (response.ok) {
+        handleInputChange('techStack', updatedTechStack);
+        toast.success('Technology removed successfully!');
+      } else {
+        toast.error('Failed to remove technology');
+      }
+    } catch (error) {
+      console.error('Error removing technology:', error);
+      toast.error('An error occurred while removing technology');
     }
   };
 
@@ -407,17 +470,30 @@ const Settings = () => {
                           <button
                             type="button"
                             className="ml-2 text-purple-400 hover:text-purple-600"
+                            onClick={() => handleRemoveTech(tech)}
                           >
                             ×
                           </button>
                         </span>
                       ))}
                     </div>
-                    <input
-                      type="text"
-                      className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Add technology"
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newTech}
+                        onChange={(e) => setNewTech(e.target.value)}
+                        className="flex-1 px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Add technology"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddTech}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-400"
+                        disabled={!newTech.trim()}
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </div>
               </section>
