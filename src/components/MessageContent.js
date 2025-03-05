@@ -1,7 +1,6 @@
 import React from "react";
 
 const MessageContent = ({ messages, userEmail, endOfMessagesRef }) => {
-  console.log("messages", messages);
   if (!messages || messages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1">

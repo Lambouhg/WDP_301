@@ -112,7 +112,7 @@ const MessageList = ({
               <MessageListItem
                 key={conversation.id}
                 id={conversation.id}
-                name={otherUser || "Unknown"}
+                name={otherUser || "Unknown"} // Ensure a string or fallback
                 time={
                   conversationData.lastMessageTime
                     ? new Date(

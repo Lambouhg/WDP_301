@@ -1,8 +1,15 @@
 import React from "react";
 
 const MessageListItem = ({ id, name, time, preview, active, onClick }) => {
-  // Extract first letter of name for avatar
-  const firstLetter = name.charAt(0).toUpperCase();
+  // Safely get the first letter, handling different input types
+  const firstLetter =
+    typeof name === "string" ? name.charAt(0).toUpperCase() : "?";
+
+  // Convert name to a string, with a fallback
+  const displayName =
+    typeof name === "string"
+      ? name
+      : name?.email || name?.toString() || "Unknown";
 
   return (
     <div
@@ -11,12 +18,9 @@ const MessageListItem = ({ id, name, time, preview, active, onClick }) => {
       }`}
       onClick={onClick}
     >
-      <div className="h-12 w-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-        {firstLetter}
-      </div>
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="flex justify-between items-center">
-          <h3 className="font-medium">{name}</h3>
+          <h3 className="font-medium">{displayName}</h3>
           <span className="text-xs text-gray-500">{time}</span>
         </div>
         <p className="text-sm text-gray-600 truncate">{preview}</p>
@@ -24,5 +28,4 @@ const MessageListItem = ({ id, name, time, preview, active, onClick }) => {
     </div>
   );
 };
-
 export default MessageListItem;
