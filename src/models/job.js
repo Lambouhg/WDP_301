@@ -4,11 +4,6 @@ import mongoose from "mongoose";
 const JobSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    employmentType: { 
-      type: String, 
-      enum: ["Full-Time", "Part-Time", "Remote", "Internship", "Contract"], 
-      required: true 
-    },
     salaryMin: { type: Number, required: true },
     salaryMax: { type: Number, required: true },
     categories: { type: [String], required: true },
