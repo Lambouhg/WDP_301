@@ -3,12 +3,11 @@ import { ArrowLeft, ChevronDown } from "lucide-react";
 import SidebarCompany from "../../components/SidebarCompany";
 import HeaderCompany from "../../components/HeaderCompany";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 const JobDetails = () => {
   const router = useRouter();
   const { job_id } = router.query; // Lấy job_id từ URL
-
+  const { showModal } = useState();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
