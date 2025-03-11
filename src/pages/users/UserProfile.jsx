@@ -12,6 +12,7 @@ import {
 import SidebarUser from "../../components/Sidebar";
 import HeaderCompany from "../../components/DashboardHeader";
 import { useRouter } from "next/router";
+
 const UserProfile = () => {
   const router = useRouter();
   const { role } = router.query;
@@ -19,6 +20,23 @@ const UserProfile = () => {
   const [selectedStatus, setSelectedStatus] = useState(
     "OPEN FOR OPPORTUNITIES"
   );
+
+  // State để quản lý chế độ chỉnh sửa
+  const [isEditing, setIsEditing] = useState(false);
+
+  // State cho dữ liệu người dùng
+  const [name, setName] = useState("Jake Gyll");
+  const [title, setTitle] = useState("Product Designer at Twitter");
+  const [location, setLocation] = useState("Manchester, UK");
+  const [aboutMe, setAboutMe] = useState(
+    "I'm a product designer - filmmaker currently working remotely at Twitter from beautiful Manchester, United Kingdom. I'm passionate about designing digital products that have a positive impact on the world."
+  );
+  const [email, setEmail] = useState("jakegyll@email.com");
+  const [phone, setPhone] = useState("+44 1245 572 135");
+  const [languages, setLanguages] = useState("English, French");
+  const [instagram, setInstagram] = useState("instagram.com/jakegyll");
+  const [twitter, setTwitter] = useState("twitter.com/jakegyll");
+  const [website, setWebsite] = useState("www.jakegyll.com");
 
   const statuses = [
     { label: "In_Review", color: "text-blue-500 bg-blue-100" },
@@ -62,6 +80,21 @@ const UserProfile = () => {
     );
   };
 
+  // Hàm xử lý khi nhấn nút Edit/Save/Cancel
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    // TODO: Lưu các thay đổi (ví dụ: gửi đến API)
+    setIsEditing(false);
+  };
+
+  const handleCancelClick = () => {
+    // Reset state về giá trị ban đầu (nếu cần)
+    setIsEditing(false);
+  };
+
   return (
     <div className="flex w-screen h-screen overflow-hidden p-4 font-sans">
       <SidebarUser />
@@ -81,19 +114,65 @@ const UserProfile = () => {
             <div className="mt-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <h1 className="text-xl font-bold">Jake Gyll</h1>
-                  <p className="text-gray-600 text-sm">
-                    Product Designer at Twitter
-                  </p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="text-xl font-bold border rounded-md p-1"
+                    />
+                  ) : (
+                    <h1 className="text-xl font-bold">{name}</h1>
+                  )}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="text-gray-600 text-sm border rounded-md p-1"
+                    />
+                  ) : (
+                    <p className="text-gray-600 text-sm">{title}</p>
+                  )}
                   <div className="flex items-center text-gray-600 text-sm mt-1">
                     <MapPin className="w-4 h-4 mr-1" />
-                    <span>Manchester, UK</span>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="border rounded-md p-1"
+                      />
+                    ) : (
+                      <span>{location}</span>
+                    )}
                   </div>
                 </div>
                 {role !== "company" && (
-                  <button className="px-4 py-2 border rounded-lg text-blue-600 hover:bg-blue-50">
-                    Edit Profile
-                  </button>
+                  // Thay đổi nút dựa trên trạng thái chỉnh sửa
+                  isEditing ? (
+                    <div>
+                      <button
+                        onClick={handleSaveClick}
+                        className="px-4 py-2 border rounded-lg text-green-600 hover:bg-green-50 mr-2"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={handleCancelClick}
+                        className="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleEditClick}
+                      className="px-4 py-2 border rounded-lg text-blue-600 hover:bg-blue-50"
+                    >
+                      Edit Profile
+                    </button>
+                  )
                 )}
               </div>
               {/* option */}
@@ -112,12 +191,16 @@ const UserProfile = () => {
                 <h2 className="text-lg font-semibold">About Me</h2>
                 <ArrowRight className="w-5 h-5 text-gray-400" />
               </div>
-              <p className="text-gray-600 text-sm">
-                I'm a product designer - filmmaker currently working remotely at
-                Twitter from beautiful Manchester, United Kingdom. I'm
-                passionate about designing digital products that have a positive
-                impact on the world.
-              </p>
+              {isEditing ? (
+                <textarea
+                  value={aboutMe}
+                  onChange={(e) => setAboutMe(e.target.value)}
+                  className="text-gray-600 text-sm border rounded-md p-1 w-full"
+                  rows="4"
+                />
+              ) : (
+                <p className="text-gray-600 text-sm">{aboutMe}</p>
+              )}
               <p className="text-gray-600 text-sm mt-4">
                 For 10 years, I've specialised in interface, experience &
                 interaction design as well as working in user research and
@@ -125,7 +208,6 @@ const UserProfile = () => {
                 start-ups.
               </p>
             </div>
-
             {/* Experience Section */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="flex justify-between items-center mb-4">
@@ -212,7 +294,6 @@ const UserProfile = () => {
                   <ArrowRight className="w-5 h-5 text-gray-400" />
                 </div>
               </div>
-
               {/* Toronto Education */}
               <div className="mb-4">
                 <div className="flex items-start justify-between">
@@ -280,19 +361,43 @@ const UserProfile = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-gray-600">
-                    jakegyll@email.com
-                  </span>
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="border rounded-md p-1 text-gray-700"
+                      disabled={true}
+                    />
+                  ) : (
+                    <span className="text-sm text-gray-700">{email}</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-gray-600">
-                    +44 1245 572 135
-                  </span>
+                  {isEditing ? (
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="border rounded-md p-1"
+                    />
+                  ) : (
+                    <span className="text-sm text-gray-600">{phone}</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <Globe className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-gray-600">English, French</span>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={languages}
+                      onChange={(e) => setLanguages(e.target.value)}
+                      className="border rounded-md p-1"
+                    />
+                  ) : (
+                    <span className="text-sm text-gray-600">{languages}</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -306,21 +411,42 @@ const UserProfile = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Instagram className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-blue-600">
-                    instagram.com/jakegyll
-                  </span>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={instagram}
+                      onChange={(e) => setInstagram(e.target.value)}
+                      className="border rounded-md p-1"
+                    />
+                  ) : (
+                    <span className="text-sm text-blue-600">{instagram}</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <Twitter className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-blue-600">
-                    twitter.com/jakegyll
-                  </span>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={twitter}
+                      onChange={(e) => setTwitter(e.target.value)}
+                      className="border rounded-md p-1"
+                    />
+                  ) : (
+                    <span className="text-sm text-blue-600">{twitter}</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <Globe className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-blue-600">
-                    www.jakegyll.com
-                  </span>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      className="border rounded-md p-1"
+                    />
+                  ) : (
+                    <span className="text-sm text-blue-600">{website}</span>
+                  )}
                 </div>
               </div>
             </div>
