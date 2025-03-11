@@ -33,8 +33,8 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const {
-        title, 
-        jobType, 
+        title,
+        jobType,
         salaryMin,
         salaryMax,
         categories = [],
@@ -47,44 +47,44 @@ export default async function handler(req, res) {
         dueDate,
         needs = 0
       } = req.body;
-  
+
       // Kiểm tra dữ liệu đầu vào
       if (!title || !jobType || !salaryMin || !salaryMax || !requiredSkills.length || !jobDescription || !responsibilities || !whoYouAre || !dueDate) {
         return res.status(400).json({ message: "Missing required fields" });
       }
-  
+
       if (!["Full-Time", "Part-Time", "Remote", "Internship", "Contract"].includes(jobType)) {
         return res.status(400).json({ message: "Invalid jobType" });
       }
-  
+
       if (!Array.isArray(categories) || categories.length === 0) {
         return res.status(400).json({ message: "Categories must be a non-empty array" });
       }
-  
+
       // Kiểm tra danh sách benefits hợp lệ
       const validPerks = ["Full Healthcare", "Unlimited Vacation", "Skill Development"];
       if (!perksAndBenefits.every(perk => validPerks.includes(perk))) {
         return res.status(400).json({ message: "Invalid perksAndBenefits values" });
       }
-  
+
       // Chuyển đổi salaryMin & salaryMax thành số
       const salaryMinNum = Number(salaryMin);
       const salaryMaxNum = Number(salaryMax);
       if (isNaN(salaryMinNum) || isNaN(salaryMaxNum)) {
         return res.status(400).json({ message: "Salary must be a valid number" });
       }
-  
+
       if (salaryMinNum > salaryMaxNum) {
         return res.status(400).json({ message: "salaryMin must be less than or equal to salaryMax" });
       }
-  
+
       // Kiểm tra dueDate hợp lệ
       const currentDate = new Date();
       const dueDateObj = new Date(dueDate);
       if (isNaN(dueDateObj.getTime()) || dueDateObj <= currentDate) {
         return res.status(400).json({ message: "dueDate must be a valid future date" });
       }
-  
+
       // Tạo job mới
       const newJob = new Job({
         title,
@@ -105,14 +105,14 @@ export default async function handler(req, res) {
         needs: needs || 0,
         companyId: user.companyId
       });
-  
+
       await newJob.save();
       return res.status(201).json({ message: "Job created successfully", job: newJob });
     } catch (error) {
       return res.status(500).json({ message: "Server error", error: error.message });
     }
   }
-  
+
 
   if (req.method === "PUT") {
     try {
