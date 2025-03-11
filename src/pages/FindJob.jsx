@@ -14,10 +14,21 @@ import Footer from "../components/Footer";
 import ListJobSearched from "../components/ListJobSearched";
 
 export default function SearchJob() {
+  const { user } = useUser();
   const router = useRouter();
+
   const toDashboard = () => {
-    router.push("/index");
+    router.push("/");
   };
+
+  const dashboard = () => {
+    if (user) {
+      router.push("users/dashboard");
+    } else {
+      document.querySelector('[data-clerk-sign-in-button]').click();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0F0F1A] text-white p-6">
       {/* Header */}
@@ -32,25 +43,31 @@ export default function SearchJob() {
             Job Finder
           </span>
           <span
-            className="text-1xl pl-9 cursor-pointer"
-            onClick={() => router.push("/SearchJob")}
+            className="text-1xl pl-2 cursor-pointer pt-3"
+            onClick={() => router.push("/FindJob")}
           >
             Find Jobs
           </span>
           <span
-            className="text-1xl pl-2 cursor-pointer"
+            className="text-1xl pl-2 cursor-pointer pt-3"
             onClick={() => router.push("/company/companydashboard")}
           >
             Browse Companies
           </span>
         </div>
         <div className="flex items-center space-x-4">
+          <span
+            className="text-1xl cursor-pointer pt-3"
+            onClick={dashboard}
+          >
+            Dashboard
+          </span>
           <SignedIn>
             <UserButton />
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 px-4 py-2 rounded-lg">
+              <button className="bg-blue-600 px-4 py-2 rounded-lg" data-clerk-sign-in-button>
                 Sign In
               </button>
             </SignInButton>

@@ -33,8 +33,6 @@ export default function Home() {
             // Điều hướng dựa trên role
             if (data.user.role === "admin") {
               router.push("/admin/admdashboard");
-            } else if (data.user.role === "company") {
-              router.push("/company/companydashboard");
             } else {
               router.push("/");
             }
@@ -49,10 +47,18 @@ export default function Home() {
   }, [user, router]);; // Đóng useEffect đúng cách
 
   const dashboard = () => {
-    if (user) {
-      router.push("users/dashboard");
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      const userFromStorage = JSON.parse(savedUser);
+      const role = userFromStorage.role;
+      if (role === "user") {
+        router.push("/users/dashboard");
+      } else if (role === "company") {
+        router.push("/company/companydashboard");
+      }
+      console.log("User role:", role);
     } else {
-      router.push("/sign-in");
+      document.querySelector('[data-clerk-sign-in-button]').click();
     }
   };
 
@@ -112,27 +118,33 @@ export default function Home() {
           <span
             className="font-bold text-3xl"
             style={{ cursor: "pointer" }}
-            onClick={dashboard}
+            onClick={() => router.push("/")}
           >
             Job Finder
           </span>
-          <span className="text-1xl pl-9 cursor-pointer" onClick={toUserSearch}>
+          <span className="text-1xl pl-2 pt-3 cursor-pointer" onClick={toUserSearch}>
             Find Jobs
           </span>
           <span
-            className="text-1xl pl-2 cursor-pointer"
+            className="text-1xl pl-2  pt-3 cursor-pointer"
             onClick={() => router.push("/company/companydashboard")}
           >
             Browse Companies
           </span>
         </div>
         <div className="flex items-center space-x-4">
+          <span
+            className="text-1xl pt-3 cursor-pointer"
+            onClick={dashboard}
+          >
+            Dashboard
+          </span>
           <SignedIn>
             <UserButton />
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 px-4 py-2 rounded-lg">
+              <button className="bg-blue-600 px-4 py-2 rounded-lg" data-clerk-sign-in-button>
                 Sign In
               </button>
             </SignInButton>
