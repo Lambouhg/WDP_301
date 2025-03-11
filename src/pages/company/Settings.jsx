@@ -32,7 +32,8 @@ const Settings = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch company data");
+          console.error("Failed to fetch company data");
+          return;
         }
 
         const data = await response.json();
@@ -98,8 +99,8 @@ const Settings = () => {
       return;
     }
 
-    const confirmDelete = window.confirm("Do you want to update this company?");
-    if (!confirmDelete) return;
+    const confirmUpdate = window.confirm("Do you want to update this company?");
+    if (!confirmUpdate) return;
 
     try {
       const response = await fetch(`/api/company/${company._id}`, {
@@ -108,10 +109,11 @@ const Settings = () => {
       });
 
       if (response.ok) {
-        toast.success("Delete company successfully!");
+        toast.success("Update company successfully!");
       } else {
         const data = await response.json();
-        toast.error(data.message || "Delete company failed.");
+        toast.error(data.message || "Update company failed.");
+        setCompany(updatedCompany)
       }
     } catch (error) {
       console.error("Error deleting company:", error);
@@ -136,6 +138,7 @@ const Settings = () => {
 
       if (response.ok) {
         toast.success("Delete company successfully!");
+        router.push("/company/companydashboard");
       } else {
         const data = await response.json();
         toast.error(data.message || "Delete company failed.");
@@ -330,7 +333,7 @@ const Settings = () => {
                     />
                   ) : (
                     // Nếu không có logo, hiển thị placeholder
-                    <span className="text-white text-3xl font-bold">+</span>
+                    <span className="text-black text-3xl font-bold">+</span>
                   )}
 
                   <div className="flex-1">
