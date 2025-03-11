@@ -1,6 +1,7 @@
 import connectDB from "../../../lib/mongodb";
 import Job from "../../../models/job";
 import User from "../../../models/User";
+import company from "../../../models/company";
 import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(req, res) {
@@ -16,6 +17,22 @@ export default async function handler(req, res) {
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
+
+  if (req.method === "GET") {
+    const { all } = req.query; // Kiểm tra query parameter
+
+    if (all === "true") {
+      try {
+        const jobs = await Job.find({ status: "Live" }) // Chỉ lấy công việc đang tuyển dụng
+          .populate("companyId", "name location"); // Lấy thêm thông tin công ty (nếu cần)
+
+        return res.status(200).json(jobs);
+      } catch (error) {
+        return res.status(500).json({ message: "Error fetching all jobs", error: error.message });
+      }
+    }
+  }
+
 
   if (!user.companyId) {
     return res.status(403).json({ message: "You must be a company owner to manage jobs" });
