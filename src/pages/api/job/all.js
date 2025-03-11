@@ -1,3 +1,4 @@
+// src/pages/api/job/all.js
 import connectDB from "../../../lib/mongodb";
 import Job from "../../../models/job";
 import "../../../models/company";
@@ -11,8 +12,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Lấy query params: page & limit (nếu không có thì mặc định)
-        let { page = 1, limit = 10 } = req.query;
+        let { page = 1, limit = 10, jobType } = req.query;
         page = parseInt(page);
         limit = parseInt(limit);
 
@@ -20,15 +20,23 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: "Invalid page or limit" });
         }
 
-        // Đếm tổng số công việc
-        const totalJobs = await Job.countDocuments({ status: "Live" });
+        // Tạo bộ lọc truy vấn MongoDB
+        let filter = { status: "Live" };
 
-        // Tính số trang
+        // Nếu có `jobType` thì thêm điều kiện lọc
+        if (jobType) {
+            filter.jobType = jobType;
+        }
+
+        // Đếm tổng số công việc phù hợp với bộ lọc
+        const totalJobs = await Job.countDocuments(filter);
         const totalPages = Math.ceil(totalJobs / limit);
 
-
-        // Lấy tất cả công việc có status = "Live"
-        const jobs = await Job.find({ status: "Live" }).populate("companyId", "name").skip((page - 1) * limit).limit(limit);
+        // Truy vấn danh sách công việc theo bộ lọc
+        const jobs = await Job.find(filter)
+            .populate("companyId", "name")
+            .skip((page - 1) * limit)
+            .limit(limit);
 
         return res.status(200).json({
             jobs,
@@ -40,3 +48,4 @@ export default async function handler(req, res) {
         return res.status(500).json({ message: "Error fetching jobs", error: error.message });
     }
 }
+
