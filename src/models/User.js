@@ -52,7 +52,7 @@ const UserSchema = new mongoose.Schema(
       default: null,
     }, // Chỉ có nếu role là "company"
     skills: { type: [String] },
-    appliedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }], // Danh sách job đã apply
+    appliedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Applicant" }], // Danh sách job đã apply
   },
 );
 
