@@ -333,34 +333,20 @@ const Settings = () => {
                     />
                   ) : (
                     // Nếu không có logo, hiển thị placeholder
-                    <span className="text-black text-3xl font-bold">+</span>
+                    <span></span>
                   )}
 
                   <div className="flex-1">
-                    <div
-                      className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-gray-300"
-                      onClick={() =>
-                        document.getElementById("logo-upload-input").click()
-                      }
-                    >
-                      {/* Icon */}
-                      <Camera className="w-6 h-6 mx-auto text-gray-400 mb-2" />
-
-                      {/* Text instructions */}
+                    <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center">
                       <p className="text-sm text-gray-600 mb-1">
-                        Upload logo here
+                        Enter logo URL here
                       </p>
-                      <p className="text-xs text-gray-400">
-                        PNG, JPG or GIF (max. 400 x 400px)
-                      </p>
-
-                      {/* Hidden file input */}
                       <input
-                        id="logo-upload-input"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => handleLogoUpload(e)}
+                        type="url"
+                        className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="https://example.com/logo.png"
+                        value={company?.logo || ""}
+                        onChange={(e) => handleInputChange("logo", e.target.value)}
                       />
                     </div>
                   </div>
