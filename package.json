@@ -27,6 +27,7 @@
     "dotenv": "^16.4.7",
     "email-validator": "^2.0.4",
     "firebase": "^11.4.0",
+    "framer-motion": "^12.4.10",
     "lucide-react": "^0.475.0",
     "mongoose": "^8.9.6",
     "next": "^15.2.0",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+  
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

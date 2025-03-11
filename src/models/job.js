@@ -9,13 +9,12 @@ const JobSchema = new mongoose.Schema(
     categories: { type: [String], required: true },
     requiredSkills: { type: [String], required: true },
     jobDescription: { type: String, required: true },
-    responsibilities: { type: String, required: true },  
+    responsibilities: { type: String, required: true },
     whoYouAre: { type: String, required: true },
     niceToHaves: { type: String },
-    perksAndBenefits: { 
-      type: [String], 
-      enum: ["Full Healthcare", "Unlimited Vacation", "Skill Development"], 
-      default: [] 
+    perksAndBenefits: {
+      type: [String],
+      default: []
     },
     status: { type: String, enum: ["Live", "Draft", "Closed"], default: "Live" },
     datePosted: { type: Date, required: true },
