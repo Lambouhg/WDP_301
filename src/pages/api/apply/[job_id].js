@@ -59,9 +59,6 @@ export default async function handler(req, res) {
     // Đọc dữ liệu từ request bằng `getRawBody`
     const rawBody = await getRawBody(req);
     const parsedBody = JSON.parse(rawBody.toString("utf-8"));
-
-    console.log(" Received raw request body:", parsedBody);
-
     const { fullName, email, phoneNumber, currentJobTitle, linkedinURL, portfolioURL, additionalInfo, resume } = parsedBody;
 
     //  Kiểm tra xem có thiếu dữ liệu không
