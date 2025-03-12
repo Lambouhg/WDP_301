@@ -1,55 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import img1 from "../assets/image.png";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+
 function ListJobSearched() {
   const router = useRouter();
-  const toDetailJob = () => {
-    router.push("/JobDetail");
-  };
-  return (
-    <div className="flex gap-8 mt-3 overflow-y-auto">
-      {/* Filters */}
-      <div className="w-58">
-        <div className="mb-6">
-          <h3 className="font-semibold mb-4 text-md">Type of Employment</h3>
-          <div className="space-y-3 text-gray-600">
-            <div className="flex items-center gap-2 ">
-              {/* <Checkbox id="full-time" /> */}
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
+  const [jobs, setJobs] = useState([]);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedJobType, setSelectedJobType] = useState("");
 
-              <label htmlFor="full-time" className="text-md">
-                Full-Time (2)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="part-time" className="text-md">
-                Part-Time (5)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="remote" className="text-md">
-                Remote (2)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="remote" className="text-md">
-                Internship (24)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="remote" className="text-md">
-                Contract (3)
-              </label>
-            </div>
+  // Fetch jobs from API
+  const fetchJobs = async (page = 1, jobType = "") => {
+    try {
+      const query = `/api/job/all?page=${page}&limit=5${jobType ? `&jobType=${jobType}` : ""}`;
+      const res = await fetch(query);
+      const data = await res.json();
+
+      setJobs(data.jobs);
+      setTotalJobs(data.totalJobs);
+      setTotalPages(data.totalPages);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+  // Load jobs on component mount
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  // Handle changing job type filter
+  const handleJobTypeChange = (jobType) => {
+    setSelectedJobType(jobType);
+    fetchJobs(1, jobType);
+  };
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return; // Ngăn lỗi vượt giới hạn trang
+    fetchJobs(page, selectedJobType);
+  };
+
+  return (
+    <div className="flex gap-8 mt-5 px-10 overflow-y-auto">
+      {/* Filters */}
+      <div className="w-64 p-5 bg-white shadow-md rounded-lg">
+        {/* Type of Employment */}
+        <div className="mb-6">
+          <h3 className="font-semibold mb-4 text-lg text-gray-800">Type of Employment</h3>
+          <div className="space-y-3">
+            {["Full-Time", "Part-Time", "Remote", "Internship", "Contract"].map((type) => (
+              <div key={type} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                <input
+                  type="radio"
+                  className="w-5 h-5 accent-blue-500"
+                  checked={selectedJobType === type}
+                  onChange={() => handleJobTypeChange(type)}
+                />
+                <label className="text-md text-gray-700">{type}</label>
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Other filters (Static Data) */}
+        {/* Categories, Job Level - Giữ nguyên */}
         <div className="mb-6 scroll-y">
           <h3 className="font-semibold mb-4">Categories</h3>
           <div className="space-y-3 text-gray-600">
@@ -154,15 +173,15 @@ function ListJobSearched() {
       </div>
 
       {/* Job Listings */}
-      <div className="flex-1 ml-8">
-        <div className="flex justify-between items-center pr-9">
+      <div className="flex-1">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-3xl font-semibold text-blue-500">All Jobs</h2>
-            <p className="text-sm text-gray-500">Showing 73 results</p>
+            <h2 className="text-3xl font-semibold text-blue-600">All Jobs</h2>
+            <p className="text-sm text-gray-500">Showing {totalJobs} results</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-smm text-gray-400">Sort by:</span>
-            <select className="text-md">
+            <span className="text-md text-gray-500">Sort by:</span>
+            <select className="p-2 border border-gray-300 rounded-md">
               <option value="relevant">Most relevant</option>
               <option value="recent">Most recent</option>
               <option value="popular">Most popular</option>
@@ -170,79 +189,27 @@ function ListJobSearched() {
           </div>
         </div>
 
-        <div className="space-y-4">
-          {[
-            {
-              img: img1,
-              title: "Social Media Assistant",
-              company: "Nike",
-              location: "Florence, Italy",
-              tags: ["Full-time", "Marketing", "Design"],
-              applications: 5,
-            },
-            {
-              img: img1,
-              title: "Brand Designer",
-              company: "Dropbox",
-              location: "San Francisco, USA",
-              tags: ["Full-time", "Marketing", "Design"],
-              applications: 7,
-            },
-            {
-              img: img1,
-              title: "Brand Designer",
-              company: "Dropbox",
-              location: "San Francisco, USA",
-              tags: ["Full-time", "Marketing", "Design"],
-              applications: 7,
-            },
-            {
-              img: img1,
-              title: "Brand Designer",
-              company: "Dropbox",
-              location: "San Francisco, USA",
-              tags: ["Full-time", "Marketing", "Design"],
-              applications: 7,
-            },
-            {
-              img: img1,
-              title: "Brand Designer",
-              company: "Dropbox",
-              location: "San Francisco, USA",
-              tags: ["Full-time", "Marketing", "Design"],
-              applications: 7,
-            },
-          ].map((job, index) => (
-            <Card key={index} className="gap-1">
+        <div className="grid grid-cols-1 gap-6">
+          {jobs.map((job, index) => (
+            <Card key={index} className="shadow-md rounded-lg hover:shadow-lg transition duration-300">
               <div
-                className="flex justify-between items-start border-2 border-gray-200 p-4 cursor-pointer hover:border-blue-300"
-                onClick={toDetailJob}
+                className="flex justify-between items-start border border-gray-200 p-6 cursor-pointer hover:border-blue-400 transition duration-200 rounded-md"
+                onClick={() => router.push("/JobDetail")}
               >
-                <div className="flex gap-4 ">
-                  <div className="w-18 h-18 bg-gray-100 rounded-lg">
+                <div className="flex gap-4">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                     <img
-                      src={job.img}
-                      // alt={job.title}
+                      src={job.companyId?.logo || img1}
                       className="w-full h-full object-cover rounded-lg"
+                      alt={job.title}
                     />
                   </div>
                   <div>
-                    <h3 className="font-semibold">{job.title}</h3>
-                    <p className="text-sm text-gray-600">
-                      {job.company} • {job.location}
-                    </p>
+                    <h3 className="font-semibold text-lg">{job.title}</h3>
+                    <p className="text-sm text-gray-600">{job.companyId?.name} • {job.location || "Unknown Location"}</p>
                     <div className="flex gap-2 mt-2">
-                      {job.tags.map((tag, tagIndex) => (
-                        <span
-                          key={tagIndex}
-                          className={`text-xs px-3 py-1 rounded-full ${
-                            tag === "Full-time"
-                              ? " border-r-2 border-green-200 text-green-500 font-bold"
-                              : tag === "Marketing"
-                              ? " border border-orange-200 text-orange-500 font-bold"
-                              : "border border-blue-200 text-blue-500 font-bold"
-                          }`}
-                        >
+                      {job.categories.map((tag, tagIndex) => (
+                        <span key={tagIndex} className="bg-blue-100 text-blue-700 font-semibold text-xs px-3 py-1 rounded-full">
                           {tag}
                         </span>
                       ))}
@@ -250,22 +217,14 @@ function ListJobSearched() {
                   </div>
                 </div>
                 <div className="text-right flex flex-col text-center">
-                  <Button className="bg-blue-600 hover:bg-blue-700 pt-2 pb-2 text-white font-bold text-md mb-2 mt-2">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mb-2">
                     Apply
                   </Button>
                   <div className="relative w-full bg-gray-300 rounded h-2 mb-2">
-                    <div
-                      className="absolute h-full bg-green-500"
-                      style={{
-                        width: `calc(${job?.applications ?? 0} / 10 * 100%)`,
-                      }}
-                    ></div>
+                    <div className="absolute h-full bg-green-500 rounded" style={{ width: `calc(${job?.applicants ?? 0} / 10 * 100%)` }}></div>
                   </div>
-                  <p className="text-sm text-gray-500 flex">
-                    <span className="font-bold">
-                      {job?.applications ?? 0} applied
-                    </span>
-                    <span> of 10 capacity</span>
+                  <p className="text-sm text-gray-500">
+                    <span className="font-bold">{job?.applicants ?? 0} applied</span> of {job?.needs ?? 10} capacity
                   </p>
                 </div>
               </div>
@@ -275,25 +234,17 @@ function ListJobSearched() {
 
         {/* Pagination */}
         <div className="flex justify-center gap-2 mt-8">
-          <Button variant="ghost" className="h-10 w-10 text-gray-800 font-bold">
+          <Button variant="ghost" className="h-10 w-10 text-gray-800 font-bold" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
             &lt;
           </Button>
 
-          {[1, 2, 3, 4, 5, "...", 23].map((page, index) => (
-            <Button
-              key={index}
-              variant={page === 1 ? "default" : "ghost"}
-              className={
-                page === 1
-                  ? "bg-blue-600 hover:bg-blue-700 h-10 w-10 text-white rounded-md"
-                  : ""
-              }
-            >
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+            <Button key={page} onClick={() => handlePageChange(page)} variant={page === currentPage ? "default" : "ghost"} className={page === currentPage ? "bg-blue-600 text-white h-10 w-10 rounded-lg" : "h-10 w-10"}>
               {page}
             </Button>
           ))}
 
-          <Button variant="ghost" className="h-10 w-10 text-gray-800 font-bold">
+          <Button variant="ghost" className="h-10 w-10 text-gray-800 font-bold" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
             &gt;
           </Button>
         </div>
