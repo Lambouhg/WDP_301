@@ -22,7 +22,8 @@ const CompanyProfile = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch company data");
+          console.error("Failed to fetch company data");
+          return;
         }
 
         const data = await response.json();
@@ -74,9 +75,6 @@ const CompanyProfile = () => {
             <div className="text-center max-w-md mx-auto p-6 bg-white rounded-lg shadow">
               <h1 className="text-2xl font-bold mb-4">Bạn chưa tạo hồ sơ công ty</h1>
               <p className="text-gray-600 mb-4">Hãy tạo hồ sơ công ty để xem nó ở đây.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200">
-                Tạo hồ sơ công ty
-              </button>
             </div>
           </div>
         </div>

@@ -78,11 +78,12 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "Categories must be a non-empty array" });
       }
 
-      // Kiểm tra danh sách benefits hợp lệ
+      // Kiểm tra danh sách benefits hợ
       const validPerks = ["Full Healthcare", "Unlimited Vacation", "Skill Development"];
       if (!perksAndBenefits.every(perk => validPerks.includes(perk))) {
         return res.status(400).json({ message: "Invalid perksAndBenefits values" });
       }
+
 
       // Chuyển đổi salaryMin & salaryMax thành số
       const salaryMinNum = Number(salaryMin);
