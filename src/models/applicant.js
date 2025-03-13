@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const applicantSchema = new mongoose.Schema({
     jobID: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
     userID: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    companyID: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
+    companyID: { type: mongoose.Schema.Types.ObjectId, ref: "Company", required: true },
     fullName: { type: String, required: true },
     email: { type: String, required: true },
     phoneNumber: { type: String, required: true },
