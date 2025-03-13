@@ -4,10 +4,10 @@
 //delete by userId
 
 // src/pages/api/apply/[job_id].js
-import connectDB from "../../../lib/mongodb";
-import Applicant from "../../../models/applicant";
-import Job from "../../../models/job";
-import User from "../../../models/User";
+import connectDB from "../../../../lib/mongodb";
+import Applicant from "../../../../models/applicant";
+import Job from "../../../../models/job";
+import User from "../../../../models/User";
 import { getAuth } from "@clerk/nextjs/server";
 import mongoose from "mongoose";
 import getRawBody from "raw-body";
