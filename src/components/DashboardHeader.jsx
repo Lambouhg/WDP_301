@@ -13,12 +13,12 @@ const DashboardHeader = ({ dashboardHeaderName }) => {
         {dashboardHeaderName}
       </h1>
       <div className="flex ">
-        <span
+        {/* <span
           className="p-2 border-2 gray-900 mb-2 mr-9 text-blue-800 font-semibold cursor-pointer rounded-md"
           onClick={returnToHome}
         >
           Back to Homepage
-        </span>
+        </span> */}
         <NotificationIcon />
       </div>
     </div>

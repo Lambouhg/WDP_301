@@ -1,3 +1,4 @@
+// src/pages/api/job/index.js
 import connectDB from "../../../lib/mongodb";
 import Job from "../../../models/job";
 import User from "../../../models/User";
