@@ -61,15 +61,24 @@ export default async function handler(req, res) {
     const parsedBody = JSON.parse(rawBody.toString("utf-8"));
     const { fullName, email, phoneNumber, currentJobTitle, linkedinURL, portfolioURL, additionalInfo, resume } = parsedBody;
 
-    //  Kiểm tra xem có thiếu dữ liệu không
+    // Kiểm tra xem có thiếu dữ liệu không
     if (!fullName || !email || !phoneNumber) {
       return res.status(400).json({ message: "Missing required fields: fullName, email, phoneNumber" });
     }
+
+    // Lấy thông tin companyId từ Job
+    const job = await Job.findById(jobObjectId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    const companyId = job.companyId;  // Lấy companyId từ Job
 
     // Tạo đơn ứng tuyển mới
     const newApplication = new Applicant({
       jobID: jobObjectId,
       userID: user._id,
+      companyID: companyId,
       fullName,
       email,
       phoneNumber,
@@ -82,14 +91,15 @@ export default async function handler(req, res) {
 
     await newApplication.save();
     await Job.findByIdAndUpdate(jobObjectId, { $inc: { applicants: 1 } });
+
     res.status(201).json({
       message: "Application submitted successfully",
-      applicant: newApplication,
+      applicant: {
+        ...newApplication.toObject(),  // Chuyển đổi applicant thành đối tượng thường
+        companyID: companyId,  // Thêm companyId vào applicant
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 }
-
-
-
