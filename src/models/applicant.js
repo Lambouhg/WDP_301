@@ -12,7 +12,7 @@ const applicantSchema = new mongoose.Schema({
     portfolioURL: { type: String },
     additionalInfo: { type: String, maxlength: 500 },
     resume: { type: String },
-    status: { type: String, enum: ["In review", "Shortlisted", "Interview", "Hired"], default: "In review" }
+    status: { type: String, enum: ["In Review", "Interviewing", "Shortlisted", "Hired", "Rejected"], default: "In Review" }
 }, { timestamps: true });
 
 export default mongoose.models.Applicant || mongoose.model("Applicant", applicantSchema);

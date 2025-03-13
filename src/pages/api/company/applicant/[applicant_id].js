@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     }
 
     // Kiểm tra trạng thái hợp lệ
-    const validStatuses = ["In review", "Shortlisted", "Interview", "Hired"];
+    const validStatuses = ["In Review", "Interviewing", "Shortlisted", "Hired", "Rejected"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: `Invalid status. Valid statuses are: ${validStatuses.join(', ')}` });
     }

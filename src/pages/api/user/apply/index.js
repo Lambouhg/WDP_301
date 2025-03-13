@@ -3,6 +3,7 @@ import connectDB from "../../../../lib/mongodb";
 import Applicant from "../../../../models/applicant";
 import User from "../../../../models/User";
 import Company from "../../../../models/company";
+import Job from "../../../../models/job";
 import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(req, res) {
