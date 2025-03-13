@@ -1,53 +1,89 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Filter, MoreVertical } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
-const UserMyApplication = () => {
-  const tabs = [
-    { name: "All", count: 45 },
-    { name: "In Review", count: 34 },
-    { name: "Interviewing", count: 18 },
-    { name: "Assessment", count: 5 },
-    { name: "Offered", count: 2 },
-    { name: "Hired", count: 1 },
-  ];
 
-  const applications = [
-    {
-      id: 1,
-      company: "Nomad",
-      role: "Social Media Assistant",
-      date: "24 July 2021",
-      status: "In Review",
-    },
-    {
-      id: 2,
-      company: "Udacity",
-      role: "Social Media Assistant",
-      date: "20 July 2021",
-      status: "In Review",
-    },
-    {
-      id: 3,
-      company: "Packer",
-      role: "Social Media Assistant",
-      date: "16 July 2021",
-      status: "In Review",
-    },
-    {
-      id: 4,
-      company: "Divvy",
-      role: "Social Media Assistant",
-      date: "14 July 2021",
-      status: "Interviewing",
-    },
-    {
-      id: 5,
-      company: "DigitalOcean",
-      role: "Social Media Assistant",
-      date: "10 July 2021",
-      status: "In Review",
-    },
+const UserMyApplication = () => {
+  const [applications, setApplications] = useState([]);
+  const [filteredApplications, setFilteredApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("All"); // Tab được chọn
+
+  // Gọi API lấy toàn bộ dữ liệu ứng viên
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await fetch("/api/user/apply"); // Đường dẫn API lấy dữ liệu
+        if (!response.ok) {
+          throw new Error("Failed to fetch");
+        }
+        const data = await response.json(); // Chuyển đổi dữ liệu nhận được từ JSON
+        setApplications(data.applications);
+        setFilteredApplications(data.applications); // Lưu dữ liệu ban đầu
+      } catch (err) {
+        setError("Failed to fetch applications.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
+  // Hàm lọc ứng viên theo tab
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    if (tab === "All") {
+      setFilteredApplications(applications);
+    } else {
+      const filtered = applications.filter((app) => app.status === tab);
+      setFilteredApplications(filtered);
+    }
+  };
+
+  const handleDelete = async (jobId) => {
+    if (!jobId) {
+      alert("Invalid job ID");
+      return;
+    }
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this application?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`/api/user/apply/${jobId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete application");
+      }
+
+      // Cập nhật danh sách ứng tuyển sau khi xóa thành công
+      setFilteredApplications((prevApplications) =>
+        prevApplications.filter((app) => app.jobID?._id !== jobId)
+      );
+
+      alert("Application deleted successfully");
+    } catch (error) {
+      console.error("Error deleting application:", error);
+      alert("Failed to delete application");
+    }
+  };
+
+  // Các tabs (số lượng ứng viên theo trạng thái sẽ được tính ở frontend)
+  const tabs = [
+    { name: "All", count: applications.length },
+    { name: "In Review", count: applications.filter((app) => app.status === "In Review").length },
+    { name: "Interviewing", count: applications.filter((app) => app.status === "Interviewing").length },
+    { name: "Shortlisted", count: applications.filter((app) => app.status === "Shortlisted").length },
+    { name: "Hired", count: applications.filter((app) => app.status === "Hired").length },
+    { name: "Rejected", count: applications.filter((app) => app.status === "Rejected").length },
   ];
 
   return (
@@ -60,32 +96,7 @@ const UserMyApplication = () => {
 
         <div className="m-6">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-semibold">Keep it up, Jake</h1>
-            <select className="border rounded-md px-3 py-1">
-              <option>Jul 19 - Jul 25</option>
-            </select>
-          </div>
-
-          {/* New Feature Notice */}
-          <div className="bg-purple-50 p-4 rounded-lg mb-6 relative">
-            <div className="flex gap-3">
-              <div className="bg-purple-100 p-2 rounded-lg">
-                <div className="w-6 h-6 bg-purple-600 rounded-lg"></div>
-              </div>
-              <div>
-                <h3 className="text-purple-600 font-medium mb-1">
-                  New Feature
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  You can request a follow-up 7 days after applying for a job if
-                  the application status is in review. Only one follow-up is
-                  allowed per job.
-                </p>
-              </div>
-            </div>
-            <button className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-              ×
-            </button>
+            <h1 className="text-xl font-semibold">Keep it up!</h1>
           </div>
 
           {/* Tabs */}
@@ -94,11 +105,11 @@ const UserMyApplication = () => {
               {tabs.map((tab) => (
                 <button
                   key={tab.name}
-                  className={`pb-4 px-1 ${
-                    tab.name === "All"
-                      ? "border-b-2 border-purple-600 text-purple-600"
-                      : "text-gray-500"
-                  }`}
+                  onClick={() => handleTabChange(tab.name)}
+                  className={`pb-4 px-1 ${tab.name === selectedTab
+                    ? "border-b-2 border-purple-600 text-purple-600"
+                    : "text-gray-500"
+                    }`}
                 >
                   {tab.name} ({tab.count})
                 </button>
@@ -126,80 +137,59 @@ const UserMyApplication = () => {
               </div>
             </div>
 
-            <table className="w-full">
-              <thead className="text-left text-gray-500 text-sm">
-                <tr>
-                  <th className="py-2">#</th>
-                  <th>Company Name</th>
-                  <th>Roles</th>
-                  <th>Date Applied</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {applications.map((app) => (
-                  <tr key={app.id} className="border-t">
-                    <td className="py-4">{app.id}</td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
-                          <div className="w-4 h-4 bg-emerald-500 rounded-sm"></div>
+            {/* Hiển thị trạng thái tải dữ liệu */}
+            {loading ? (
+              <p className="text-center text-gray-500">Loading applications...</p>
+            ) : error ? (
+              <p className="text-center text-red-500">{error}</p>
+            ) : filteredApplications.length === 0 ? (
+              <p className="text-center text-gray-500">No applications found.</p>
+            ) : (
+              <table className="w-full">
+                <thead className="text-left text-gray-500 text-sm">
+                  <tr>
+                    <th className="py-2">#</th>
+                    <th>Company Name</th>
+                    <th>Role</th>
+                    <th>Date Applied</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredApplications.map((app, index) => (
+                    <tr key={app._id} className="border-t">
+                      <td className="py-4">{index + 1}</td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          {app.companyID?.name || "Unknown Company"}
                         </div>
-                        {app.company}
-                      </div>
-                    </td>
-                    <td>{app.role}</td>
-                    <td>{app.date}</td>
-                    <td>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm ${
-                          app.status === "Interviewing"
+                      </td>
+                      <td>{app.jobID?.title || "Unknown Role"}</td>
+                      <td>{new Date(app.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm ${app.status === "Interviewing"
                             ? "bg-blue-50 text-blue-600"
                             : "bg-yellow-50 text-yellow-600"
-                        }`}
-                      >
-                        {app.status}
-                      </span>
-                    </td>
-                    <td>
-                      <button className="p-2 hover:bg-gray-100 rounded">
-                        <MoreVertical className="w-4 h-4 text-gray-400" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center gap-2">
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              ‹
-            </button>
-            <button className="px-3 py-1 bg-purple-600 text-white rounded">
-              1
-            </button>
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              3
-            </button>
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              4
-            </button>
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              5
-            </button>
-            <span className="px-3 py-1">...</span>
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              33
-            </button>
-            <button className="px-3 py-1 border rounded hover:bg-gray-50">
-              ›
-            </button>
+                            }`}
+                        >
+                          {app.status}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => handleDelete(app.jobID?._id)}
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                          Cancel
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>
