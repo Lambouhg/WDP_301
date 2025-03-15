@@ -160,6 +160,21 @@ export default function FindJobDetail() {
                                 ))}
                             </div>
                         </div>
+
+                        {/* Skills */}
+                        <div className="bg-white p-4 rounded-lg shadow-md mt-6">
+                            <h3 className="text-lg font-semibold mb-4">Required Skills</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {job.requiredSkills?.map((skill, index) => (
+                                    <span
+                                        key={index}
+                                        className="bg-indigo-200 text-indigo-800 px-3 py-1 rounded-full text-sm"
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
