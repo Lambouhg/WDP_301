@@ -102,13 +102,15 @@ const Sidebar = () => {
         </div>
         <button
           onClick={() => {
-            signOut({ redirectUrl: "/" });
+            localStorage.removeItem("user"); // Xóa dữ liệu người dùng
+            signOut({ redirectUrl: "/" }); // Đăng xuất và chuyển hướng về trang chủ
           }}
           className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-100 w-full"
         >
           <FiLogOut className="text-lg" />
           <span className="text-sm font-medium">Đăng xuất</span>
         </button>
+
       </div>
     </aside>
   );
@@ -121,10 +123,9 @@ function NavItem({ icon, label, href, active }) {
     <div
       onClick={() => router.push(href)}
       className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300
-        ${
-          active
-            ? "bg-blue-100 text-blue-600"
-            : "text-gray-700 hover:bg-gray-200"
+        ${active
+          ? "bg-blue-100 text-blue-600"
+          : "text-gray-700 hover:bg-gray-200"
         }`}
     >
       <span className="text-lg">{icon}</span>

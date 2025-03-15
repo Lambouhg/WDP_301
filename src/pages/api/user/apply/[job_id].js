@@ -54,26 +54,31 @@ export default async function handler(req, res) {
         jobID: jobObjectId,
         userID: user._id,
       });
-
+    
       if (existingApplication) {
         return res.status(400).json({ message: "You have already applied for this job" });
       }
-
-      const rawBody = await getRawBody(req);
-      const parsedBody = JSON.parse(rawBody.toString("utf-8"));
-      const { fullName, email, phoneNumber, currentJobTitle, linkedinURL, portfolioURL, additionalInfo, resume } = parsedBody;
-
-      if (!fullName || !email || !phoneNumber) {
-        return res.status(400).json({ message: "Missing required fields: fullName, email, phoneNumber" });
-      }
-
+    
+      // Kiểm tra số lượng đơn ứng tuyển đã đạt giới hạn hay chưa
       const job = await Job.findById(jobObjectId);
       if (!job) {
         return res.status(404).json({ message: "Job not found" });
       }
-
-      const companyId = job.companyId;  // Lấy companyId từ Job
-
+    
+      if (job.applicants >= job.needs) {
+        return res.status(400).json({ message: "This job has reached the maximum number of applicants" });
+      }
+    
+      const rawBody = await getRawBody(req);
+      const parsedBody = JSON.parse(rawBody.toString("utf-8"));
+      const { fullName, email, phoneNumber, currentJobTitle, linkedinURL, portfolioURL, additionalInfo, resume } = parsedBody;
+    
+      if (!fullName || !email || !phoneNumber) {
+        return res.status(400).json({ message: "Missing required fields: fullName, email, phoneNumber" });
+      }
+    
+      const companyId = job.companyId; // Lấy companyId từ Job
+    
       // Tạo đơn ứng tuyển mới
       const newApplication = new Applicant({
         jobID: jobObjectId,
@@ -88,10 +93,10 @@ export default async function handler(req, res) {
         additionalInfo,
         resume,
       });
-
+    
       await newApplication.save();
       await Job.findByIdAndUpdate(jobObjectId, { $inc: { applicants: 1 } });
-
+    
       return res.status(201).json({
         message: "Application submitted successfully",
         applicant: {

@@ -14,6 +14,7 @@ function ListJobSearched() {
   const [selectedJobType, setSelectedJobType] = useState("");
   const [selectedJob, setSelectedJob] = useState(null); // State to track the selected job for applying
   const [isApplyFormOpen, setIsApplyFormOpen] = useState(false); // State to control the form visibility
+  const [userRole, setUserRole] = useState(""); // State to store user role (user/company)
 
   // Fetch jobs from API
   const fetchJobs = async (page = 1, jobType = "") => {
@@ -33,6 +34,9 @@ function ListJobSearched() {
 
   // Load jobs on component mount
   useEffect(() => {
+    // Get role from somewhere (e.g., localStorage, context, etc.)
+    const role = localStorage.getItem("role"); // Assuming role is saved in localStorage
+    setUserRole(role); // Set the role (user or company)
     fetchJobs();
   }, []);
 
@@ -195,9 +199,9 @@ function ListJobSearched() {
           {jobs.map((job, index) => (
             <Card key={index} className="shadow-md rounded-lg hover:shadow-lg transition duration-300">
               <div className="flex justify-between items-start border border-gray-200 p-6 rounded-md">
-                <div 
+                <div
                   className="flex gap-4 cursor-pointer flex-1"
-                  onClick={() => router.push("/JobDetail")}
+                  onClick={() => router.push(`/FindJobDetail?jobId=${job._id}`)}
                 >
                   <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                     <img
@@ -219,15 +223,15 @@ function ListJobSearched() {
                   </div>
                 </div>
                 <div className="text-right flex flex-col text-center">
-                  <Button 
+                  <Button
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mb-2"
                     onClick={() => handleOpenApplyForm(job)} // Open the apply form when button is clicked
                   >
                     Apply
                   </Button>
                   <div className="relative w-full bg-gray-300 rounded h-2 mb-2">
-                    <div 
-                      className="absolute h-full bg-green-500 rounded" 
+                    <div
+                      className="absolute h-full bg-green-500 rounded"
                       style={{ width: `calc(${job?.applicants ?? 0} / ${job?.needs ?? 10} * 100%)` }}
                     ></div>
                   </div>
@@ -242,30 +246,30 @@ function ListJobSearched() {
 
         {/* Pagination */}
         <div className="flex justify-center gap-2 mt-8">
-          <Button 
-            variant="ghost" 
-            className="h-10 w-10 text-gray-800 font-bold" 
-            onClick={() => handlePageChange(currentPage - 1)} 
+          <Button
+            variant="ghost"
+            className="h-10 w-10 text-gray-800 font-bold"
+            onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
             &lt;
           </Button>
 
           {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-            <Button 
-              key={page} 
-              onClick={() => handlePageChange(page)} 
-              variant={page === currentPage ? "default" : "ghost"} 
+            <Button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              variant={page === currentPage ? "default" : "ghost"}
               className={page === currentPage ? "bg-blue-600 text-white h-10 w-10 rounded-lg" : "h-10 w-10"}
             >
               {page}
             </Button>
           ))}
 
-          <Button 
-            variant="ghost" 
-            className="h-10 w-10 text-gray-800 font-bold" 
-            onClick={() => handlePageChange(currentPage + 1)} 
+          <Button
+            variant="ghost"
+            className="h-10 w-10 text-gray-800 font-bold"
+            onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
             &gt;
@@ -275,10 +279,10 @@ function ListJobSearched() {
 
       {/* Apply Job Form Dialog */}
       {selectedJob && (
-        <ApplyJobForm 
-          job={selectedJob} 
-          isOpen={isApplyFormOpen} 
-          onClose={handleCloseApplyForm} 
+        <ApplyJobForm
+          job={selectedJob}
+          isOpen={isApplyFormOpen}
+          onClose={handleCloseApplyForm}
         />
       )}
     </div>

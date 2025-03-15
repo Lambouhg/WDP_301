@@ -1,6 +1,7 @@
 // src/pages/api/job/all.js
 import connectDB from "../../../lib/mongodb";
 import Job from "../../../models/job";
+import mongoose from "mongoose";
 import "../../../models/company";
 
 
@@ -12,12 +13,27 @@ export default async function handler(req, res) {
     }
 
     try {
-        let { page = 1, limit = 10, jobType } = req.query;
+        let { jobId, page = 1, limit = 10, jobType } = req.query;
         page = parseInt(page);
         limit = parseInt(limit);
 
+
         if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
             return res.status(400).json({ message: "Invalid page or limit" });
+        }
+
+        // 📌 Nếu có jobId, trả về chi tiết công việc
+        if (jobId) {
+            if (!mongoose.Types.ObjectId.isValid(jobId)) {
+                return res.status(400).json({ message: "Invalid job ID" });
+            }
+
+            const job = await Job.findById(jobId).populate("companyId", "name");
+            if (!job) {
+                return res.status(404).json({ message: "Job not found" });
+            }
+
+            return res.status(200).json(job);
         }
 
         // Tạo bộ lọc truy vấn MongoDB

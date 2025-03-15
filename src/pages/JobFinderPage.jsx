@@ -11,7 +11,7 @@ const JobFinderPage = () => {
     <div className="flex bg-white h-screen w-full overflow-hidden">
       <Sidebar />
 
-      <div className="flex flex-col flex-1 ">
+      <div className="flex flex-col flex-1 overflow-y-auto">
         {/* Header */}
         <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
           <DashboardHeader dashboardHeaderName={"Find Jobs"} />
