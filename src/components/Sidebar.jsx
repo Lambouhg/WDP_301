@@ -9,6 +9,7 @@ import {
   FiSettings,
   FiLogOut,
   FiUser,
+  FiGlobe,
 } from "react-icons/fi";
 
 const Sidebar = () => {
@@ -80,6 +81,12 @@ const Sidebar = () => {
             label="My Public Profile"
             href="/users/UserProfile"
             active={router.pathname === "/users/UserProfile"}
+          />
+          <NavItem
+            icon={<FiGlobe />}
+            label="Browse Companies"
+            href="/ListCompaniesPage"
+            active={router.pathname === "/ListCompaniesPage"}
           />
           <NavItem
             icon={<FiSettings />}

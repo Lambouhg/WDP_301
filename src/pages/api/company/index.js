@@ -8,6 +8,17 @@ export const config = { api: { bodyParser: false } };
 export default async function handler(req, res) {
   await connectDB();
 
+  // if (req.method === "GET" && req.query.all === "true") {
+  //   try {
+  //     const companies = await Company.find({});
+  //     return res.status(200).json({ success: true, data: companies });
+  //   } catch (error) {
+  //     console.error("Error fetching companies:", error);
+  //     return res.status(500).json({ message: "Server error", error: error.message });
+  //   }
+  // }
+
+
   if (req.method === "GET") {
     const { userId } = getAuth(req);
     if (!userId) {
