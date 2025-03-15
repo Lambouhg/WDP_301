@@ -102,13 +102,15 @@ const Sidebar = () => {
         </div>
         <button
           onClick={() => {
-            signOut({ redirectUrl: "/" });
+            localStorage.removeItem("user"); // Xóa dữ liệu người dùng
+            signOut({ redirectUrl: "/" }); // Đăng xuất và chuyển hướng về trang chủ
           }}
           className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-100 w-full"
         >
           <FiLogOut className="text-lg" />
           <span className="text-sm font-medium">Đăng xuất</span>
         </button>
+
       </div>
     </aside>
   );
