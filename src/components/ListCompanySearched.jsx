@@ -108,7 +108,11 @@ function ListCompanySearched() {
                                     />
                                 </div>
                                 <h3 className="font-semibold text-lg">{company.name}</h3>
-                                <p className="text-sm text-gray-600">{company.industry}</p>
+                                <p className="text-sm text-gray-600">
+                                    {company.description.length > 100
+                                        ? `${company.description.slice(0, 100)}...`
+                                        : company.description}
+                                </p>
                                 <p className="text-sm text-gray-400">{company.employees} employees</p>
                             </div>
                         </Card>
