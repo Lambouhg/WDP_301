@@ -120,10 +120,31 @@ const MessageDetail = ({ conversation, user }) => {
     );
   }
   if (!conversation || !conversation.users) {
-    return <div>Select a conversation to view messages</div>;
+    return (
+      <div className="w-full flex flex-col items-center justify-center bg-gray-100 border-2 border-gray-300 rounded-lg shadow-md p-6">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-16 w-16 text-gray-400 mb-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m-6 0a3 3 0 01-6 0M15 16a3 3 0 106 0m-6 0a3 3 0 016 0m-6 0h6M3 8a9 9 0 0118 0v4a9 9 0 01-18 0V8z"
+          />
+        </svg>
+        <p className="text-gray-600 text-lg font-medium">No messages yet</p>
+        <p className="text-gray-500 text-sm mt-1">
+          Select a conversation to start chatting
+        </p>
+      </div>
+    );
   }
   return (
-    <div className="flex flex-col h-full p-5" style={{ width: "50%" }}>
+    <div className="flex flex-col h-full p-5 w-full">
       <div className="h-auto">
         {loadingRecipient ? (
           <p className="text-gray-500 text-center py-2">Loading recipient...</p>

@@ -25,7 +25,7 @@ const MessageCenter = () => {
 
       <div className="flex flex-col flex-1 overflow-hidden w-screen">
         {/* Header */}
-        <div className="w-screen mt-6 px-4 border-b-2 border-gray-200 mb-12">
+        <div className="w-screen mt-6 px-4 border-b-2 border-gray-200">
           <DashboardHeader dashboardHeaderName={"Messages"} />
         </div>
         <div className="flex flex-row flex-1 w-full ml-1 overflow-hidden justify-around">
@@ -36,7 +36,7 @@ const MessageCenter = () => {
             user={user}
           />
           <MessageDetail
-            className="flex-1 overflow-y-auto w-full"
+            className="flex-2 overflow-y-auto w-full"
             conversation={selectedConversation || {}}
             user={user}
           />
