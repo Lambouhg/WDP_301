@@ -80,7 +80,7 @@ const MessageList = ({
   );
 
   return (
-    <div className="flex flex-col bg-white shadow-sm min-w-[240px] w-[416px] max-md:px-5 border-r-2 gray-500 h-5/6">
+    <div className="flex flex-col bg-white shadow-sm min-w-[240px] w-[416px] max-md:px-5 border-r-2 gray-500 h-5/6 self-start">
       <div className="flex gap-4 items-center px-4 py-3 w-full text-base leading-relaxed text-gray-400 bg-white border border-solid border-zinc-200 cursor-pointer">
         <Search size={24} className="self-stretch my-auto" />
 

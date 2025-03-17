@@ -44,7 +44,7 @@ export default function Home() {
 
       saveUserToDatabase();
     }
-  }, [user, router]);; // Đóng useEffect đúng cách
+  }, [user, router]); // Đóng useEffect đúng cách
 
   const dashboard = () => {
     const savedUser = localStorage.getItem("user");
@@ -58,7 +58,7 @@ export default function Home() {
       }
       console.log("User role:", role);
     } else {
-      document.querySelector('[data-clerk-sign-in-button]').click();
+      document.querySelector("[data-clerk-sign-in-button]").click();
     }
   };
 
@@ -122,7 +122,10 @@ export default function Home() {
           >
             Job Finder
           </span>
-          <span className="text-1xl pl-2 pt-3 cursor-pointer" onClick={toUserSearch}>
+          <span
+            className="text-1xl pl-2 pt-3 cursor-pointer"
+            onClick={toUserSearch}
+          >
             Find Jobs
           </span>
           <span
@@ -133,10 +136,7 @@ export default function Home() {
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span
-            className="text-1xl pt-3 cursor-pointer"
-            onClick={dashboard}
-          >
+          <span className="text-1xl pt-3 cursor-pointer" onClick={dashboard}>
             Dashboard
           </span>
           <SignedIn>
@@ -144,7 +144,10 @@ export default function Home() {
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 px-4 py-2 rounded-lg" data-clerk-sign-in-button>
+              <button
+                className="bg-blue-600 px-4 py-2 rounded-lg"
+                data-clerk-sign-in-button
+              >
                 Sign In
               </button>
             </SignInButton>
