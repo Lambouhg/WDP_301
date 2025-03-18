@@ -9,24 +9,23 @@ function ListJobSearched() {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [totalJobs, setTotalJobs] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedJobType, setSelectedJobType] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null); // State to track the selected job for applying
   const [isApplyFormOpen, setIsApplyFormOpen] = useState(false); // State to control the form visibility
-  const [userRole, setUserRole] = useState(""); // State to store user role (user/company)
+  const [userRole, setUserRole] = useState(""); // State to store user role ,(user/company)
 
   // Fetch jobs from API
-  const fetchJobs = async (page = 1, jobType = "") => {
+  const fetchJobs = async (jobType = "", categories = []) => {
     try {
-      const query = `/api/job/all?page=${page}&limit=5${jobType ? `&jobType=${jobType}` : ""}`;
+      // Build query string for categories and jobType
+      const categoriesQuery = categories.length > 0 ? `&categories=${categories.join(",")}` : "";
+      const query = `/api/job/all?${jobType ? `jobType=${jobType}` : ""}${categoriesQuery}`;
       const res = await fetch(query);
       const data = await res.json();
 
       setJobs(data.jobs);
       setTotalJobs(data.totalJobs);
-      setTotalPages(data.totalPages);
-      setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
@@ -37,19 +36,22 @@ function ListJobSearched() {
     // Get role from somewhere (e.g., localStorage, context, etc.)
     const role = localStorage.getItem("role"); // Assuming role is saved in localStorage
     setUserRole(role); // Set the role (user or company)
-    fetchJobs();
+    fetchJobs(); // Fetch jobs without filters initially
   }, []);
 
   // Handle changing job type filter
   const handleJobTypeChange = (jobType) => {
     setSelectedJobType(jobType);
-    fetchJobs(1, jobType);
+    fetchJobs(jobType, selectedCategories); // Fetch jobs based on selected filters
   };
 
-  // Handle page change
-  const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return; // Prevent page out of bounds errors
-    fetchJobs(page, selectedJobType);
+  // Handle changing categories filter
+  const handleCategoriesChange = (category) => {
+    const newCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter((cat) => cat !== category)
+      : [...selectedCategories, category];
+    setSelectedCategories(newCategories);
+    fetchJobs(selectedJobType, newCategories); // Fetch jobs based on selected filters
   };
 
   // Handle opening the apply form
@@ -86,94 +88,21 @@ function ListJobSearched() {
           </div>
         </div>
 
-        {/* Other filters (Static Data) */}
-        {/* Categories, Job Level - Giữ nguyên */}
-        <div className="mb-6 scroll-y">
-          <h3 className="font-semibold mb-4">Categories</h3>
-          <div className="space-y-3 text-gray-600">
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="design" className="text-md">
-                Design (24)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="sales" className="text-md">
-                Sales (5)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Marketing (3)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Finance (3)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Business (3)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Human Resource (6)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Engineering (4)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Technology (5)
-              </label>
-            </div>
-          </div>
-        </div>
+        {/* Type of Categories */}
         <div className="mb-6">
-          <h3 className="font-semibold mb-4">Job Level</h3>
-          <div className="space-y-3 text-gray-600">
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="design" className="text-md">
-                Entry Level (57)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="sales" className="text-md">
-                Mid Level (3)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Senior Level (5)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                Director (12)
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-5 h-5 accent-blue-500" />
-              <label htmlFor="marketing" className="text-md">
-                VP or above (8)
-              </label>
-            </div>
+          <h3 className="font-semibold mb-4 text-lg text-gray-800">Categories</h3>
+          <div className="space-y-3">
+            {["Design", "Sales", "Marketing", "Business", "Human Resource", "Finance", "Engineering", "Technology"].map((category) => (
+              <div key={category} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                <input
+                  type="checkbox"
+                  className="w-5 h-5 accent-blue-500"
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => handleCategoriesChange(category)}
+                />
+                <label className="text-md text-gray-700">{category}</label>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -214,7 +143,7 @@ function ListJobSearched() {
                     <h3 className="font-semibold text-lg">{job.title}</h3>
                     <p className="text-sm text-gray-600">{job.companyId?.name} • {job.location || "Unknown Location"}</p>
                     <div className="flex gap-2 mt-2">
-                      {job.categories.map((tag, tagIndex) => (
+                      {job.categories && Array.isArray(job.categories) && job.categories.map((tag, tagIndex) => (
                         <span key={tagIndex} className="bg-blue-100 text-blue-700 font-semibold text-xs px-3 py-1 rounded-full">
                           {tag}
                         </span>
@@ -242,38 +171,6 @@ function ListJobSearched() {
               </div>
             </Card>
           ))}
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-center gap-2 mt-8">
-          <Button
-            variant="ghost"
-            className="h-10 w-10 text-gray-800 font-bold"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </Button>
-
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-            <Button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              variant={page === currentPage ? "default" : "ghost"}
-              className={page === currentPage ? "bg-blue-600 text-white h-10 w-10 rounded-lg" : "h-10 w-10"}
-            >
-              {page}
-            </Button>
-          ))}
-
-          <Button
-            variant="ghost"
-            className="h-10 w-10 text-gray-800 font-bold"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </Button>
         </div>
       </div>
 

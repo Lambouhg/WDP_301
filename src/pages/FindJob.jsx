@@ -47,7 +47,7 @@ export default function SearchJob() {
           <span
 
             className="text-1xl pl-9 cursor-pointer text-black"
-            onClick={() => router.push("/SearchJob")}
+            onClick={() => router.push("/FindJob")}
 
           >
             Find Jobs
@@ -60,12 +60,7 @@ export default function SearchJob() {
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span
-            className="text-1xl cursor-pointer pt-3"
-            onClick={dashboard}
-          >
-            Dashboard
-          </span>
+
           <SignedIn>
             <UserButton />
           </SignedIn>

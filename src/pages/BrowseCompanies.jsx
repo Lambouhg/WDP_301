@@ -97,11 +97,7 @@ const BrowseCompanies = () => {
                     </span>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <span
-                        className="text-1xl cursor-pointer pt-3"
-                    >
-                        Dashboard
-                    </span>
+
                     <SignedIn>
                         <UserButton />
                     </SignedIn>
