@@ -53,10 +53,8 @@ export default function SearchJob() {
             Find Jobs
           </span>
           <span
-
             className="text-1xl pl-2 cursor-pointer text-black"
-
-            onClick={() => router.push("/company/companydashboard")}
+            onClick={() => router.push("/BrowseCompanies")}
           >
             Browse Companies
           </span>

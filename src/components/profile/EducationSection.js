@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 // components/EducationSection.js
 import React from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
