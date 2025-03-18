@@ -130,7 +130,7 @@ export default function Home() {
           </span>
           <span
             className="text-1xl pl-2  pt-3 cursor-pointer"
-            onClick={() => router.push("/company/companydashboard")}
+            onClick={() => router.push("/BrowseCompanies")}
           >
             Browse Companies
           </span>
