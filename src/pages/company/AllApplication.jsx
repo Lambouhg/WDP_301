@@ -35,7 +35,13 @@ const ApplicantList = () => {
       try {
         const response = await fetch("/api/company/applicant");
         const data = await response.json();
-        setApplicants(data.applicants);
+
+        // Kiểm tra nếu không có applicants hoặc là null
+        if (data?.applicants && data.applicants.length > 0) {
+          setApplicants(data.applicants);
+        } else {
+          setApplicants([]); // Nếu không có applicants, trả về mảng rỗng
+        }
       } catch (error) {
         console.error("Error fetching applicants:", error);
       } finally {
@@ -74,13 +80,16 @@ const ApplicantList = () => {
 
         {loading ? (
           <p>Loading applicants...</p>
+        ) : applicants.length === 0 ? (
+          <p>Chưa có Applicant nào</p> // Hiển thị khi không có ứng viên
         ) : (
           <table className="w-full">
             <thead>
               <tr className="text-left border-b border-gray-100">
                 <th className="pb-4 font-medium">
                   <input type="checkbox" className="mr-4" />
-                  Full Name <ChevronDown className="w-4 h-4 inline-block ml-1" />
+                  Full Name{" "}
+                  <ChevronDown className="w-4 h-4 inline-block ml-1" />
                 </th>
                 <th className="pb-4 font-medium">
                   Score <ChevronDown className="w-4 h-4 inline-block ml-1" />
@@ -104,7 +113,10 @@ const ApplicantList = () => {
             </thead>
             <tbody>
               {applicants.map((applicant) => (
-                <tr key={applicant._id} className="border-b border-gray-50 hover:bg-gray-50">
+                <tr
+                  key={applicant._id}
+                  className="border-b border-gray-50 hover:bg-gray-50"
+                >
                   <td className="py-4">
                     <div className="flex items-center">
                       <input type="checkbox" className="mr-4 h-4 w-4" />
@@ -115,7 +127,9 @@ const ApplicantList = () => {
                   <td className="py-4">
                     <div className="flex items-center">
                       <span className="text-yellow-500">★</span>
-                      <span className="ml-1">{(applicant.score || 0).toFixed(1)}</span>
+                      <span className="ml-1">
+                        {(applicant.score || 0).toFixed(1)}
+                      </span>
                     </div>
                   </td>
                   <td className="py-4">
@@ -128,9 +142,7 @@ const ApplicantList = () => {
                   </td>
                   <td className="py-4">{applicant.currentJobTitle || "N/A"}</td>
                   <td className="py-4">
-                    <button
-                      className="px-4 py-2 text-blue-600 bg-blue-50 rounded-lg"
-                    >
+                    <button className="px-4 py-2 text-blue-600 bg-blue-50 rounded-lg">
                       See Application
                     </button>
                   </td>
