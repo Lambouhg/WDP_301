@@ -3,81 +3,135 @@ import { useRouter } from "next/router";
 import img1 from "../assets/image.png";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import ApplyJobForm from "./ApplyJobForm"; // Import the ApplyJobForm component
+import ApplyJobForm from "./ApplyJobForm";
+import { FiChevronsLeft, FiChevronLeft, FiChevronRight, FiChevronsRight } from "react-icons/fi";
 
 function ListJobSearched() {
   const router = useRouter();
-  const [jobs, setJobs] = useState([]);
+  const [allJobs, setAllJobs] = useState([]); // Lưu tất cả jobs từ API
+  const [displayedJobs, setDisplayedJobs] = useState([]); // Jobs hiển thị trên trang hiện tại
   const [totalJobs, setTotalJobs] = useState(0);
   const [selectedJobType, setSelectedJobType] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null); // State to track the selected job for applying
-  const [isApplyFormOpen, setIsApplyFormOpen] = useState(false); // State to control the form visibility
-  const [userRole, setUserRole] = useState(""); // State to store user role ,(user/company)
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isApplyFormOpen, setIsApplyFormOpen] = useState(false);
+  const [userRole, setUserRole] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobsPerPage] = useState(6);
 
-  // Fetch jobs from API
+  // Fetch tất cả jobs từ API
   const fetchJobs = async (jobType = "", categories = []) => {
     try {
-      // Build query string for categories and jobType
       const categoriesQuery = categories.length > 0 ? `&categories=${categories.join(",")}` : "";
       const query = `/api/job/all?${jobType ? `jobType=${jobType}` : ""}${categoriesQuery}`;
       const res = await fetch(query);
       const data = await res.json();
 
-      setJobs(data.jobs);
-      setTotalJobs(data.totalJobs);
+      setAllJobs(data.jobs); // Lưu tất cả jobs
+      setTotalJobs(data.totalJobs || data.jobs.length); // Tổng số jobs (dùng length nếu API không trả totalJobs)
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
   };
 
-  // Load jobs on component mount
+  // Cập nhật jobs hiển thị dựa trên currentPage
   useEffect(() => {
-    // Get role from somewhere (e.g., localStorage, context, etc.)
-    const role = localStorage.getItem("role"); // Assuming role is saved in localStorage
-    setUserRole(role); // Set the role (user or company)
-    fetchJobs(); // Fetch jobs without filters initially
-  }, []);
+    const skip = (currentPage - 1) * jobsPerPage;
+    const filteredJobs = allJobs.slice(skip, skip + jobsPerPage); // Cắt dữ liệu theo trang
+    setDisplayedJobs(filteredJobs);
+  }, [allJobs, currentPage]);
 
-  // Handle changing job type filter
+  // Load jobs khi component mount hoặc khi filter thay đổi
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    setUserRole(role);
+    fetchJobs(selectedJobType, selectedCategories);
+  }, [selectedJobType, selectedCategories]);
+
   const handleJobTypeChange = (jobType) => {
     setSelectedJobType(jobType);
-    fetchJobs(jobType, selectedCategories); // Fetch jobs based on selected filters
+    setCurrentPage(1); // Reset về trang 1
   };
 
-  // Handle changing categories filter
   const handleCategoriesChange = (category) => {
     const newCategories = selectedCategories.includes(category)
       ? selectedCategories.filter((cat) => cat !== category)
       : [...selectedCategories, category];
     setSelectedCategories(newCategories);
-    fetchJobs(selectedJobType, newCategories); // Fetch jobs based on selected filters
+    setCurrentPage(1); // Reset về trang 1
   };
 
-  // Handle opening the apply form
   const handleOpenApplyForm = (job) => {
     setSelectedJob(job);
     setIsApplyFormOpen(true);
   };
 
-  // Handle closing the apply form
   const handleCloseApplyForm = () => {
     setIsApplyFormOpen(false);
     setSelectedJob(null);
+  };
+
+  const totalPages = Math.ceil(totalJobs / jobsPerPage);
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+  const getPageNumbers = () => {
+    const pages = [];
+
+    // Nếu totalPages <= 3, hiển thị tất cả các trang
+    if (totalPages <= 3) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+
+    // Nếu totalPages > 3, hiển thị trang hiện tại và các trang gần kề
+    const showEllipsisBefore = currentPage > 3; // Hiển thị ... trước trang hiện tại
+    const showEllipsisAfter = currentPage < totalPages - 2; // Hiển thị ... sau trang hiện tại
+
+    // Trang đầu tiên luôn hiển thị
+    pages.push(1);
+
+    // Thêm dấu ... nếu cần trước trang hiện tại
+    if (showEllipsisBefore) {
+      pages.push("...");
+    }
+
+    // Các trang gần kề (trước và sau trang hiện tại)
+    const startPage = Math.max(2, currentPage - 1);
+    const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    // Thêm dấu ... nếu cần sau trang hiện tại
+    if (showEllipsisAfter) {
+      pages.push("...");
+    }
+
+    // Trang cuối cùng luôn hiển thị
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+
+    return pages;
   };
 
   return (
     <div className="flex gap-8 mt-5 px-10 overflow-y-auto">
       {/* Filters */}
       <div className="w-64 p-5 bg-white shadow-md rounded-lg">
-        {/* Type of Employment */}
         <div className="mb-6">
           <h3 className="font-semibold mb-4 text-lg text-gray-800">Type of Employment</h3>
           <div className="space-y-3">
             {["Full-Time", "Part-Time", "Remote", "Internship", "Contract"].map((type) => (
               <div key={type} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
                 <input
-                  type="radio"
+                  type="checkbox"
                   className="w-5 h-5 accent-blue-500"
                   checked={selectedJobType === type}
                   onChange={() => handleJobTypeChange(type)}
@@ -88,7 +142,6 @@ function ListJobSearched() {
           </div>
         </div>
 
-        {/* Type of Categories */}
         <div className="mb-6">
           <h3 className="font-semibold mb-4 text-lg text-gray-800">Categories</h3>
           <div className="space-y-3">
@@ -125,7 +178,7 @@ function ListJobSearched() {
         </div>
 
         <div className="grid grid-cols-1 gap-6">
-          {jobs.map((job, index) => (
+          {displayedJobs.map((job, index) => (
             <Card key={index} className="shadow-md rounded-lg hover:shadow-lg transition duration-300">
               <div className="flex justify-between items-start border border-gray-200 p-6 rounded-md">
                 <div
@@ -154,7 +207,7 @@ function ListJobSearched() {
                 <div className="text-right flex flex-col text-center">
                   <Button
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mb-2"
-                    onClick={() => handleOpenApplyForm(job)} // Open the apply form when button is clicked
+                    onClick={() => handleOpenApplyForm(job)}
                   >
                     Apply
                   </Button>
@@ -171,6 +224,61 @@ function ListJobSearched() {
               </div>
             </Card>
           ))}
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center mt-6 gap-2">
+          {/* Nút First */}
+          <Button
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+            className="bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 px-3 py-1 rounded-md"
+          >
+            <FiChevronsLeft size={20} />
+          </Button>
+
+          {/* Nút Previous */}
+          <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 px-3 py-1 rounded-md"
+          >
+            <FiChevronLeft size={20} />
+          </Button>
+
+          {/* Các số trang */}
+          {getPageNumbers().map((page) => (
+            <Button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`${currentPage === page
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                } px-3 py-1 rounded-md`}
+            >
+              {page}
+            </Button>
+          ))}
+
+          {/* Nút Next */}
+          <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 px-3 py-1 rounded-md"
+          >
+            <FiChevronRight size={20} />
+          </Button>
+
+          {/* Nút Last */}
+          <Button
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            className="bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 px-3 py-1 rounded-md"
+          >
+            <FiChevronsRight size={20} />
+          </Button>
+
+
         </div>
       </div>
 

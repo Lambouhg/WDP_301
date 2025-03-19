@@ -32,9 +32,9 @@ export default function SearchJob() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff] text-black p-6">
+    <div className="min-h-screen bg-[#fff] text-black ">
       {/* Header */}
-      <nav className="flex justify-between items-center mb-12 ml-6 mr-5">
+      <nav className="flex justify-between items-center mb-12 ml-6 mr-5 mt-6">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
           <span
@@ -103,8 +103,7 @@ export default function SearchJob() {
         </div>
       </div>
       <ListJobSearched />
-
-
+      <div className="p-4" />
       <Footer />
     </div>
   );
