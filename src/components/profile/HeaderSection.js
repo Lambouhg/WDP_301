@@ -217,6 +217,8 @@ const HeaderSection = ({
           <Image
             src={avatar}
             alt="Profile"
+            width={80}
+            height={80}
             className="w-20 h-20 rounded-full border-4 border-white"
           />
         </div>
