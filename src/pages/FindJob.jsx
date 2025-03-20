@@ -32,9 +32,9 @@ export default function SearchJob() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff] text-black p-6">
+    <div className="min-h-screen bg-[#fff] text-black ">
       {/* Header */}
-      <nav className="flex justify-between items-center mb-12 ml-6 mr-5">
+      <nav className="flex justify-between items-center mb-12 ml-6 mr-5 mt-6">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
           <span
@@ -47,7 +47,7 @@ export default function SearchJob() {
           <span
 
             className="text-1xl pl-9 cursor-pointer text-black"
-            onClick={() => router.push("/SearchJob")}
+            onClick={() => router.push("/FindJob")}
 
           >
             Find Jobs
@@ -60,12 +60,7 @@ export default function SearchJob() {
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span
-            className="text-1xl cursor-pointer pt-3"
-            onClick={dashboard}
-          >
-            Dashboard
-          </span>
+
           <SignedIn>
             <UserButton />
           </SignedIn>
@@ -97,19 +92,18 @@ export default function SearchJob() {
             placeholder="Job title or keyword"
             className="flex-1 bg-[#E9E9E9FF] p-4 rounded-lg"
           />
-          <input
-            type="text"
-            placeholder="Location"
-            className="flex-1 bg-[#E9E9E9FF] p-4 rounded-lg"
-          />
+
           <button className="bg-blue-600 px-8 rounded-lg cursor-pointer text-white font-bold">
             Search for jobs
           </button>
         </div>
+        <div className="text-md text-gray-500 mb-3 mt-5">
+          Popular: UI Designer, UX Researcher, Android, Admin
+        </div>
       </div>
+
       <ListJobSearched />
-
-
+      <div className="p-4" />
       <Footer />
     </div>
   );

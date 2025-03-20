@@ -13,14 +13,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        let { jobId, page = 1, limit = 10, jobType } = req.query;
-        page = parseInt(page);
-        limit = parseInt(limit);
-
-
-        if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
-            return res.status(400).json({ message: "Invalid page or limit" });
-        }
+        let { jobId, jobType, categories } = req.query;
 
         // 📌 Nếu có jobId, trả về chi tiết công việc
         if (jobId) {
@@ -41,23 +34,29 @@ export default async function handler(req, res) {
 
         // Nếu có `jobType` thì thêm điều kiện lọc
         if (jobType) {
-            filter.jobType = jobType;
+            filter.jobType = { $in: jobType.split(",") }; // Chuyển chuỗi thành mảng và dùng $in
+        }
+
+        // Nếu có `categories` thì thêm điều kiện lọc
+        if (categories) {
+            filter.categories = { $in: categories.split(",") };
         }
 
         // Đếm tổng số công việc phù hợp với bộ lọc
         const totalJobs = await Job.countDocuments(filter);
-        const totalPages = Math.ceil(totalJobs / limit);
 
         // Truy vấn danh sách công việc theo bộ lọc
-        const jobs = await Job.find(filter)
-            .populate("companyId", "name")
-            .skip((page - 1) * limit)
-            .limit(limit);
+        const jobs = await Job.find(filter).populate("companyId", "name");
+
+        // Kiểm tra và đảm bảo mỗi công việc có categories là mảng (tránh lỗi frontend)
+        jobs.forEach((job) => {
+            if (!Array.isArray(job.categories)) {
+                job.categories = []; // Gán giá trị mặc định là mảng trống nếu không có categories
+            }
+        });
 
         return res.status(200).json({
             jobs,
-            page,
-            totalPages,
             totalJobs,
         });
     } catch (error) {
