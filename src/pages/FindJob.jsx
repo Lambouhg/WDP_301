@@ -92,16 +92,16 @@ export default function SearchJob() {
             placeholder="Job title or keyword"
             className="flex-1 bg-[#E9E9E9FF] p-4 rounded-lg"
           />
-          <input
-            type="text"
-            placeholder="Location"
-            className="flex-1 bg-[#E9E9E9FF] p-4 rounded-lg"
-          />
+
           <button className="bg-blue-600 px-8 rounded-lg cursor-pointer text-white font-bold">
             Search for jobs
           </button>
         </div>
+        <div className="text-md text-gray-500 mb-3 mt-5">
+          Popular: UI Designer, UX Researcher, Android, Admin
+        </div>
       </div>
+
       <ListJobSearched />
       <div className="p-4" />
       <Footer />

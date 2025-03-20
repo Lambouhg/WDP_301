@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
         // Nếu có `jobType` thì thêm điều kiện lọc
         if (jobType) {
-            filter.jobType = jobType;
+            filter.jobType = { $in: jobType.split(",") }; // Chuyển chuỗi thành mảng và dùng $in
         }
 
         // Nếu có `categories` thì thêm điều kiện lọc
