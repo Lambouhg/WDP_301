@@ -45,10 +45,8 @@ export default function SearchJob() {
             Job Finder
           </span>
           <span
-
             className="text-1xl pl-9 cursor-pointer text-black"
             onClick={() => router.push("/FindJob")}
-
           >
             Find Jobs
           </span>
@@ -60,13 +58,15 @@ export default function SearchJob() {
           </span>
         </div>
         <div className="flex items-center space-x-4">
-
           <SignedIn>
             <UserButton />
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 px-4 py-2 rounded-lg" data-clerk-sign-in-button>
+              <button
+                className="bg-blue-600 px-4 py-2 rounded-lg"
+                data-clerk-sign-in-button
+              >
                 Sign In
               </button>
             </SignInButton>
@@ -86,20 +86,8 @@ export default function SearchJob() {
           Find your next career at companies like HubSpot, Nike, and Dropbox
         </p>
         {/* Search Bar */}
-        <div className="flex gap-4 mb-8">
-          <input
-            type="text"
-            placeholder="Job title or keyword"
-            className="flex-1 bg-[#E9E9E9FF] p-4 rounded-lg"
-          />
 
-          <button className="bg-blue-600 px-8 rounded-lg cursor-pointer text-white font-bold">
-            Search for jobs
-          </button>
-        </div>
-        <div className="text-md text-gray-500 mb-3 mt-5">
-          Popular: UI Designer, UX Researcher, Android, Admin
-        </div>
+
       </div>
 
       <ListJobSearched />
