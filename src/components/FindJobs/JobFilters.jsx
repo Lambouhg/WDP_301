@@ -50,7 +50,7 @@ const JobFilters = ({
                                 className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors duration-200"
                             >
                                 <input
-                                    type="radio"
+                                    type="checkbox"
                                     name="jobType"
                                     className="w-5 h-5 accent-indigo-600 focus:ring-indigo-500"
                                     checked={selectedJobTypes === type}
@@ -86,7 +86,7 @@ const JobFilters = ({
                                 className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors duration-200"
                             >
                                 <input
-                                    type="radio"
+                                    type="checkbox"
                                     name="category"
                                     className="w-5 h-5 accent-indigo-600 focus:ring-indigo-500"
                                     checked={selectedCategories === category}

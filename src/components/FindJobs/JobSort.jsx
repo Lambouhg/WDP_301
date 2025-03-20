@@ -12,7 +12,7 @@ const JobSort = ({
     return (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-                <h2 className="text-3xl font-bold text-indigo-700">All Jobs</h2>
+                <h2 className="text-2xl font-bold text-indigo-700">All Jobs</h2>
                 <p className="text-sm text-gray-600 mt-1">Showing {totalJobs} results</p>
             </div>
             <div className="flex items-center gap-3">
