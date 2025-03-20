@@ -1,10 +1,9 @@
+//src/components/FindJobs/JobSearchBar.jsx
 import React from "react";
 
 const JobSearchBar = ({
     searchQuery,
     setSearchQuery,
-    handleSearch,
-    handleSearchKeyPress,
 }) => {
     return (
         <div className="flex flex-col gap-4">

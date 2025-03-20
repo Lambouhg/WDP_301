@@ -7,7 +7,6 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import Footer from "../components/Footer";
@@ -86,12 +85,8 @@ export default function SearchJob() {
           Find your next career at companies like HubSpot, Nike, and Dropbox
         </p>
         {/* Search Bar */}
-
-
+        <ListJobSearched />
       </div>
-
-      <ListJobSearched />
-      <div className="p-4" />
       <Footer />
     </div>
   );
