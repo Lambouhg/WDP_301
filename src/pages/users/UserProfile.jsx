@@ -15,6 +15,7 @@ import axios from "axios";
 import { Loader } from "lucide-react"; // Sử dụng lucide-react để hiển thị loading icon
 import img1 from "../../assets/b79144e03dc4996ce319ff59118caf65.jpg";
 import { set } from "mongoose";
+import ShortVideoSection from "../../components/profile/ShortVideoSection";
 const UserProfile = () => {
   const router = useRouter();
   const { role } = router.query;
@@ -38,6 +39,7 @@ const UserProfile = () => {
   const [skills, setSkills] = useState([]);
   const [showSkillForm, setShowSkillForm] = useState(false);
   const [newSkill, setNewSkill] = useState("");
+  const [video, setVideo] = useState("");
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -57,6 +59,7 @@ const UserProfile = () => {
         setExperiences(userData.expereince || []);
         setEducations(userData.education || []);
         setSkills(userData.skills || []);
+        setVideo(userData.video || "");
       } catch (err) {
         setError("Không thể tải dữ liệu người dùng.");
       } finally {
@@ -207,6 +210,14 @@ const UserProfile = () => {
                 setTwitter={setTwitter}
                 website={website}
                 setWebsite={setWebsite}
+              />
+            </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-semibold mb-4">Short Introduce</h2>
+              <ShortVideoSection
+                isEditing={isEditing}
+                video={video}
+                setVideo={setVideo}
               />
             </div>
           </div>
