@@ -246,7 +246,7 @@ const JobDetails = () => {
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={EDIT_ICON_PATH} />
                                                 </svg>
-                                                + Edit Company
+                                                + Edit Job
                                             </button>
                                             <button
                                                 className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors font-medium flex items-center"
