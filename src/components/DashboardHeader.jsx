@@ -1,24 +1,27 @@
 import React from "react";
 import NotificationIcon from "../components/NotificationIcon";
-import { useRouter } from "next/router";
-const DashboardHeader = ({ dashboardHeaderName }) => {
-  const router = useRouter();
-  const returnToHome = () => {
-    router.push("/");
-  };
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
+const DashboardHeader = ({ dashboardHeaderName, onBack }) => {
   return (
-    <div className="flex items-center justify-between  m-1">
-      <h1 className="text-3xl font-bold text-gray-600">
-        {dashboardHeaderName}
-      </h1>
-      <div className="flex ">
-        {/* <span
-          className="p-2 border-2 gray-900 mb-2 mr-9 text-blue-800 font-semibold cursor-pointer rounded-md"
-          onClick={returnToHome}
-        >
-          Back to Homepage
-        </span> */}
+    <div className="flex items-center justify-between m-1">
+      {/* Left Section - Back Button and Header Name */}
+      <div className="flex items-center space-x-4">
+        {onBack && (
+          <button
+            className="text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+            onClick={onBack}
+            style={{ fontSize: "1.5rem" }} // Tăng kích thước icon
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+        )}
+        <h1 className="text-3xl font-bold text-gray-600">{dashboardHeaderName}</h1>
+      </div>
+
+      {/* Right Section - Notification Icon */}
+      <div className="flex">
         <NotificationIcon />
       </div>
     </div>
