@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import DashboardHeader from "../components/DashboardHeader";
+import Image from "next/image";
+import img1 from "../assets/image.png";
 import JobApplicationPopup from "../components/PopupApply_user";
 import CompanySidebar from "../components/SidebarCompany";
 import Sidebar from "../components/Sidebar";
@@ -65,10 +67,10 @@ export default function FindJobDetail() {
 
                 {/* Job Header */}
                 <div className="bg-white rounded-lg shadow-lg p-6 flex items-center mt-6">
-                    <img
-                        src="https://placehold.co/80x80"
-                        alt="Company logo"
-                        className="w-20 h-20 rounded-full mr-6"
+                    <Image
+                        src={job.companyId?.logo || img1}
+                        className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden"
+                        alt={job.title}
                     />
                     <div>
                         <h2 className="text-2xl font-bold">{job.title}</h2>
