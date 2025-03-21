@@ -23,14 +23,14 @@ const MessageCenter = () => {
     <div className="flex bg-white h-screen w-full overflow-hidden">
       <Sidebar />
 
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 overflow-hidden w-screen">
         {/* Header */}
         <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
           <DashboardHeader dashboardHeaderName={"Messages"} />
         </div>
 
         {/* Nội dung tin nhắn */}
-        <div className="flex flex-row flex-1 w-screen ml-1 overflow-hidden">
+        <div className="flex flex-row flex-1 w-full ml-1 overflow-hidden">
           <MessageList
             className="flex-1 w-full border-r border-gray-300 overflow-y-auto"
             onSelectConversation={setSelectedConversation}
@@ -39,7 +39,7 @@ const MessageCenter = () => {
           />
           <MessageDetail
             className="flex-1 overflow-y-auto w-full"
-            conversation={selectedConversation}
+            conversation={selectedConversation || {}}
             user={user}
           />
         </div>

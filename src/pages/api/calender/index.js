@@ -1,21 +1,24 @@
 import { getAuth } from "@clerk/nextjs/server";
 import connectDB from "../../../lib/mongodb";
 import Calender from "../../../models/Calender"; // Model MongoDB
+import mongoose from "mongoose";
 
 export default async function handler(req, res) {
   await connectDB();
   const { method } = req;
-
   try {
     switch (method) {
       case "GET":
         const { userId } = getAuth(req);
+        const companyId = req.query.companyId;
         if (!userId) {
           return res
             .status(401)
             .json({ message: "Unauthorized: No valid token" });
         }
-        const events = await Calender.find({});
+        const events = await Calender.find({
+          companyID: new mongoose.Types.ObjectId(companyId),
+        });
         return res.status(200).json(events);
 
       case "POST":

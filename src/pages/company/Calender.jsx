@@ -1,22 +1,39 @@
+// src/pages/calendar/CalendarApp.jsx
 import React, { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
-import SidebarCompany from "../../components/SidebarCompany";
-import DasborderHeader from "../../components/HeaderCompany";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import axios from "axios";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import axios from "axios";
+
+import SidebarCompany from "../../components/SidebarCompany";
+import DasborderHeader from "../../components/HeaderCompany";
+import EventForm from "../../components/calender/EventForm";
+import EventModal from "../../components/calender/EventModal";
+import CalendarToolbar from "../../components/calender/CalendarToolbar";
 
 const localizer = momentLocalizer(moment);
 
+// Time slots available for scheduling
+const AVAILABLE_TIME_SLOTS = [
+  { label: "8:00 AM", value: "08:00:00" },
+  { label: "9:00 AM", value: "09:00:00" },
+  { label: "10:00 AM", value: "10:00:00" },
+  { label: "2:00 PM", value: "14:00:00" },
+  { label: "3:00 PM", value: "15:00:00" },
+  { label: "4:00 PM", value: "16:00:00" },
+];
+
 const CalendarApp = () => {
   const [events, setEvents] = useState([]);
-  console.log("event" + JSON.stringify(events));
-
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null); // Track selected event
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
-  const [isFormOpen, setIsFormOpen] = useState(false); // Form state
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [view, setView] = useState("month"); // Quản lý trạng thái view
+  const [date, setDate] = useState(new Date()); // Quản lý trạng thái ngày
+
   const [formValues, setFormValues] = useState({
     jobID: "",
     companyID: "",
@@ -27,23 +44,49 @@ const CalendarApp = () => {
     date: "",
     time: "",
   });
-  const [selectedSlot, setSelectedSlot] = useState(null); // Track selected slot
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/api/calender/");
-        setEvents(res.data);
-      } catch (err) {
-        setError("Không thể tải sự kiện.");
-      }
-    };
-
     fetchEvents();
   }, []);
 
-  const handleSelectSlot = ({ start, end }) => {
-    setSelectedSlot({ start, end });
+  const fetchEvents = async () => {
+    setLoading(true);
+    try {
+      const storedUser = localStorage.getItem("user");
+      const userData = JSON.parse(storedUser);
+      console.log("user: " + JSON.stringify(userData.companyId));
+      const res = await axios.get(`/api/calender`, {
+        params: { companyId: userData.companyId },
+      });
+      if (res.data) {
+        const formattedEvents = res.data.map((event) => ({
+          ...event,
+          start: new Date(event.date + "T" + event.time),
+          end: new Date(
+            new Date(event.date + "T" + event.time).getTime() + 60 * 60 * 1000
+          ),
+        }));
+        setEvents(formattedEvents);
+      }
+    } catch (err) {
+      setError("Không thể tải sự kiện.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  console.log("events: " + JSON.stringify(events));
+  const handleSelectSlot = ({ start }) => {
+    // Set the selected date
+    const selectedDate = moment(start).format("YYYY-MM-DD");
+
+    // Reset form values and set the selected date
+    setFormValues({
+      ...formValues,
+      date: selectedDate,
+      time: "", // Clear time to force user selection
+    });
+
+    setSelectedSlot({ start });
     setIsFormOpen(true);
   };
 
@@ -52,92 +95,188 @@ const CalendarApp = () => {
     setIsModalOpen(true);
   };
 
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+  const handleCreateEvent = async (event) => {
+    event.preventDefault();
 
-  const handleFormSubmit = async () => {
+    if (!formValues.time) {
+      alert("Vui lòng chọn thời gian cho sự kiện.");
+      return;
+    }
+
     try {
-      const { start, end } = selectedSlot;
-      const date = moment(start).format("YYYY-MM-DD");
-      const time = moment(start).format("HH:mm:ss");
-
       const newEvent = {
         ...formValues,
-        date,
-        time,
+      };
+      const response = await axios.post("/api/calender/", newEvent);
+      const createdEvent = {
+        ...response.data,
+        start: new Date(formValues.date + "T" + formValues.time),
+        end: new Date(
+          new Date(formValues.date + "T" + formValues.time).getTime() +
+            60 * 60 * 1000
+        ),
       };
 
-      await axios.post("http://localhost:3000/api/calender/", newEvent);
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      setEvents((prevEvents) => [...prevEvents, createdEvent]);
       setIsFormOpen(false);
+      setFormValues({
+        jobID: "",
+        companyID: "",
+        applicantID: "",
+        title: "",
+        description: "",
+        location: "",
+        date: "",
+        time: "",
+      });
       alert("Sự kiện đã được tạo thành công!");
     } catch (err) {
       setError("Không thể tạo sự kiện.");
+      console.error("Error creating event:", err);
     }
   };
 
   const handleUpdateEvent = async (updatedData) => {
     try {
-      await axios.put(`http://localhost:3000/api/calender/`, {
+      await axios.put(`/api/calender/`, {
         id: selectedEvent.id,
         updatedEvent: updatedData,
       });
+
+      // Update the event in state
       setEvents((prevEvents) =>
         prevEvents.map((evt) =>
           evt.id === selectedEvent.id ? { ...evt, ...updatedData } : evt
         )
       );
+
       setIsModalOpen(false);
       alert("Sự kiện đã được cập nhật thành công!");
     } catch (err) {
       setError("Không thể cập nhật sự kiện.");
+      console.error("Error updating event:", err);
     }
   };
 
   const handleDeleteEvent = async () => {
+    // Confirm before deleting
+    if (!window.confirm("Bạn có chắc chắn muốn xóa sự kiện này?")) {
+      return;
+    }
+
     try {
       await axios.delete(`http://localhost:3000/api/calender/`, {
         data: { idCalender: selectedEvent.id },
       });
+
       setEvents((prevEvents) =>
         prevEvents.filter((evt) => evt.id !== selectedEvent.id)
       );
+
       setIsModalOpen(false);
       alert("Sự kiện đã được xóa thành công!");
     } catch (err) {
       setError("Không thể xóa sự kiện.");
+      console.error("Error deleting event:", err);
     }
   };
 
+  // Check if a time slot is already booked for the selected date
+  const isTimeSlotBooked = (date, time) => {
+    return events.some(
+      (event) =>
+        moment(event.start).format("YYYY-MM-DD") === date &&
+        moment(event.start).format("HH:mm:ss") === time
+    );
+  };
+
+  // Get available time slots for the selected date
+  const getAvailableTimeSlots = () => {
+    if (!formValues.date) return [];
+
+    return AVAILABLE_TIME_SLOTS.map((slot) => ({
+      ...slot,
+      disabled: isTimeSlotBooked(formValues.date, slot.value),
+    }));
+  };
+
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gray-50 p-4">
+    <div className="flex h-screen w-screen overflow-hidden bg-gray-50">
       <SidebarCompany />
       <div className="overflow-y-auto w-full p-6">
         <DasborderHeader />
         <div className="mx-auto mt-4">
           <div className="gap-4">
             <div>
-              <button className="flex w-full items-center gap-2 rounded-lg border bg-white text-blue-600">
-                <Plus size={20} />
-                Create Event
+              <button
+                className="flex w-full items-center gap-2 rounded-lg border bg-white text-blue-600 p-2 mb-4"
+                onClick={() => {
+                  setFormValues({
+                    jobID: "",
+                    companyID: "",
+                    applicantID: "",
+                    title: "",
+                    description: "",
+                    location: "",
+                    date: moment().format("YYYY-MM-DD"),
+                    time: "",
+                  });
+                  setIsFormOpen(true);
+                }}
+              >
+                <div className="flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 5v14M5 12h14"></path>
+                  </svg>
+                  <span className="ml-2">Tạo Sự Kiện</span>
+                </div>
               </button>
 
-              {/* Categories */}
-              <div className="p-6">
+              <div className="p-6 bg-white rounded-lg shadow">
                 <h1 className="text-xl font-bold mb-4">Lịch phỏng vấn</h1>
-                {error && <p className="text-red-500">{error}</p>}
-                <Calendar
-                  localizer={localizer}
-                  events={events}
-                  selectable
-                  onSelectSlot={handleSelectSlot}
-                  onSelectEvent={handleSelectEvent}
-                  startAccessor="start"
-                  endAccessor="end"
-                  style={{ height: 600 }}
-                />
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+
+                {loading ? (
+                  <div className="flex justify-center items-center h-96">
+                    <div className="text-blue-600">Đang tải dữ liệu...</div>
+                  </div>
+                ) : (
+                  <Calendar
+                    localizer={localizer}
+                    events={events}
+                    selectable
+                    startAccessor="start"
+                    endAccessor="end"
+                    style={{ height: 600 }}
+                    views={["month", "week", "day"]}
+                    view={view}
+                    date={date}
+                    onNavigate={(newDate) => {
+                      setDate(newDate);
+                    }}
+                    onSelectSlot={handleSelectSlot}
+                    onSelectEvent={handleSelectEvent}
+                    components={{
+                      toolbar: (props) => (
+                        <CalendarToolbar
+                          {...props}
+                          view={view}
+                          onView={setView}
+                        />
+                      ),
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -145,161 +284,23 @@ const CalendarApp = () => {
 
         {/* Form for Creating Events */}
         {isFormOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">Tạo Sự Kiện</h2>
-              <form onSubmit={handleFormSubmit}>
-                <div className="mb-4">
-                  <label
-                    htmlFor="title"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Tiêu đề
-                  </label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    value={formValues.title}
-                    onChange={handleFormChange}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="description"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Mô tả
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formValues.description}
-                    onChange={handleFormChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="location"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Địa điểm
-                  </label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={formValues.location}
-                    onChange={handleFormChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="date"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Ngày
-                  </label>
-                  <input
-                    type="date"
-                    id="date"
-                    name="date"
-                    value={moment(selectedSlot?.start).format("YYYY-MM-DD")}
-                    onChange={handleFormChange}
-                    disabled
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="time"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Thời gian
-                  </label>
-                  <input
-                    type="time"
-                    id="time"
-                    name="time"
-                    value={moment(selectedSlot?.start).format("HH:mm")}
-                    onChange={handleFormChange}
-                    disabled
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    className="mr-2 px-4 py-2 bg-gray-300 text-gray-800 rounded"
-                    onClick={() => setIsFormOpen(false)}
-                  >
-                    Hủy
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-indigo-500 text-white rounded"
-                  >
-                    Tạo
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <EventForm
+            formValues={formValues}
+            setFormValues={setFormValues}
+            availableTimeSlots={getAvailableTimeSlots()}
+            onSubmit={handleCreateEvent}
+            onClose={() => setIsFormOpen(false)}
+          />
         )}
 
         {/* Modal for Event Details */}
         {isModalOpen && selectedEvent && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">{selectedEvent.title}</h2>
-              <p className="mb-2">
-                <strong>Mô tả:</strong> {selectedEvent.description}
-              </p>
-              <p className="mb-2">
-                <strong>Địa điểm:</strong> {selectedEvent.location}
-              </p>
-              <p className="mb-2">
-                <strong>Bắt đầu:</strong>{" "}
-                {moment(selectedEvent.start).format("LLL")}
-              </p>
-              <p className="mb-2">
-                <strong>Kết thúc:</strong>{" "}
-                {moment(selectedEvent.end).format("LLL")}
-              </p>
-              <div className="flex justify-end">
-                <button
-                  className="mr-2 px-4 py-2 bg-indigo-500 text-white rounded"
-                  onClick={() => {
-                    const newTitle = prompt(
-                      "Cập nhật tiêu đề:",
-                      selectedEvent.title
-                    );
-                    if (newTitle) {
-                      handleUpdateEvent({ title: newTitle });
-                    }
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="mr-2 px-4 py-2 bg-red-500 text-white rounded"
-                  onClick={handleDeleteEvent}
-                >
-                  Delete
-                </button>
-                <button
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
+          <EventModal
+            event={selectedEvent}
+            onUpdate={handleUpdateEvent}
+            onDelete={handleDeleteEvent}
+            onClose={() => setIsModalOpen(false)}
+          />
         )}
       </div>
     </div>

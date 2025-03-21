@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { MoreHorizontal, Filter, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import {
+  MoreHorizontal,
+  Filter,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import SidebarCompany from "../../components/SidebarCompany";
 import HeaderCompany from "../../components/HeaderCompany";
 import { useRouter } from "next/navigation";
@@ -14,7 +20,8 @@ const JobListingPage = () => {
   const fetchJobs = async () => {
     try {
       const response = await fetch("/api/job");
-      if (!response.ok) throw new Error("Failed to fetch jobs");
+      if (!response.ok)
+        throw new Error("You have no company exist let create one");
       const data = await response.json();
       setJobs(data);
     } catch (err) {
@@ -36,7 +43,6 @@ const JobListingPage = () => {
     router.push(`/company/JobDetails?job_id=${job._id}`);
   };
 
-
   return (
     <div className="mx-auto h-screen w-screen flex overflow-hidden">
       <SidebarCompany />
@@ -45,7 +51,9 @@ const JobListingPage = () => {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h1 className="text-xl font-semibold mb-1">Job Listing</h1>
-            <p className="text-gray-500 text-sm">Here is your jobs listing status.</p>
+            <p className="text-gray-500 text-sm">
+              Here is your jobs listing status.
+            </p>
           </div>
           <button className="flex items-center px-4 py-2 border rounded-lg">
             Jul 19 - Jul 25
@@ -54,7 +62,9 @@ const JobListingPage = () => {
         </div>
 
         {/* Hiển thị trạng thái tải dữ liệu */}
-        {loading && <p className="text-center text-gray-500">Loading jobs...</p>}
+        {loading && (
+          <p className="text-center text-gray-500">Loading jobs...</p>
+        )}
         {error && <p className="text-center text-red-500">Error: {error}</p>}
 
         {/* Hiển thị bảng công việc */}
@@ -82,16 +92,23 @@ const JobListingPage = () => {
               </thead>
               <tbody>
                 {jobs.map((job, index) => (
-                  <tr key={job._id} className="border-b hover:bg-gray-50 cursor-pointer" onClick={() => goToApplicants(job)}>
-
+                  <tr
+                    key={job._id}
+                    className="border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => goToApplicants(job)}
+                  >
                     <td className="p-4">{job.title}</td>
                     <td className="p-4">
                       <span className="px-3 py-1 text-green-600 bg-green-100 rounded-full text-sm">
                         {job.status || "Live"}
                       </span>
                     </td>
-                    <td className="p-4">{new Date(job.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4">{new Date(job.dueDate).toLocaleDateString()}</td>
+                    <td className="p-4">
+                      {new Date(job.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="p-4">
+                      {new Date(job.dueDate).toLocaleDateString()}
+                    </td>
                     <td className="p-4">
                       <span className="px-3 py-1 text-blue-600 bg-blue-100 rounded-full text-sm">
                         {job.jobType || "Fulltime"}
@@ -114,14 +131,20 @@ const JobListingPage = () => {
                 <select className="border rounded px-2 py-1">
                   <option>10</option>
                 </select>
-                <span className="text-sm text-gray-500">Applicants per page</span>
+                <span className="text-sm text-gray-500">
+                  Applicants per page
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <button className="p-1 rounded-lg hover:bg-gray-100">
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                <button className="px-3 py-1 rounded-lg bg-blue-600 text-white">1</button>
-                <button className="px-3 py-1 rounded-lg hover:bg-gray-100">2</button>
+                <button className="px-3 py-1 rounded-lg bg-blue-600 text-white">
+                  1
+                </button>
+                <button className="px-3 py-1 rounded-lg hover:bg-gray-100">
+                  2
+                </button>
                 <button className="p-1 rounded-lg hover:bg-gray-100">
                   <ChevronRight className="w-5 h-5" />
                 </button>
