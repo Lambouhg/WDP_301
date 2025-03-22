@@ -2,6 +2,7 @@
 import connectDB from "../../../lib/mongodb";
 import User from "../../../models/User";
 import { getAuth } from "@clerk/nextjs/server";
+import mongoose from "mongoose";
 
 // Bật lại bodyParser vì request sử dụng JSON
 export const config = { api: { bodyParser: true } };
@@ -16,12 +17,14 @@ export default async function handler(req, res) {
   }
 
   // Lấy otherUserId từ body nếu có (chỉ khi không phải GET request)
-  const { otherUserId } = req.method === "GET" ? req.query : req.body;
+  const otherUserId =
+    req.method === "GET" ? req.query.otherUserId : req.body.otherUserId;
 
   // Nếu otherUserId tồn tại, tìm user khác
   if (otherUserId) {
+    const objectId = new mongoose.Types.ObjectId(otherUserId);
     try {
-      const user = await User.findById(otherUserId);
+      const user = await User.findById(objectId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }

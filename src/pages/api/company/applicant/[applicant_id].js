@@ -39,9 +39,21 @@ export default async function handler(req, res) {
     }
 
     // Kiểm tra trạng thái hợp lệ
-    const validStatuses = ["In Review", "Interviewing", "Shortlisted", "Hired", "Rejected"];
+    const validStatuses = [
+      "In Review",
+      "Interviewing",
+      "Shortlisted",
+      "Hired",
+      "Rejected",
+    ];
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({ message: `Invalid status. Valid statuses are: ${validStatuses.join(', ')}` });
+      return res
+        .status(400)
+        .json({
+          message: `Invalid status. Valid statuses are: ${validStatuses.join(
+            ", "
+          )}`,
+        });
     }
 
     // Kiểm tra người dùng có phải là công ty không
@@ -90,6 +102,8 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error("Error occurred:", error); // Log lỗi chi tiết
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 }

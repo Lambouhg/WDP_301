@@ -1,7 +1,6 @@
 import { useUser, UserButton, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
 import {
   FiHome,
   FiMessageSquare,
@@ -14,21 +13,22 @@ import {
 } from "react-icons/fi";
 
 const CompanySidebar = () => {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser(); // Kiểm tra isLoaded để tránh redirect sớm
   const { signOut } = useClerk();
   const router = useRouter();
-  const returnToHome = () => {
-    router.push("/");
-  };
 
   useEffect(() => {
-    if (!user) {
+    if (isLoaded && !user) {
       router.push("/");
     }
-  }, [user, router]);
+  }, [isLoaded, user, router]);
+
+  if (!isLoaded) {
+    return <div>Loading...</div>; // Chờ Clerk tải xong user
+  }
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>Redirecting...</div>; // Nếu user không tồn tại sau khi tải xong, sẽ điều hướng
   }
 
   return (
@@ -36,7 +36,7 @@ const CompanySidebar = () => {
       <div>
         <h2
           className="text-3xl font-bold text-blue-600 mb-8 cursor-pointer"
-          onClick={returnToHome}
+          onClick={() => router.push("/")}
         >
           Job Finder
         </h2>
@@ -45,43 +45,36 @@ const CompanySidebar = () => {
             icon={<FiHome />}
             label="Dashboard"
             href="/company/companydashboard"
-            active={router.pathname === "/company/companydashboard"}
           />
           <NavItem
             icon={<FiMessageSquare />}
             label="Messages"
             href="/company/companymessage"
-            active={router.pathname === "/company/companymessage"}
           />
           <NavItem
             icon={<FiUser />}
             label="Company Profile"
             href="/company/companyprofile"
-            active={router.pathname === "/company/profile"}
           />
           <NavItem
             icon={<FiUsers />}
             label="All Applicants"
             href="/company/AllApplication"
-            active={router.pathname === "/company/AllApplication"}
           />
           <NavItem
             icon={<FiBriefcase />}
             label="Job Listings"
             href="/company/JobListingCompany"
-            active={router.pathname === "/company/JobListingCompany"}
           />
           <NavItem
             icon={<FiCalendar />}
             label="My Schedule"
             href="/company/Calender"
-            active={router.pathname === "/company/Calender"}
           />
           <NavItem
             icon={<FiSettings />}
             label="Settings"
             href="/company/Settings"
-            active={router.pathname === "/company/Settings"}
           />
         </nav>
       </div>
@@ -98,30 +91,31 @@ const CompanySidebar = () => {
         </div>
         <button
           onClick={() => {
-            localStorage.removeItem("user"); // Xóa dữ liệu người dùng khỏi localStorage
-            signOut({ redirectUrl: "/" }); // Đăng xuất và chuyển hướng về trang chủ
+            localStorage.removeItem("user");
+            signOut({ redirectUrl: "/" });
           }}
           className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-100 w-full"
         >
           <FiLogOut className="text-lg" />
           <span className="text-sm font-medium">Đăng xuất</span>
         </button>
-
       </div>
     </aside>
   );
 };
 
-function NavItem({ icon, label, href, active }) {
+function NavItem({ icon, label, href }) {
   const router = useRouter();
+  const isActive = router.pathname === href;
 
   return (
     <div
       onClick={() => router.push(href)}
       className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300
-        ${active
-          ? "bg-blue-100 text-blue-600"
-          : "text-gray-700 hover:bg-gray-200"
+        ${
+          isActive
+            ? "bg-blue-100 text-blue-600"
+            : "text-gray-700 hover:bg-gray-200"
         }`}
     >
       <span className="text-lg">{icon}</span>
