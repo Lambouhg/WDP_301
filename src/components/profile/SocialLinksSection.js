@@ -28,7 +28,9 @@ const SocialLinksSection = ({
               className="border rounded-md p-1"
             />
           ) : (
-            <span className="text-sm text-blue-600">{instagram}</span>
+            <span className="text-sm text-blue-600 cursor-pointer">
+              {instagram}
+            </span>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -41,7 +43,9 @@ const SocialLinksSection = ({
               className="border rounded-md p-1"
             />
           ) : (
-            <span className="text-sm text-blue-600">{twitter}</span>
+            <span className="text-sm text-blue-600 cursor-pointer">
+              {twitter}
+            </span>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -54,7 +58,9 @@ const SocialLinksSection = ({
               className="border rounded-md p-1"
             />
           ) : (
-            <span className="text-sm text-blue-600">{website}</span>
+            <span className="text-sm text-blue-600 cursor-pointer">
+              {website}
+            </span>
           )}
         </div>
       </div>

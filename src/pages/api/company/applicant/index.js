@@ -22,13 +22,19 @@ export default async function handler(req, res) {
 
     // Kiểm tra role có phải "company" không
     if (user.role !== "company") {
-      return res.status(403).json({ message: "Access denied. Only company accounts can view applicants." });
+      return res
+        .status(403)
+        .json({
+          message: "Access denied. Only company accounts can view applicants.",
+        });
     }
 
     // Lấy companyId của công ty
     const companyId = user.companyId;
     if (!companyId) {
-      return res.status(400).json({ message: "Company ID not found for this user." });
+      return res
+        .status(400)
+        .json({ message: "Company ID not found for this user." });
     }
 
     // Nếu có query jobId, tìm ứng viên theo jobId
@@ -52,11 +58,13 @@ export default async function handler(req, res) {
     // Nếu không có jobId trong query, lấy tất cả ứng viên của công ty
     const jobs = await Job.find({ companyId }).select("_id");
     if (!jobs.length) {
-      return res.status(404).json({ message: "No jobs found for this company." });
+      return res
+        .status(404)
+        .json({ message: "No jobs found for this company." });
     }
 
     // Trích xuất jobIDs từ danh sách job
-    const jobIds = jobs.map(job => job._id);
+    const jobIds = jobs.map((job) => job._id);
 
     // Lấy tất cả ứng viên đã apply vào các job này
     const applicants = await Applicant.find({ jobID: { $in: jobIds } })
@@ -64,8 +72,9 @@ export default async function handler(req, res) {
       .populate("jobID", "title"); // Populate thông tin job ứng tuyển
 
     res.status(200).json({ applicants });
-
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 }
