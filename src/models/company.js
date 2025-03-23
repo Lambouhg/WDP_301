@@ -1,3 +1,4 @@
+//src/models/company.js
 import mongoose from "mongoose";
 
 const CompanySchema = new mongoose.Schema(
@@ -9,6 +10,7 @@ const CompanySchema = new mongoose.Schema(
     industry: { type: String },  // Ngành nghề công ty
     dateFounded: { type: Date },  // Ngày thành lập công ty
     techStack: { type: [String] },  // Các công nghệ mà công ty sử dụng
+    location: { type: String, default: "none" },  // Địa chỉ công ty
     description: { type: String },  // Mô tả về công ty
     socialLinks: {  // Các liên kết mạng xã hội
       instagram: { type: String, default: null },
@@ -16,6 +18,10 @@ const CompanySchema = new mongoose.Schema(
       facebook: { type: String, default: null },
       linkedin: { type: String, default: null },
       youtube: { type: String, default: null },
+    },
+    contact: {  // Thông tin liên hệ
+      email: { type: String, required: null },
+      phone: { type: String, required: null },
     },
     team: [{  // Danh sách thành viên trong team
       user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },  // Tham chiếu đến người dùng trong team

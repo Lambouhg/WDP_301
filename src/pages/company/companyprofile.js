@@ -1,7 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaLinkedin,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarked
+} from "react-icons/fa";
 import HeaderCompany from "../../components/HeaderCompany";
 import Sidebar from "../../components/SidebarCompany";
 
@@ -14,7 +23,7 @@ const CompanyProfile = () => {
     const fetchCompanyData = async () => {
       try {
         if (!user?.id) return;
-        
+
         const response = await fetch(`/api/company?userId=${user.id}`, {
           method: "GET",
           headers: {
@@ -87,9 +96,9 @@ const CompanyProfile = () => {
     <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 py-6">
           <HeaderCompany />
-          
+
           {/* Company Header */}
           <div className="bg-white rounded-lg shadow p-6 mb-6 mt-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -102,8 +111,8 @@ const CompanyProfile = () => {
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold break-words">{company.name || 'Company Name'}</h1>
                   {company.website && (
-                    <a 
-                      href={company.website} 
+                    <a
+                      href={company.website}
                       className="text-blue-600 text-sm hover:underline break-all"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -155,7 +164,7 @@ const CompanyProfile = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Location</p>
+                    <p className="text-gray-600">Address</p>
                     <p className="font-medium break-words">{company.location || 'Not specified'}</p>
                   </div>
                 </div>
@@ -208,22 +217,65 @@ const CompanyProfile = () => {
                   <p className="text-gray-600">No tech stack information</p>
                 )}
               </div>
-              
+
               {/* Contact Information */}
               <div className="bg-white p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-gray-600">Email</p>
-                    <p className="font-medium break-words">{company.email || 'Not provided'}</p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <FaEnvelope className="text-gray-600 w-5 h-5" />
+                    <div>
+                      <p className="text-gray-600 text-sm">Email</p>
+                      <p className="font-medium break-words">
+                        {company.contact?.email ? (
+                          <a
+                            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(company.contact.email)}`}
+                            className="text-blue-600 hover:underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {company.contact.email}
+                          </a>
+                        ) : (
+                          "Not provided"
+                        )}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-gray-600">Phone</p>
-                    <p className="font-medium">{company.phone || 'Not provided'}</p>
+                  <div className="flex items-center gap-3">
+                    <FaPhone className="text-gray-600 w-5 h-5" />
+                    <div>
+                      <p className="text-gray-600 text-sm">Phone</p>
+                      <p className="font-medium">
+                        {company.contact?.phone ? (
+                          <a href={`tel:${company?.contact?.phone}`} className="text-blue-600 hover:underline">
+                            {company.contact.phone}
+                          </a>
+                        ) : (
+                          "Not provided"
+                        )}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-gray-600">Address</p>
-                    <p className="font-medium break-words">{company.address || 'Not provided'}</p>
+                  <div className="flex items-center gap-3">
+                    <FaMapMarked className="text-gray-600 w-5 h-5" />
+                    <div>
+                      <p className="text-gray-600 text-sm">Location</p>
+                      <p className="font-medium">
+                        {company.location ? (
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.location)}`}
+                            className="text-blue-600 hover:underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {company.location}
+                          </a>
+                        ) : (
+                          "Not provided"
+                        )}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

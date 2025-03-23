@@ -2,17 +2,18 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/router";
-import CompanyFilters from "./BrowseCompanies/CompanyFilters";
 import Pagination from "./BrowseCompanies/Pagination";
 import CompanySort from "./BrowseCompanies/CompanySort";
+import CompanyFilters from "./BrowseCompanies/CompanyFilters";
+import CompanyCards from "./BrowseCompanies/CompanyCards";
+import CompanySearchBar from "./BrowseCompanies/CompanySearchBar";
 
 const ListCompaniesSearched = () => {
-    const router = useRouter();
+
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [sortOption, setSortOption] = useState("relevant");
+    const [sortOption, setSortOption] = useState("recent");
     const [sortDirection, setSortDirection] = useState("desc");
     const [selectedIndustry, setSelectedIndustry] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -34,29 +35,6 @@ const ListCompaniesSearched = () => {
 
         fetchCompanies();
     }, []);
-
-    const industries = [
-        { name: "Advertising", count: 5 },
-        { name: "Business Services", count: 4 },
-        { name: "Blockchain", count: 1 },
-        { name: "Cloud", count: 2 },
-        { name: "Computer Tech", count: 3 },
-        { name: "Education", count: 10 },
-        { name: "Finance", count: 15 },
-        { name: "Gaming", count: 7 },
-        { name: "Travel & Bookings", count: 8 },
-        { name: "Healthcare", count: 6 },
-        { name: "Publishing", count: 3 },
-        { name: "Retail", count: 4 },
-    ];
-
-    const handleCompanyClick = (companyId) => {
-        router.push(`/company/${companyId}`);
-    };
-
-    const handleImageError = (e) => {
-        e.target.src = "https://via.placeholder.com/32";
-    };
 
     const handleSortChange = (e) => {
         setSortOption(e.target.value);
@@ -134,19 +112,12 @@ const ListCompaniesSearched = () => {
     };
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex gap-4">
-                <input
-                    type="text"
-                    placeholder="Job title or keyword"
-                    className="flex-1 bg-[#E9E9E9FF] p-4 rounded-lg"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-            </div>
-            <div className="text-md text-gray-500">
-                Popular: Twitter, Microsoft, Apple, Facebook
-            </div>
+        <div className="flex flex-col gap-6 mt-6 px-4 md:px-10 max-w-9xl mx-auto">
+            {/* Search bar */}
+            <CompanySearchBar
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+            />
 
             {loading ? (
                 <p>Đang tải...</p>
@@ -155,8 +126,8 @@ const ListCompaniesSearched = () => {
             ) : (
                 <div className="flex flex-col">
                     <div className="flex">
+                        {/* Bộ lọc ngành */}
                         <CompanyFilters
-                            industries={industries}
                             selectedIndustry={selectedIndustry}
                             handleIndustryChange={handleIndustryChange}
                             countCompaniesByIndustry={countCompaniesByIndustry}
@@ -165,51 +136,18 @@ const ListCompaniesSearched = () => {
                             handleClearFilters={handleClearFilters}
                         />
 
+                        {/* Nội dung chính */}
                         <div className="flex-1 ml-5">
-                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-indigo-700">All Companies</h2>
-                                    <p className="text-sm text-gray-500">
-                                        Showing {allCompanies.length} results
-                                    </p>
-                                </div>
-                                {/* Sort by */}
-                                <CompanySort
-                                    sortOption={sortOption}
-                                    handleSortChange={handleSortChange}
-                                />
-                            </div>
+                            <CompanySort
+                                totalCompanies={allCompanies.length}
+                                sortOption={sortOption}
+                                handleSortChange={handleSortChange}
+                                sortDirection={sortDirection}
+                                setSortDirection={setSortDirection}
+                            />
 
                             {/* Company Cards */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {currentCompanies.map((company) => (
-                                    <div
-                                        key={company._id}
-                                        className="shadow-md rounded-lg hover:shadow-lg transition duration-200 border border-gray-200 cursor-pointer hover:bg-gray-50"
-                                        onClick={() => handleCompanyClick(company._id)}
-                                    >
-                                        <div className="relative p-4">
-                                            <p className="absolute top-2 right-2 text-xs text-blue-600 font-medium">
-                                                {company.jobsCount || 0} jobs
-                                            </p>
-                                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-                                                <img
-                                                    src={company.logo || "https://via.placeholder.com/32"}
-                                                    className="w-full h-full object-cover rounded-full"
-                                                    alt={company.name}
-                                                    onError={handleImageError}
-                                                />
-                                            </div>
-                                            <h3 className="text-base font-semibold text-gray-900 mb-1">
-                                                {company.name}
-                                            </h3>
-                                            <p className="text-xs text-gray-600 line-clamp-6">
-                                                {company.description}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            <CompanyCards companies={currentCompanies} />
                         </div>
                     </div>
 
