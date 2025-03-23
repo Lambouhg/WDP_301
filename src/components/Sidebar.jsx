@@ -9,6 +9,7 @@ import {
   FiSettings,
   FiLogOut,
   FiUser,
+  FiGlobe
 } from "react-icons/fi";
 
 const Sidebar = () => {
@@ -30,7 +31,9 @@ const Sidebar = () => {
   const toJobFinder = () => {
     router.push("/JobFinderPage");
   };
-
+  const toFindCompaniesPage = () => {
+    router.push("/FindCompanies")
+  };
   useEffect(() => {
     if (isLoaded && !user) {
       router.push("/");
@@ -77,6 +80,12 @@ const Sidebar = () => {
             label="Find Jobs"
             href="/JobFinderPage"
             active={router.pathname === "/JobFinderPage"}
+          />
+          <NavItem
+            icon={<FiGlobe />}
+            label="Browse Companies"
+            href="/FindCompaniesPage"
+            active={router.pathname === "/FindCompaniesPage"}
           />
           <NavItem
             icon={<FiUser />}
