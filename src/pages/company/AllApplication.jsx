@@ -1,3 +1,4 @@
+//src/pages/company/AllApplication.jsx
 import React, { useEffect, useState } from "react";
 import { Search, Filter, MoreVertical, ChevronDown } from "lucide-react";
 import DasborderHeader from "../../components/HeaderCompany";
@@ -50,6 +51,12 @@ const ApplicantList = () => {
     };
     fetchApplicants();
   }, []);
+
+  // Handle "See Application" button click
+  const handleSeeApplication = (applicantId) => {
+    // Navigate to ApplicantDetails page with applicantId as query parameter
+    router.push(`/company/applicant-details?applicantId=${applicantId}`);
+  };
 
   return (
     <div className="flex w-screen h-screen overflow-hidden bg-white rounded-lg shadow-sm mx-auto">
@@ -142,7 +149,10 @@ const ApplicantList = () => {
                   </td>
                   <td className="py-4">{applicant.currentJobTitle || "N/A"}</td>
                   <td className="py-4">
-                    <button className="px-4 py-2 text-blue-600 bg-blue-50 rounded-lg">
+                  <button
+                      className="px-4 py-2 text-blue-600 bg-blue-50 rounded-lg"
+                      onClick={() => handleSeeApplication(applicant._id)}
+                    >
                       See Application
                     </button>
                   </td>
