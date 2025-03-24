@@ -1,4 +1,3 @@
-import { Facebook } from "lucide-react";
 import connectDB from "../../../../lib/mongodb";
 import Applicant from "../../../../models/applicant";
 import User from "../../../../models/User";
@@ -35,8 +34,8 @@ export default async function handler(req, res) {
 
       // Tìm ứng viên dựa trên applicant_id
       const applicant = await Applicant.findById(applicant_id)
-        .populate("userID", "name email phone avatar appliedJobs socialLinks ") // Populate thông tin user
-        .select("+resume"); // Include trường resume
+        .populate("userID","name email phone avatar appliedJobs socialLinks jobType categories appliedJobs")
+        .select("+resume");
 
       if (!applicant) {
         return res.status(404).json({ message: "Applicant not found" });
@@ -73,10 +72,6 @@ export default async function handler(req, res) {
           email: applicant.userID.email,
           phone: applicant.userID.phone,
           socialLinks: applicant.userID.socialLinks,
-          jobType: applicant.jobID.jobType,
-          categories: applicant.jobID.categories,
-          appliedJobs: applicant.userID.appliedJobs,
-          title: applicant.jobID.title,
         },
       });
     } catch (error) {
