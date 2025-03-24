@@ -25,17 +25,6 @@ const ApplicantDetails = () => {
     { value: "Hired", color: "text-gray-500 bg-gray-100" },
     { value: "Rejected", color: "text-blue bg-blue-500" },
   ];
-
-  const getStatusColor = (status) => {
-    const statusInfo = statuses.find((s) => s.value === status);
-    return statusInfo ? statusInfo.color.split(" ")[1] : "bg-gray-200";
-  };
-
-  const getStatusClass = (status) => {
-    const statusInfo = statuses.find((s) => s.value === status);
-    return statusInfo ? statusInfo.color : "text-gray-500 bg-gray-200";
-  };
-
   // Fetch applicant data from API
   useEffect(() => {
     const fetchApplicant = async () => {
@@ -54,32 +43,6 @@ const ApplicantDetails = () => {
     };
     fetchApplicant();
   }, [applicantId]);
-
-  // Handle Schedule Interview button click
-  const handleScheduleInterview = async () => {
-    try {
-      setIsUpdating(true);
-      const response = await fetch(`/api/company/applicant/${applicantId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: selectedStatus }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update applicant status");
-      }
-      const data = await response.json();
-      setApplicant({
-        ...applicant,
-        status: data.applicant.status,
-      });
-      setIsUpdating(false);
-    } catch (error) {
-      setError(error.message);
-      setIsUpdating(false);
-    }
-  };
 
   // Xử lý thay đổi trạng thái
   const handleStatusChange = async (newStatus) => {
@@ -175,7 +138,7 @@ const ApplicantDetails = () => {
                     {applicant?.name || "N/A"}
                   </h2>
                   <p className="text-gray-500 text-sm">
-                    {applicant?.email || "N/A"}
+                    {applicant?.userID.email || "N/A"}
                   </p>
                   <div className="flex items-center gap-1 mt-2">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
