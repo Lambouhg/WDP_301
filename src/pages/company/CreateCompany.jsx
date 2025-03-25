@@ -66,8 +66,8 @@ const CreateCompany = () => {
     try {
       const formattedData = {
         ...formData,
-        dateFounded: formatDateForSubmission(formData.dateFounded), // Format date
-        ownerId: user.id, // Ensure ownerId is included
+        dateFounded: formatDateForSubmission(formData.dateFounded),
+        ownerId: user.id,
       };
   
       const response = await fetch("/api/company", {
@@ -78,19 +78,26 @@ const CreateCompany = () => {
         body: JSON.stringify(formattedData),
       });
   
+      const errorData = await response.json();
+  
       if (!response.ok) {
-        const errorData = await response.json();
+        if (response.status === 400 && errorData.message.includes("User already owns a company")) {
+          alert("User already owns a company. Only one company is allowed.");
+          return; // Ngăn không cho xử lý tiếp
+        }
         throw new Error(errorData.message || "Failed to create company");
       }
   
       router.push("/company/companyprofile");
     } catch (error) {
       console.error("Error creating company:", error);
-      alert(error.message || "Failed to create company. Please try again.");
+      if (!error.message.includes("User already owns a company")) {
+        alert(error.message || "Failed to create company. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
-  };
+  };  
 
   // Format date before sending to server
   const formatDateForSubmission = (date) => {
