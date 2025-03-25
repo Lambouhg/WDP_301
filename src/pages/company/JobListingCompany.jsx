@@ -46,7 +46,7 @@ const JobListingPage = () => {
 
   return (
     <div className="mx-auto h-screen w-screen flex overflow-hidden">
-      <SidebarCompany />
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="w-full px-10 pt-5 h-full overflow-y-auto">
         <HeaderCompany />
         <div className="flex justify-between items-center mb-4">

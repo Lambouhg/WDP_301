@@ -14,6 +14,7 @@ import HeaderCompany from "../../components/HeaderCompany";
 ChartJS.register(BarElement, CategoryScale, LinearScale);
 
 export default function CompanyDashboard() {
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState("Week");
 
   // Dữ liệu cho biểu đồ
@@ -91,7 +92,7 @@ export default function CompanyDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-100 w-screen overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {/* Main Content */}
       <div className="flex-1 p-6 overflow-y-auto">

@@ -140,7 +140,7 @@ const PostJobCompany = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <SidebarCompany />
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="p-6 bg-white shadow-sm">
           <HeaderCompany />

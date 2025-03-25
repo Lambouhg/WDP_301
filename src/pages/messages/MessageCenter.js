@@ -7,6 +7,7 @@ import DashboardHeader from "../../components/DashboardHeader";
 import { useUser } from "@clerk/nextjs";
 
 const MessageCenter = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { user, isLoaded } = useUser(); // Kiểm tra trạng thái tải dữ liệu
   const [selectedConversation, setSelectedConversation] = useState(null);
 
@@ -21,7 +22,7 @@ const MessageCenter = () => {
 
   return (
     <div className="flex bg-white h-screen w-full overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="flex flex-col flex-1 overflow-hidden w-screen">
         {/* Header */}

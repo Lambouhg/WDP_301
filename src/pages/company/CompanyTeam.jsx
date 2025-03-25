@@ -59,7 +59,7 @@ const CompanyTeam = () => {
 
   return (
     <main className="mx-auto h-screen w-screen flex overflow-hidden">
-      <SidebarCompany />
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="w-full px-10 pt-5 h-full overflow-y-auto py-8">
         <HeaderCompany />
 

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
@@ -13,13 +14,12 @@ import {
 } from "react-icons/fa";
 import HeaderCompany from "../../components/HeaderCompany";
 import Sidebar from "../../components/SidebarCompany";
-import Image from "next/image";
 
 const CompanyProfile = () => {
   const { user } = useUser();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
@@ -71,7 +71,7 @@ const CompanyProfile = () => {
   if (loading) {
     return (
       <div className="flex bg-gray-50 min-h-screen">
-        <Sidebar />
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex-1 p-6 overflow-y-auto">
           <HeaderCompany />
           <div className="flex justify-center items-center h-64">
@@ -84,8 +84,8 @@ const CompanyProfile = () => {
 
   if (!company) {
     return (
-      <div className="flex bg-gray-50 min-h-screen">
-        <Sidebar />
+      <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen w-full overflow-hidden">
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex-1 p-6 overflow-y-auto">
           <HeaderCompany />
           <div className="flex justify-center items-center h-64">
@@ -104,8 +104,8 @@ const CompanyProfile = () => {
   }
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
-      <Sidebar />
+    <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen w-full overflow-hidden">
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-8xl mx-auto px-4 sm:px-6 py-6">
           <HeaderCompany />
@@ -114,7 +114,7 @@ const CompanyProfile = () => {
           <div className="bg-white rounded-lg shadow p-6 mb-6 mt-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <Image
+                <img
                   src={company.logo || "https://i.imgur.com/6bY8z2N.jpg"}
                   alt="Company logo"
                   className="w-16 h-16 rounded-lg object-cover flex-shrink-0"

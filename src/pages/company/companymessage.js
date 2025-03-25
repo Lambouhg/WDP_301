@@ -9,7 +9,7 @@ import { useUser } from "@clerk/nextjs";
 const MessageCenter = () => {
   const { user, isLoaded } = useUser(); // Kiểm tra trạng thái tải dữ liệu
   const [selectedConversation, setSelectedConversation] = useState(null);
-
+  const [isOpen, setIsOpen] = useState(false);
   // Nếu dữ liệu user chưa tải xong, hiển thị loading
   if (!isLoaded) {
     return (
@@ -21,7 +21,7 @@ const MessageCenter = () => {
 
   return (
     <div className="flex bg-white h-screen w-full overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="flex flex-col flex-1 overflow-hidden w-screen">
         {/* Header */}

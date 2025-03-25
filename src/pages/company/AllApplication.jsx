@@ -61,7 +61,7 @@ const ApplicantList = () => {
 
   return (
     <div className="flex w-screen h-screen overflow-hidden bg-white rounded-lg shadow-sm mx-auto">
-      <SidebarCompany />
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="overflow-y-auto w-full p-6">
         <DasborderHeader />
         <div className="flex items-center justify-between mb-6">

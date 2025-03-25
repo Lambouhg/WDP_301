@@ -398,7 +398,7 @@ const CalendarApp = () => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-gray-50">
-      <SidebarCompany />
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="overflow-y-auto w-full p-6">
         <DasborderHeader />
         <div className="mx-auto mt-4">

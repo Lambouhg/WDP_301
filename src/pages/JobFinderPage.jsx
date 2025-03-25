@@ -1,15 +1,16 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+"use client";
 import ListJobSearched from "../components/ListJobSearched";
 import Sidebar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
 
 import { Search, MapPin } from "lucide-react";
+import { useState } from "react";
 
 const JobFinderPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex bg-white h-screen w-full overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="flex flex-col flex-1 overflow-y-auto">
         {/* Header */}

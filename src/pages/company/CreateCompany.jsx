@@ -6,6 +6,7 @@ import HeaderCompany from "../../components/HeaderCompany";
 import Sidebar from "../../components/SidebarCompany";
 
 const CreateCompany = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { user } = useUser();
   const [formData, setFormData] = useState({
@@ -120,7 +121,7 @@ const CreateCompany = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Create Company Profile</h1>

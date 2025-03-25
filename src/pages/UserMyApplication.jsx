@@ -10,7 +10,7 @@ const UserMyApplication = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTab, setSelectedTab] = useState("All"); // Tab được chọn
-
+  const [isOpen, setIsOpen] = useState(false);
   // Gọi API lấy toàn bộ dữ liệu ứng viên
   useEffect(() => {
     const fetchApplications = async () => {
@@ -106,7 +106,7 @@ const UserMyApplication = () => {
 
   return (
     <div className="bg-white flex overflow-hidden rounded-lg shadow-lg w-screen h-screen">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="w-full overflow-y-auto pb-6">
         <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
           <DashboardHeader dashboardHeaderName={"My Applications"} />

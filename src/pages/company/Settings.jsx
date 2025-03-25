@@ -194,7 +194,7 @@ const Settings = () => {
   if (!company) {
     return (
       <div className="flex bg-gray-50 min-h-screen">
-        <SidebarCompany />
+        <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex-1 p-6 overflow-y-auto">
           <HeaderCompany />
           <div className="flex justify-center items-center h-screen">
@@ -214,7 +214,7 @@ const Settings = () => {
 
   return (
     <main className="mx-auto h-screen w-screen flex overflow-hidden">
-      <SidebarCompany />
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="w-full px-10 pt-5 h-full overflow-y-auto">
         <HeaderCompany />
         <div className="w-full mx-auto py-7">

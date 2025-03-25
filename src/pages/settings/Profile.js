@@ -7,10 +7,10 @@ import Sidebar from "../../components/Sidebar";
 import DashboardHeader from "../../components/DashboardHeader";
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("ProfileForm");
-
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className=" w-screen h-screen overflow-hidden flex">
-      <Sidebar />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex flex-col border-b pb-2 border-l-2 gray-500 pl-5 h-full w-full overflow-y-auto">
         <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
           <DashboardHeader dashboardHeaderName={"Setting"} />
