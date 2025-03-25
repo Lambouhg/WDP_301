@@ -18,43 +18,45 @@ export default function SearchJob() {
 
   const toDashboard = () => {
     router.push("/");
-
   };
 
   const dashboard = () => {
     if (user) {
       router.push("users/dashboard");
     } else {
-      document.querySelector('[data-clerk-sign-in-button]').click();
+      document.querySelector("[data-clerk-sign-in-button]").click();
     }
-
   };
 
   return (
-    <div className="min-h-screen bg-[#fff] text-black ">
+    <div className="min-h-screen bg-[#fff] text-black">
       {/* Header */}
-      <nav className="flex justify-between items-center mb-12 ml-6 mr-5 mt-6">
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-          <span
-            className="font-bold text-3xl text-blue-500"
-            style={{ cursor: "pointer" }}
-            onClick={toDashboard}
-          >
-            Job Finder
-          </span>
-          <span
-            className="text-1xl pl-9 cursor-pointer text-black"
-            onClick={() => router.push("/FindJob")}
-          >
-            Find Jobs
-          </span>
-          <span
-            className="text-1xl pl-2 cursor-pointer text-black"
-            onClick={() => router.push("/BrowseCompanies")}
-          >
-            Browse Companies
-          </span>
+      <nav className="flex flex-col sm:flex-row justify-between items-center mb-12 ml-4 sm:ml-6 mr-4 sm:mr-5 mt-6 space-y-4 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span
+              className="font-bold text-2xl sm:text-3xl text-blue-500"
+              style={{ cursor: "pointer" }}
+              onClick={toDashboard}
+            >
+              Job Finder
+            </span>
+          </div>
+          <div className="flex space-x-4">
+            <span
+              className="text-sm sm:text-base pl-0 sm:pl-9 cursor-pointer text-black"
+              onClick={() => router.push("/FindJob")}
+            >
+              Find Jobs
+            </span>
+            <span
+              className="text-sm sm:text-base pl-0 sm:pl-2 cursor-pointer text-black"
+              onClick={() => router.push("/BrowseCompanies")}
+            >
+              Browse Companies
+            </span>
+          </div>
         </div>
         <div className="flex items-center space-x-4">
           <SignedIn>
@@ -63,7 +65,7 @@ export default function SearchJob() {
           <SignedOut>
             <SignInButton mode="modal">
               <button
-                className="bg-blue-600 px-4 py-2 rounded-lg"
+                className="bg-blue-600 px-4 py-2 rounded-lg text-sm sm:text-base"
                 data-clerk-sign-in-button
               >
                 Sign In
@@ -74,16 +76,17 @@ export default function SearchJob() {
       </nav>
 
       {/* Hero Section */}
-      <div className="mb-5 ml-9 mr-5">
-        <h1 className="text-8xl font-bold pb-9 text-black">
-          <span className="pr-4">Find your</span>
+      <div className="mb-5 ml-4 sm:ml-9 mr-4 sm:mr-5">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold pb-6 sm:pb-9 text-black">
+          <span className="block sm:inline pr-0 sm:pr-4">Find your</span>
           <span className="text-blue-500 border-b-2 border-blue-500 height-full">
             dream jobs
           </span>
         </h1>
-        <p className="text-white-400 mb-8 text-xl">
+        <p className="text-gray-600 mb-6 sm:mb-8 text-base sm:text-xl">
           Find your next career at companies like HubSpot, Nike, and Dropbox
         </p>
+
         {/* Search Bar */}
         <ListJobSearched />
       </div>
