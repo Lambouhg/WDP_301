@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import {
   Camera,
@@ -198,8 +199,12 @@ const Settings = () => {
           <HeaderCompany />
           <div className="flex justify-center items-center h-screen">
             <div className="text-center">
-              <h1 className="text-2xl font-bold mb-4">Bạn chưa tạo hồ sơ công ty</h1>
-              <p className="text-gray-600">Hãy tạo hồ sơ công ty để xem nó ở đây.</p>
+              <h1 className="text-2xl font-bold mb-4">
+                Bạn chưa tạo hồ sơ công ty
+              </h1>
+              <p className="text-gray-600">
+                Hãy tạo hồ sơ công ty để xem nó ở đây.
+              </p>
             </div>
           </div>
         </div>
@@ -215,7 +220,9 @@ const Settings = () => {
         <div className="w-full mx-auto py-7">
           <header className="bg-white rounded-2xl shadow-sm mb-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">OVERVIEW</h1>
-            <p className="text-gray-500">Manage your company profile and information</p>
+            <p className="text-gray-500">
+              Manage your company profile and information
+            </p>
             <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
               <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-white text-blue-600 shadow-sm">
                 Overview
@@ -238,21 +245,35 @@ const Settings = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <aside className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-sm p-6">
-                <h2 className="font-semibold text-gray-800 mb-4">Quick Navigation</h2>
+                <h2 className="font-semibold text-gray-800 mb-4">
+                  Quick Navigation
+                </h2>
                 <nav className="flex flex-col space-y-4">
-                  <a href="#basic" className="flex items-center space-x-3 text-gray-600 hover:text-blue-600">
+                  <a
+                    href="#basic"
+                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600"
+                  >
                     <Building2 className="w-5 h-5" />
                     <span>Basic Information</span>
                   </a>
-                  <a href="#logo" className="flex items-center space-x-3 text-gray-600 hover:text-blue-600">
+                  <a
+                    href="#logo"
+                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600"
+                  >
                     <Camera className="w-5 h-5" />
                     <span>Company Logo</span>
                   </a>
-                  <a href="#details" className="flex items-center space-x-3 text-gray-600 hover:text-blue-600">
+                  <a
+                    href="#details"
+                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600"
+                  >
                     <FileText className="w-5 h-5" />
                     <span>Company Details</span>
                   </a>
-                  <a href="#about" className="flex items-center space-x-3 text-gray-600 hover:text-blue-600">
+                  <a
+                    href="#about"
+                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600"
+                  >
                     <Globe className="w-5 h-5" />
                     <span>About Company</span>
                   </a>
@@ -271,25 +292,37 @@ const Settings = () => {
               <section id="logo" className="bg-white rounded-2xl shadow-sm p-6">
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-1">Company Logo</h3>
-                    <p className="text-gray-500 text-sm">This will be displayed on your public profile</p>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                      Company Logo
+                    </h3>
+                    <p className="text-gray-500 text-sm">
+                      This will be displayed on your public profile
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-6">
                   {company?.logo ? (
-                    <img src={company.logo} alt="Company logo" className="w-24 h-24" />
+                    <img
+                      src={company.logo}
+                      alt="Company logo"
+                      className="w-24 h-24"
+                    />
                   ) : (
                     <span></span>
                   )}
                   <div className="flex-1">
                     <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center">
-                      <p className="text-sm text-gray-600 mb-1">Enter logo URL here</p>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Enter logo URL here
+                      </p>
                       <input
                         type="url"
                         className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="https://example.com/logo.png"
                         value={company?.logo || ""}
-                        onChange={(e) => handleInputChange("logo", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("logo", e.target.value)
+                        }
                       />
                     </div>
                   </div>
@@ -297,70 +330,105 @@ const Settings = () => {
               </section>
 
               {/* Company Details */}
-              <section id="details" className="bg-white rounded-2xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-6">Company Details</h3>
+              <section
+                id="details"
+                className="bg-white rounded-2xl shadow-sm p-6"
+              >
+                <h3 className="text-lg font-semibold text-gray-800 mb-6">
+                  Company Details
+                </h3>
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Company Name
+                      </label>
                       <input
                         type="text"
                         className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={company?.name || ""}
-                        onChange={(e) => handleInputChange("name", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("name", e.target.value)
+                        }
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Website
+                      </label>
                       <input
                         type="url"
                         className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-blue-600"
                         value={company?.website || ""}
-                        onChange={(e) => handleInputChange("website", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("website", e.target.value)
+                        }
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Location
+                    </label>
                     <input
                       type="text"
                       className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={company?.location || ""}
-                      onChange={(e) => handleInputChange("location", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("location", e.target.value)
+                      }
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Employees</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Employees
+                      </label>
                       <input
                         type="number"
                         className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={company?.employees || ""}
-                        onChange={(e) => handleInputChange("employees", Number(e.target.value))}
+                        onChange={(e) =>
+                          handleInputChange("employees", Number(e.target.value))
+                        }
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Industry</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Industry
+                      </label>
                       <input
                         type="text"
                         className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={company?.industry || ""}
-                        onChange={(e) => handleInputChange("industry", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("industry", e.target.value)
+                        }
                       />
                     </div>
                   </div>
 
                   {/* Thêm Date Founded */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Date Founded</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Date Founded
+                    </label>
                     <div className="relative">
                       <input
                         type="date"
                         className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={company?.dateFounded ? new Date(company.dateFounded).toISOString().split("T")[0] : ""}
-                        onChange={(e) => handleInputChange("dateFounded", e.target.value)}
+                        value={
+                          company?.dateFounded
+                            ? new Date(company.dateFounded)
+                                .toISOString()
+                                .split("T")[0]
+                            : ""
+                        }
+                        onChange={(e) =>
+                          handleInputChange("dateFounded", e.target.value)
+                        }
                       />
                       <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     </div>
@@ -369,25 +437,41 @@ const Settings = () => {
                   {/* Thêm Contact Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Email
+                      </label>
                       <div className="relative">
                         <input
                           type="email"
                           className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={company?.contact?.email || ""}
-                          onChange={(e) => handleInputChange("contact", e.target.value, "email")}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "contact",
+                              e.target.value,
+                              "email"
+                            )
+                          }
                         />
                         <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Contact Phone</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Phone
+                      </label>
                       <div className="relative">
                         <input
                           type="tel"
                           className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={company?.contact?.phone || ""}
-                          onChange={(e) => handleInputChange("contact", e.target.value, "phone")}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "contact",
+                              e.target.value,
+                              "phone"
+                            )
+                          }
                         />
                         <Phone className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                       </div>
@@ -396,7 +480,9 @@ const Settings = () => {
 
                   {/* Tech Stack */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Tech Stack</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tech Stack
+                    </label>
                     <div className="flex flex-wrap gap-2 mb-3">
                       {company?.techStack?.map((tech) => (
                         <span
@@ -436,20 +522,37 @@ const Settings = () => {
               </section>
 
               {/* About Company */}
-              <section id="about" className="bg-white rounded-2xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-6">About Company</h3>
+              <section
+                id="about"
+                className="bg-white rounded-2xl shadow-sm p-6"
+              >
+                <h3 className="text-lg font-semibold text-gray-800 mb-6">
+                  About Company
+                </h3>
                 <div className="border rounded-xl overflow-hidden">
                   <div className="flex items-center space-x-2 border-b p-3">
-                    <button type="button" className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button
+                      type="button"
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
                       <Bold className="w-5 h-5" />
                     </button>
-                    <button type="button" className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button
+                      type="button"
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
                       <Italic className="w-5 h-5" />
                     </button>
-                    <button type="button" className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button
+                      type="button"
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
                       <List className="w-5 h-5" />
                     </button>
-                    <button type="button" className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button
+                      type="button"
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
                       <Link2 className="w-5 h-5" />
                     </button>
                   </div>
@@ -457,11 +560,17 @@ const Settings = () => {
                     className="w-full p-4 min-h-[200px] resize-none border-none focus:ring-0"
                     placeholder="Write about your company..."
                     value={company?.description || ""}
-                    onChange={(e) => handleInputChange("description", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("description", e.target.value)
+                    }
                   />
                   <div className="border-t p-3 flex justify-between items-center">
-                    <span className="text-sm text-gray-500">Markdown supported</span>
-                    <span className="text-sm text-gray-500">{company?.description?.length || 0} / 500</span>
+                    <span className="text-sm text-gray-500">
+                      Markdown supported
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {company?.description?.length || 0} / 500
+                    </span>
                   </div>
                 </div>
               </section>

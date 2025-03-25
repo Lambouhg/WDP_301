@@ -1,5 +1,4 @@
 "use client";
-
 import Sidebar from "../../components/SidebarCompany";
 import {
   Chart as ChartJS,

@@ -1,5 +1,16 @@
+"use client";
 import React, { useState } from "react";
-import { Gift, Plus, Heart, Sun, Coffee, Clock, DollarSign, Compass, CheckCircle } from "lucide-react";
+import {
+  Gift,
+  Plus,
+  Heart,
+  Sun,
+  Coffee,
+  Clock,
+  DollarSign,
+  Compass,
+  CheckCircle,
+} from "lucide-react";
 import "react-datepicker/dist/react-datepicker.css";
 
 const BenefitsPage = ({ jobData, setJobData }) => {
@@ -8,33 +19,63 @@ const BenefitsPage = ({ jobData, setJobData }) => {
     {
       title: "Health & Wellness",
       icon: <Heart className="w-5 h-5 text-rose-500" />,
-      perks: ["Comprehensive Health Insurance", "Dental Insurance", "Vision Insurance", "Life Insurance", "Gym Membership"]
+      perks: [
+        "Comprehensive Health Insurance",
+        "Dental Insurance",
+        "Vision Insurance",
+        "Life Insurance",
+        "Gym Membership",
+      ],
     },
     {
       title: "Time Off",
       icon: <Sun className="w-5 h-5 text-amber-500" />,
-      perks: ["Unlimited Paid Time Off", "Paid Vacation", "Flexible Work Schedule", "Personal Days", "Paid Sick Leave"]
+      perks: [
+        "Unlimited Paid Time Off",
+        "Paid Vacation",
+        "Flexible Work Schedule",
+        "Personal Days",
+        "Paid Sick Leave",
+      ],
     },
     {
       title: "Growth & Development",
       icon: <Compass className="w-5 h-5 text-blue-500" />,
-      perks: ["Skill Training", "Tuition Assistance", "Professional Development", "Career Mentorship", "Internal Promotion"]
+      perks: [
+        "Skill Training",
+        "Tuition Assistance",
+        "Professional Development",
+        "Career Mentorship",
+        "Internal Promotion",
+      ],
     },
     {
       title: "Office & Work Environment",
       icon: <Coffee className="w-5 h-5 text-orange-500" />,
-      perks: ["Free Meals", "Modern Workspace", "Standing Desks", "Team Building Events", "Pet-Friendly Office"]
+      perks: [
+        "Free Meals",
+        "Modern Workspace",
+        "Standing Desks",
+        "Team Building Events",
+        "Pet-Friendly Office",
+      ],
     },
     {
       title: "Financial Benefits",
       icon: <DollarSign className="w-5 h-5 text-green-500" />,
-      perks: ["Performance Bonus", "Company Stock Options", "Retirement Savings Plan", "Profit Sharing", "Commuter Benefits"]
+      perks: [
+        "Performance Bonus",
+        "Company Stock Options",
+        "Retirement Savings Plan",
+        "Profit Sharing",
+        "Commuter Benefits",
+      ],
     },
     {
       title: "Legacy Benefits",
       icon: <Gift className="w-5 h-5 text-purple-500" />,
-      perks: ["Full Healthcare", "Unlimited Vacation", "Skill Development"]
-    }
+      perks: ["Full Healthcare", "Unlimited Vacation", "Skill Development"],
+    },
   ];
 
   // State for custom benefit
@@ -42,10 +83,13 @@ const BenefitsPage = ({ jobData, setJobData }) => {
 
   // Function to add custom benefit
   const addCustomBenefit = () => {
-    if (customBenefit.trim() !== "" && !jobData.perksAndBenefits.includes(customBenefit.trim())) {
+    if (
+      customBenefit.trim() !== "" &&
+      !jobData.perksAndBenefits.includes(customBenefit.trim())
+    ) {
       setJobData({
         ...jobData,
-        perksAndBenefits: [...jobData.perksAndBenefits, customBenefit.trim()]
+        perksAndBenefits: [...jobData.perksAndBenefits, customBenefit.trim()],
       });
       setCustomBenefit("");
     }
@@ -61,8 +105,8 @@ const BenefitsPage = ({ jobData, setJobData }) => {
     setJobData({
       ...jobData,
       perksAndBenefits: isBenefitSelected(perk)
-        ? jobData.perksAndBenefits.filter(p => p !== perk)
-        : [...jobData.perksAndBenefits, perk]
+        ? jobData.perksAndBenefits.filter((p) => p !== perk)
+        : [...jobData.perksAndBenefits, perk],
     });
   };
 
@@ -70,7 +114,7 @@ const BenefitsPage = ({ jobData, setJobData }) => {
   const removeBenefit = (perk) => {
     setJobData({
       ...jobData,
-      perksAndBenefits: jobData.perksAndBenefits.filter(p => p !== perk)
+      perksAndBenefits: jobData.perksAndBenefits.filter((p) => p !== perk),
     });
   };
 
@@ -88,7 +132,10 @@ const BenefitsPage = ({ jobData, setJobData }) => {
         {jobData.perksAndBenefits.length > 0 ? (
           <div className="flex flex-wrap gap-2 mt-3">
             {jobData.perksAndBenefits.map((perk, index) => (
-              <div key={index} className="flex items-center gap-1 px-3 py-2 bg-blue-100 text-blue-800 rounded-lg">
+              <div
+                key={index}
+                className="flex items-center gap-1 px-3 py-2 bg-blue-100 text-blue-800 rounded-lg"
+              >
                 <CheckCircle className="w-4 h-4 text-blue-600" />
                 <span>{perk}</span>
                 <button
@@ -102,7 +149,8 @@ const BenefitsPage = ({ jobData, setJobData }) => {
           </div>
         ) : (
           <div className="p-4 text-gray-500 border border-dashed border-gray-300 rounded-lg bg-gray-50 text-center">
-            No benefits selected yet. Add from the list below or create a custom benefit.
+            No benefits selected yet. Add from the list below or create a custom
+            benefit.
           </div>
         )}
       </div>
@@ -155,7 +203,9 @@ const BenefitsPage = ({ jobData, setJobData }) => {
                       : "bg-gray-100 hover:bg-gray-200 text-gray-700"
                   }`}
                 >
-                  {isBenefitSelected(perk) && <CheckCircle className="w-4 h-4 mr-2" />}
+                  {isBenefitSelected(perk) && (
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                  )}
                   {perk}
                 </button>
               ))}
@@ -167,7 +217,9 @@ const BenefitsPage = ({ jobData, setJobData }) => {
       {/* Note */}
       <div className="pt-2 text-sm text-gray-500 italic flex items-center">
         <Clock className="w-4 h-4 mr-1" />
-        <span>Attractive benefits will help you attract more potential candidates</span>
+        <span>
+          Attractive benefits will help you attract more potential candidates
+        </span>
       </div>
     </div>
   );
