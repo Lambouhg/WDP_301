@@ -1,8 +1,17 @@
+"use client";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Calendar, Briefcase, DollarSign, Tag, Code, Users, Clock } from "lucide-react";
- 
+import {
+  Calendar,
+  Briefcase,
+  DollarSign,
+  Tag,
+  Code,
+  Users,
+  Clock,
+} from "lucide-react";
+
 const JobInformationCompany = ({ jobData, setJobData }) => {
   const jobTypes = [
     { value: "Full-Time", label: "Full Time", icon: "🕒" },
@@ -11,7 +20,7 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
     { value: "Internship", label: "Internship", icon: "🎓" },
     { value: "Contract", label: "Contract", icon: "📝" },
   ];
-  
+
   const categories = [
     { value: "Tech", label: "Technology", icon: "💻" },
     { value: "Marketing", label: "Marketing", icon: "📊" },
@@ -19,11 +28,10 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
     { value: "HR", label: "Human Resources", icon: "👥" },
     { value: "Sales", label: "Sales", icon: "🤝" },
   ];
-  
 
   // Skill input state
   const [skillInput, setSkillInput] = useState("");
-  
+
   // Calculate tomorrow's date
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -33,10 +41,13 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
 
   // Handle adding a skill
   const handleAddSkill = () => {
-    if (skillInput.trim() !== "" && !jobData.requiredSkills.includes(skillInput.trim())) {
+    if (
+      skillInput.trim() !== "" &&
+      !jobData.requiredSkills.includes(skillInput.trim())
+    ) {
       setJobData({
         ...jobData,
-        requiredSkills: [...jobData.requiredSkills, skillInput.trim()]
+        requiredSkills: [...jobData.requiredSkills, skillInput.trim()],
       });
       setSkillInput("");
     }
@@ -46,14 +57,14 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
   const handleRemoveSkill = (skill) => {
     setJobData({
       ...jobData,
-      requiredSkills: jobData.requiredSkills.filter(s => s !== skill)
+      requiredSkills: jobData.requiredSkills.filter((s) => s !== skill),
     });
   };
 
   return (
     <div className="space-y-8">
       <h2 className="text-xl font-semibold text-gray-800">Basic information</h2>
-      
+
       {/* Job Title */}
       <div className="space-y-2">
         <label className="flex items-center text-gray-700 font-medium">
@@ -126,7 +137,10 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
               placeholder="Minimum salary"
               required
             />
-            <DollarSign className="absolute right-3 top-3 text-gray-400" size={20} />
+            <DollarSign
+              className="absolute right-3 top-3 text-gray-400"
+              size={20}
+            />
           </div>
           <div className="flex items-center justify-center">
             <div className="w-8 h-1 bg-gray-300 rounded"></div>
@@ -144,7 +158,10 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
               placeholder="Maximum salary"
               required
             />
-            <DollarSign className="absolute right-3 top-3 text-gray-400" size={20} />
+            <DollarSign
+              className="absolute right-3 top-3 text-gray-400"
+              size={20}
+            />
           </div>
         </div>
         {jobData.salaryMin > jobData.salaryMax && jobData.salaryMax > 0 && (
@@ -210,10 +227,10 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
             onClick={handleAddSkill}
             className="px-4 py-3 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-all duration-200"
           >
-           Add
+            Add
           </button>
         </div>
-        
+
         <div className="flex flex-wrap gap-2 mt-2">
           {jobData.requiredSkills.map((skill, index) => (
             <div
@@ -230,7 +247,7 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
             </div>
           ))}
         </div>
-        
+
         {jobData.requiredSkills.length === 0 && (
           <div className="text-red-500 text-sm flex items-center">
             <Clock className="w-4 h-4 mr-1" />
@@ -254,7 +271,10 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
             placeholderText="Choose an expiration date"
             required
           />
-          <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+          <Calendar
+            className="absolute right-3 top-3 text-gray-400"
+            size={20}
+          />
         </div>
         {isDueDateInvalid && (
           <div className="text-red-500 text-sm flex items-center">
@@ -282,10 +302,12 @@ const JobInformationCompany = ({ jobData, setJobData }) => {
           placeholder="Enter the number of candidates needed"
         />
       </div>
-      
+
       <div className="pt-2 text-sm text-gray-500 italic flex items-center">
         <Clock className="w-4 h-4 mr-1" />
-        <span>Markup fields <span className="text-red-500">*</span> is required</span>
+        <span>
+          Markup fields <span className="text-red-500">*</span> is required
+        </span>
       </div>
     </div>
   );

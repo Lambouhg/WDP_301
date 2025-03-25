@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+"use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import DashboardHeader from "../components/DashboardHeader";
@@ -75,11 +75,15 @@ export default function FindJobDetail() {
   return (
     <div className="flex bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-sans">
       {/* Sidebar */}
-      {userRole === "company" && <CompanySidebar className="w-[250px] shrink-0" />}
+      {userRole === "company" && (
+        <CompanySidebar className="w-[250px] shrink-0" />
+      )}
       {userRole === "user" && <Sidebar className="w-[250px] shrink-0" />}
 
       {/* Main Content */}
-      <div className="overflow-y-auto w-full h-screen pb-12 px-8"> {/* Tăng px-6 thành px-8 */}
+      <div className="overflow-y-auto w-full h-screen pb-12 px-8">
+        {" "}
+        {/* Tăng px-6 thành px-8 */}
         <main className="flex-1">
           {/* Header */}
           <div className="w-full mt-8 border-b-2 border-gray-200/50 pb-4 mb-10">
@@ -90,7 +94,9 @@ export default function FindJobDetail() {
           </div>
 
           {/* Job Header */}
-          <div className="max-w-7xl mx-auto"> {/* Tăng từ max-w-5xl lên max-w-7xl */}
+          <div className="max-w-7xl mx-auto">
+            {" "}
+            {/* Tăng từ max-w-5xl lên max-w-7xl */}
             <div className="bg-white rounded-xl shadow-lg p-8 mb-8 transform hover:scale-[1.01] transition-all duration-300">
               <div className="flex flex-col md:flex-row md:items-center gap-6">
                 <Image
@@ -101,10 +107,17 @@ export default function FindJobDetail() {
                   className="w-20 h-20 rounded-full border-4 border-blue-100 p-1 object-cover"
                 />
                 <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-gray-900 tracking-tight">{job.title}</h2>
+                  <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
+                    {job.title}
+                  </h2>
                   <p className="text-gray-600 mt-1">
-                    <span className="text-blue-600 font-semibold">{job.companyId?.name}</span> •{" "}
-                    <span className="text-green-600 font-semibold">{job.jobType}</span>
+                    <span className="text-blue-600 font-semibold">
+                      {job.companyId?.name}
+                    </span>{" "}
+                    •{" "}
+                    <span className="text-green-600 font-semibold">
+                      {job.jobType}
+                    </span>
                   </p>
                 </div>
                 <button
@@ -115,7 +128,6 @@ export default function FindJobDetail() {
                 </button>
               </div>
             </div>
-
             {/* Job Details Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column */}
@@ -123,9 +135,11 @@ export default function FindJobDetail() {
                 <StatCard title="Description" value={job.jobDescription} />
                 <StatCard
                   title="Responsibilities"
-                  value={job.responsibilities?.split("\n").map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
+                  value={job.responsibilities
+                    ?.split("\n")
+                    .map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                 />
                 <StatCard
                   title="Who You Are"
@@ -145,15 +159,22 @@ export default function FindJobDetail() {
               <div className="space-y-6">
                 {/* Job Overview */}
                 <div className="bg-white p-6 rounded-xl shadow-lg">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Job Overview</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Job Overview
+                  </h3>
                   <p className="text-gray-700 mb-3">
-                    <span className="font-medium text-blue-600">{job.applicants}</span> applied of{" "}
-                    <span className="font-medium">{job.needs}</span> capacity
+                    <span className="font-medium text-blue-600">
+                      {job.applicants}
+                    </span>{" "}
+                    applied of <span className="font-medium">{job.needs}</span>{" "}
+                    capacity
                   </p>
                   <div className="w-full bg-gray-200 rounded-full h-3 mb-4 overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-blue-500 to-blue-700 h-3 rounded-full transition-all duration-500"
-                      style={{ width: `${(job.applicants / job.needs) * 100}%` }}
+                      style={{
+                        width: `${(job.applicants / job.needs) * 100}%`,
+                      }}
                     ></div>
                   </div>
                   <div className="space-y-3 text-sm">
@@ -171,7 +192,9 @@ export default function FindJobDetail() {
                     </p>
                     <p className="flex justify-between">
                       <span className="text-gray-600">Job Type:</span>
-                      <span className="text-gray-900 font-medium">{job.jobType}</span>
+                      <span className="text-gray-900 font-medium">
+                        {job.jobType}
+                      </span>
                     </p>
                     <p className="flex justify-between">
                       <span className="text-gray-600">Salary:</span>
@@ -184,7 +207,9 @@ export default function FindJobDetail() {
 
                 {/* Categories */}
                 <div className="bg-white p-6 rounded-xl shadow-lg">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Categories</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Categories
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {job.categories?.map((category, index) => (
                       <span
@@ -199,7 +224,9 @@ export default function FindJobDetail() {
 
                 {/* Skills */}
                 <div className="bg-white p-6 rounded-xl shadow-lg">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Required Skills</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Required Skills
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {job.requiredSkills?.map((skill, index) => (
                       <span

@@ -1,5 +1,6 @@
+"use client";
 import React, { useEffect, useState } from "react";
-import { Search, Filter, MoreVertical } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
 
@@ -49,7 +50,9 @@ const UserMyApplication = () => {
       return;
     }
 
-    const confirmDelete = window.confirm("Are you sure you want to delete this application?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this application?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -79,11 +82,26 @@ const UserMyApplication = () => {
   // Các tabs (số lượng ứng viên theo trạng thái sẽ được tính ở frontend)
   const tabs = [
     { name: "All", count: applications.length },
-    { name: "In Review", count: applications.filter((app) => app.status === "In Review").length },
-    { name: "Interviewing", count: applications.filter((app) => app.status === "Interviewing").length },
-    { name: "Shortlisted", count: applications.filter((app) => app.status === "Shortlisted").length },
-    { name: "Hired", count: applications.filter((app) => app.status === "Hired").length },
-    { name: "Rejected", count: applications.filter((app) => app.status === "Rejected").length },
+    {
+      name: "In Review",
+      count: applications.filter((app) => app.status === "In Review").length,
+    },
+    {
+      name: "Interviewing",
+      count: applications.filter((app) => app.status === "Interviewing").length,
+    },
+    {
+      name: "Shortlisted",
+      count: applications.filter((app) => app.status === "Shortlisted").length,
+    },
+    {
+      name: "Hired",
+      count: applications.filter((app) => app.status === "Hired").length,
+    },
+    {
+      name: "Rejected",
+      count: applications.filter((app) => app.status === "Rejected").length,
+    },
   ];
 
   return (
@@ -106,10 +124,11 @@ const UserMyApplication = () => {
                 <button
                   key={tab.name}
                   onClick={() => handleTabChange(tab.name)}
-                  className={`pb-4 px-1 ${tab.name === selectedTab
-                    ? "border-b-2 border-purple-600 text-purple-600"
-                    : "text-gray-500"
-                    }`}
+                  className={`pb-4 px-1 ${
+                    tab.name === selectedTab
+                      ? "border-b-2 border-purple-600 text-purple-600"
+                      : "text-gray-500"
+                  }`}
                 >
                   {tab.name} ({tab.count})
                 </button>
@@ -139,11 +158,15 @@ const UserMyApplication = () => {
 
             {/* Hiển thị trạng thái tải dữ liệu */}
             {loading ? (
-              <p className="text-center text-gray-500">Loading applications...</p>
+              <p className="text-center text-gray-500">
+                Loading applications...
+              </p>
             ) : error ? (
               <p className="text-center text-red-500">{error}</p>
             ) : filteredApplications.length === 0 ? (
-              <p className="text-center text-gray-500">No applications found.</p>
+              <p className="text-center text-gray-500">
+                No applications found.
+              </p>
             ) : (
               <table className="w-full">
                 <thead className="text-left text-gray-500 text-sm">
@@ -169,10 +192,11 @@ const UserMyApplication = () => {
                       <td>{new Date(app.createdAt).toLocaleDateString()}</td>
                       <td>
                         <span
-                          className={`px-3 py-1 rounded-full text-sm ${app.status === "Interviewing"
-                            ? "bg-blue-50 text-blue-600"
-                            : "bg-yellow-50 text-yellow-600"
-                            }`}
+                          className={`px-3 py-1 rounded-full text-sm ${
+                            app.status === "Interviewing"
+                              ? "bg-blue-50 text-blue-600"
+                              : "bg-yellow-50 text-yellow-600"
+                          }`}
                         >
                           {app.status}
                         </span>

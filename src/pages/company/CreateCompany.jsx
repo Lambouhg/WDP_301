@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useUser } from "@clerk/nextjs";
@@ -62,14 +63,14 @@ const CreateCompany = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     try {
       const formattedData = {
         ...formData,
         dateFounded: formatDateForSubmission(formData.dateFounded),
         ownerId: user.id,
       };
-  
+
       const response = await fetch("/api/company", {
         method: "POST",
         headers: {
@@ -77,17 +78,20 @@ const CreateCompany = () => {
         },
         body: JSON.stringify(formattedData),
       });
-  
+
       const errorData = await response.json();
-  
+
       if (!response.ok) {
-        if (response.status === 400 && errorData.message.includes("User already owns a company")) {
+        if (
+          response.status === 400 &&
+          errorData.message.includes("User already owns a company")
+        ) {
           alert("User already owns a company. Only one company is allowed.");
           return; // Ngăn không cho xử lý tiếp
         }
         throw new Error(errorData.message || "Failed to create company");
       }
-  
+
       router.push("/company/companyprofile");
     } catch (error) {
       console.error("Error creating company:", error);
@@ -97,7 +101,7 @@ const CreateCompany = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };  
+  };
 
   // Format date before sending to server
   const formatDateForSubmission = (date) => {
@@ -120,7 +124,7 @@ const CreateCompany = () => {
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Create Company Profile</h1>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
             <div className="bg-white p-6 rounded-lg shadow">

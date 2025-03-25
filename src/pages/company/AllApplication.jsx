@@ -1,4 +1,5 @@
 //src/pages/company/AllApplication.jsx
+"use client";
 import React, { useEffect, useState } from "react";
 import { Search, Filter, MoreVertical, ChevronDown } from "lucide-react";
 import DasborderHeader from "../../components/HeaderCompany";
@@ -149,7 +150,7 @@ const ApplicantList = () => {
                   </td>
                   <td className="py-4">{applicant.currentJobTitle || "N/A"}</td>
                   <td className="py-4">
-                  <button
+                    <button
                       className="px-4 py-2 text-blue-600 bg-blue-50 rounded-lg"
                       onClick={() => handleSeeApplication(applicant._id)}
                     >

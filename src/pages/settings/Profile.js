@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import ProfileForm from "../../components/ProfileForm";
 import LoginDetails from "../../components/LoginDetails";

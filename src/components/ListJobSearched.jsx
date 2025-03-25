@@ -1,5 +1,5 @@
+"use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import ApplyJobForm from "./ApplyJobForm";
 import Pagination from "./FindJobs/Pagination";
 import JobFilters from "./FindJobs/JobFilters";
@@ -60,7 +60,9 @@ function ListJobSearched() {
 
     // Lọc theo categories
     if (selectedCategories) {
-      filtered = filtered.filter((job) => job.categories?.includes(selectedCategories));
+      filtered = filtered.filter((job) =>
+        job.categories?.includes(selectedCategories)
+      );
     }
 
     // Lọc theo search query
@@ -102,7 +104,15 @@ function ListJobSearched() {
     const paginatedJobs = sortedJobs.slice(skip, skip + jobsPerPage);
     setDisplayedJobs(paginatedJobs);
     setTotalJobs(filteredJobs.length);
-  }, [allJobs, currentPage, selectedJobTypes, selectedCategories, sortOption, sortDirection, searchQuery]);
+  }, [
+    allJobs,
+    currentPage,
+    selectedJobTypes,
+    selectedCategories,
+    sortOption,
+    sortDirection,
+    searchQuery,
+  ]);
 
   // Fetch dữ liệu khi component mount
   useEffect(() => {
@@ -190,7 +200,10 @@ function ListJobSearched() {
           />
 
           {/* Danh sách công việc */}
-          <JobCards jobs={displayedJobs} handleOpenApplyForm={handleOpenApplyForm} />
+          <JobCards
+            jobs={displayedJobs}
+            handleOpenApplyForm={handleOpenApplyForm}
+          />
 
           {/* Phân trang */}
           <Pagination
