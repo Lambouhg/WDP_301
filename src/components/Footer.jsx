@@ -3,6 +3,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-900 text-gray-300 py-16">
+      {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo and Description */}
         <div className="space-y-4">
@@ -10,38 +11,38 @@ const Footer = () => {
             <div className="w-8 h-8 bg-indigo-600 rounded-full"></div>
             <span className="text-white text-xl font-semibold">Job Finder</span>
           </div>
-          <p className="text-sm">
+          <p className="text-sm md:text-base">
             Great platform for the job seeker that passionate about startups.
             Find your dream job easier.
           </p>
         </div>
 
         {/* About Links */}
-        <div className="space-y-4">
+        <div className="hidden md:block space-y-4">
           <h3 className="text-white font-semibold">About</h3>
           <ul className="space-y-2">
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Companies
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Pricing
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Terms
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Advice
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Privacy Policy
               </a>
             </li>
@@ -49,26 +50,26 @@ const Footer = () => {
         </div>
 
         {/* Resources Links */}
-        <div className="space-y-4">
+        <div className="hidden md:block space-y-4">
           <h3 className="text-white font-semibold">Resources</h3>
           <ul className="space-y-2">
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Help Docs
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Guide
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Updates
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-white block">
                 Contact Us
               </a>
             </li>
@@ -78,16 +79,16 @@ const Footer = () => {
         {/* Newsletter */}
         <div className="space-y-4">
           <h3 className="text-white font-semibold">Get job notifications</h3>
-          <p className="text-sm">
+          <p className="text-sm md:text-base">
             The latest job news, articles, sent to your inbox weekly.
           </p>
-          <div className="flex space-x-2">
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
             <input
               type="email"
               placeholder="Email Address"
               className="flex-1 px-4 py-2 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:border-indigo-500"
             />
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-2 md:mt-0">
               Subscribe
             </button>
           </div>
@@ -96,7 +97,7 @@ const Footer = () => {
 
       {/* Bottom Section */}
       <div className="max-w-6xl mx-auto px-4 mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-        <p className="text-sm">
+        <p className="text-sm md:text-base">
           {currentYear} © Job Finder. All rights reserved.
         </p>
         <div className="flex space-x-4 mt-4 md:mt-0">
