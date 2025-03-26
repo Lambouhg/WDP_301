@@ -1,29 +1,20 @@
 import React from "react";
-import NotificationIcon from "../components/NotificationIcon";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { ChevronLeft } from "lucide-react"; // Assuming you're using lucide-react
 
-const DashboardHeader = ({ dashboardHeaderName, onBack }) => {
+const DashboardHeader = ({ dashboardHeaderName, onBackClick }) => {
   return (
-    <div className="flex items-center justify-between m-1">
-      {/* Left Section - Back Button and Header Name */}
-      <div className="flex items-center space-x-4">
-        {onBack && (
-          <button
-            className="text-blue-600 hover:text-blue-800 font-semibold flex items-center"
-            onClick={onBack}
-            style={{ fontSize: "1.5rem" }} // Tăng kích thước icon
-          >
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-        )}
-        <h1 className="text-3xl font-bold text-gray-600">{dashboardHeaderName}</h1>
-      </div>
-
-      {/* Right Section - Notification Icon */}
-      <div className="flex">
-        <NotificationIcon />
-      </div>
+    <div className="flex items-center">
+      {onBackClick && (
+        <button
+          onClick={onBackClick}
+          className="md:hidden mr-4 text-gray-600 hover:text-gray-800"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+      )}
+      <h1 className="text-2xl font-bold text-gray-800">
+        {dashboardHeaderName}
+      </h1>
     </div>
   );
 };
