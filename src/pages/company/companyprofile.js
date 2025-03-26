@@ -2,6 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import {
   FaFacebook,
   FaLinkedin,
@@ -17,9 +18,11 @@ import Sidebar from "../../components/SidebarCompany";
 
 const CompanyProfile = () => {
   const { user } = useUser();
+  const router = useRouter(); // Initialize useRouter
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
@@ -66,6 +69,11 @@ const CompanyProfile = () => {
       default:
         return null;
     }
+  };
+
+  // Function to handle navigation to Settings page
+  const handleProfileSettingsClick = () => {
+    router.push("/company/Settings");
   };
 
   if (loading) {
@@ -139,7 +147,10 @@ const CompanyProfile = () => {
                 <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200">
                   Public View
                 </button>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200">
+                <button
+                  onClick={handleProfileSettingsClick} // Add onClick handler
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200"
+                >
                   Profile Settings
                 </button>
               </div>
@@ -227,22 +238,40 @@ const CompanyProfile = () => {
             <div className="lg:col-span-4 space-y-6">
               {/* Tech Stack */}
               <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4">Tech Stack</h2>
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Tech Stack</h2>
                 {company.techStack && company.techStack.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {company.techStack.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="bg-gray-100 px-3 py-1 rounded-full text-sm break-words"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="flex flex-wrap gap-3">
+                    {company.techStack.map((tech, index) => {
+                      const colorVariants = [
+                        "bg-red-50 text-red-700 border-red-200 hover:bg-red-100",
+                        "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100",
+                        "bg-green-50 text-green-700 border-green-200 hover:bg-green-100",
+                        "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
+                        "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100",
+                        "bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-100",
+                      ];
+
+                      // Tạo một key duy nhất dựa trên tên công nghệ để màu cố định
+                      const techColorMap = {};
+                      if (!techColorMap[tech]) {
+                        techColorMap[tech] =
+                          colorVariants[Math.floor(Math.random() * colorVariants.length)];
+                      }
+
+                      return (
+                        <span
+                          key={index}
+                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${techColorMap[tech]} transition duration-200`}
+                        >
+                          {tech}
+                        </span>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <p className="text-gray-600">No tech stack information</p>
+                  <p className="text-gray-500 italic">No tech stack information available</p>
                 )}
-              </div>
+</div>
 
               {/* Contact Information */}
               <div className="bg-white p-6 rounded-lg shadow">

@@ -33,6 +33,7 @@ const CompanyTeam = () => {
   const router = useRouter();
   const [members, setMembers] = useState(initialMembers);
   const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [newMember, setNewMember] = useState({
     name: "",
     role: "",

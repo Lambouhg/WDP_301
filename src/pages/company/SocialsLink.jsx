@@ -51,6 +51,7 @@ const SocialsLink = () => {
   const [newUrl, setNewUrl] = useState("");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   // Fetch dữ liệu công ty từ API
   useEffect(() => {

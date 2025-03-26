@@ -16,6 +16,7 @@ const JobListingPage = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   // Hàm fetch dữ liệu từ API
   const fetchJobs = async () => {
