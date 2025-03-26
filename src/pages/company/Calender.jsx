@@ -151,6 +151,7 @@ const CalendarApp = () => {
   const [view, setView] = useState("month"); // Quản lý trạng thái view
   const [date, setDate] = useState(new Date());
   const [applyUserName, setApplyUserName] = useState([]);
+  const [isOpen, setIsOpen] = useState(true);
 
   // Dialog state
   const [dialog, setDialog] = useState({

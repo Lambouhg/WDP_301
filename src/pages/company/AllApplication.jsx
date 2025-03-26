@@ -13,6 +13,7 @@ const ApplicantList = () => {
   const [role, setRole] = useState(null);
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (user) {

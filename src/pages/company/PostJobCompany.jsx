@@ -23,6 +23,7 @@ const PostJobCompany = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("JobInformationCompany");
   const { getToken } = useAuth();
+  const [isOpen, setIsOpen] = useState(true);
   const [jobData, setJobData] = useState({
     title: "",
     jobType: "",

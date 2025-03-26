@@ -24,6 +24,7 @@ const Settings = () => {
   const [company, setCompany] = useState(null);
   const [newTech, setNewTech] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
 
   // Fetch dữ liệu công ty

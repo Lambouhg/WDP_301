@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { ArrowLeft, ChevronDown, Eye, Mail } from "lucide-react";
 import {
   LineChart,
@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 
 const Analytics = () => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(true);
+
 
   const handleNavigation = (path) => {
     router.push(path);

@@ -26,6 +26,7 @@ const JobDetails = () => {
   const [error, setError] = useState(null);
   const [updatedData, setUpdatedData] = useState({});
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (!job_id) return;
