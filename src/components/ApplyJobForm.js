@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import img1 from "../assets/the-simpsons-electric-chair.gif";
+import Image from "next/image";
 
 function ApplyJobForm({ job, isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -68,13 +70,20 @@ function ApplyJobForm({ job, isOpen, onClose }) {
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-auto">
         <div className="p-4 bg-gray-50 rounded-t-lg border-b sticky top-0 z-10">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
-              <div className="text-emerald-500 font-bold">JOB</div>
+            <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+              <Image
+                src={job.companyId?.logo || img1}
+                className="w-full h-full object-cover"
+                alt={job.title}
+              />
             </div>
             <div>
               <h1 className="text-gray-700 font-bold ">
-                Social Media Assistant
+                {job.title || "Untitled Job"}
               </h1>
+              <p className="text-sm text-gray-600">
+                {job.jobType} • {job.companyId?.name || "Unknown JobType"}
+              </p>
             </div>
             <button
               className="ml-auto text-gray-400 hover:text-gray-600"
@@ -87,9 +96,7 @@ function ApplyJobForm({ job, isOpen, onClose }) {
 
         <div className="p-6">
           <h2 className="text-lg font-medium mb-4">Submit your application</h2>
-          <p className="text-sm text-gray-500 mb-6">
-            The following is required and will only be shared with Nomad
-          </p>
+
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">

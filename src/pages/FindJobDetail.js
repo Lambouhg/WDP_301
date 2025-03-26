@@ -245,7 +245,7 @@ export default function FindJobDetail() {
       </div>
 
       {/* Popup */}
-      <JobApplicationPopup isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <JobApplicationPopup job={job} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 }

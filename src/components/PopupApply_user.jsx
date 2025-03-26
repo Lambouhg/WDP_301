@@ -1,7 +1,9 @@
 import React from "react";
 import { X } from "lucide-react";
+import img1 from "../assets/the-simpsons-electric-chair.gif";
+import Image from "next/image";
 
-const JobApplicationPopup = ({ isOpen, onClose }) => {
+const JobApplicationPopup = ({ job, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -10,13 +12,19 @@ const JobApplicationPopup = ({ isOpen, onClose }) => {
         {/* Header with close button */}
         <div className="flex justify-between items-center p-6 border-b">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <div className="w-6 h-6 text-emerald-600">□</div>
+            <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+              <Image
+                src={job.companyId?.logo || img1}
+                className="w-full h-full object-cover"
+                alt={job.title}
+              />
             </div>
             <div>
-              <h2 className="text-xl font-semibold">Social Media Assistant</h2>
+              <h1 className="text-gray-700 font-bold ">
+                {job.title || "Untitled Job"}
+              </h1>
               <p className="text-sm text-gray-600">
-                Remote • Paris, France • Full Time
+                {job.jobType} • {job.companyId?.name || "Unknown JobType"}
               </p>
             </div>
           </div>
