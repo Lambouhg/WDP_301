@@ -34,14 +34,14 @@ const ApplicantTracking = () => {
     Hired: [],
     Rejected: [],
   });
-  const [jobTitle, setJobTitle] = useState(""); // State mới để lưu jobTitle
+  const [jobTitle, setJobTitle] = useState("");
   const [jobType, setJobType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState("pipeline");
 
+  // Fetch user role and applicant data (giữ nguyên logic)
   useEffect(() => {
     if (user) {
       const fetchUserRole = async () => {
@@ -64,48 +64,28 @@ const ApplicantTracking = () => {
           job_id ? `/api/company/applicant?job_id=${job_id}` : "/api/company/applicant"
         );
         const applicantData = await applicantResponse.json();
+        if (!applicantResponse.ok) throw new Error(applicantData.message || "Failed to fetch applicants");
 
-        if (!applicantResponse.ok) {
-          throw new Error(applicantData.message || "Failed to fetch applicants");
-        }
+        const jobSpecificApplicants = job_id
+          ? applicantData.applicants.filter((applicant) => applicant.jobID?._id.toString() === job_id)
+          : applicantData.applicants;
 
-        if (applicantData?.applicants && applicantData.applicants.length > 0) {
-          const jobSpecificApplicants = job_id
-            ? applicantData.applicants.filter((applicant) => applicant.jobID?._id.toString() === job_id)
-            : applicantData.applicants;
-
-          const groupedApplicants = {
-            InReview: jobSpecificApplicants.filter((a) => a.status === "In Review"),
-            Reviewing: jobSpecificApplicants.filter((a) => a.status === "In Reviewing"),
-            Shortlisted: jobSpecificApplicants.filter((a) => a.status === "Shortlisted"),
-            Hired: jobSpecificApplicants.filter((a) => a.status === "Hired"),
-            Rejected: jobSpecificApplicants.filter((a) => a.status === "Rejected"),
-          };
-          setApplicants(groupedApplicants);
-          setFilteredApplicants(groupedApplicants);
-        } else {
-          setApplicants({
-            InReview: [],
-            Reviewing: [],
-            Shortlisted: [],
-            Hired: [],
-            Rejected: [],
-          });
-          setFilteredApplicants({
-            InReview: [],
-            Reviewing: [],
-            Shortlisted: [],
-            Hired: [],
-            Rejected: [],
-          });
-        }
+        const groupedApplicants = {
+          InReview: jobSpecificApplicants.filter((a) => a.status === "In Review"),
+          Reviewing: jobSpecificApplicants.filter((a) => a.status === "In Reviewing"),
+          Shortlisted: jobSpecificApplicants.filter((a) => a.status === "Shortlisted"),
+          Hired: jobSpecificApplicants.filter((a) => a.status === "Hired"),
+          Rejected: jobSpecificApplicants.filter((a) => a.status === "Rejected"),
+        };
+        setApplicants(groupedApplicants);
+        setFilteredApplicants(groupedApplicants);
 
         if (job_id) {
           const jobResponse = await fetch(`/api/job/${job_id}`);
           if (!jobResponse.ok) throw new Error("Failed to fetch job details");
           const jobData = await jobResponse.json();
-          setJobType(jobData.job.jobType || ""); // Lưu jobType
-          setJobTitle(jobData.job.title || ""); // Lưu jobTitle
+          setJobType(jobData.job.jobType || "");
+          setJobTitle(jobData.job.title || "");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -149,37 +129,31 @@ const ApplicantTracking = () => {
     router.push(path);
   };
 
-  const toggleMobileFilter = () => {
-    setIsMobileFilterOpen(!isMobileFilterOpen);
-  };
-
   const ApplicantCard = ({ fullName, appliedDate, score, _id }) => (
-    <div className="bg-white p-4 rounded-lg border mb-4">
+    <div className="bg-white p-4 rounded-lg shadow-md border mb-4 hover:shadow-lg transition-shadow duration-200">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden"></div>
           <div>
-            <h3 className="font-medium">{fullName}</h3>
+            <h3 className="font-semibold text-gray-800">{fullName}</h3>
             <button
-              className="text-blue-600 text-sm"
+              className="text-blue-600 text-sm hover:underline"
               onClick={() => handleSeeApplication(_id)}
             >
               View Profile
             </button>
           </div>
         </div>
-        <div className="text-gray-500">
-          <MoreVertical className="w-5 h-5" />
-        </div>
+        <MoreVertical className="w-5 h-5 text-gray-500" />
       </div>
-      <div className="mt-4 flex justify-between text-sm text-gray-500">
+      <div className="mt-4 flex justify-between text-sm text-gray-600">
         <div>
           <div>Applied on</div>
-          <div>{new Date(appliedDate).toLocaleDateString("en-GB")}</div>
+          <div className="font-medium">{new Date(appliedDate).toLocaleDateString("en-GB")}</div>
         </div>
         <div className="text-right">
           <div>Score</div>
-          <div className="flex items-center">
+          <div className="flex items-center font-medium text-yellow-600">
             <span className="mr-1">★</span>
             {(score || 0).toFixed(1)}
           </div>
@@ -189,284 +163,193 @@ const ApplicantTracking = () => {
   );
 
   const tabs = [
-    {
-      key: "details",
-      label: "Job Details",
-      icon: <FileText className="w-5 h-5" />,
-      path: `/company/JobDetails?job_id=${job_id}`,
-    },
-    {
-      key: "applicants",
-      label: "Applicants",
-      icon: <Briefcase className="w-5 h-5" />,
-      path: null,
-    },
-    {
-      key: "analytics",
-      label: "Analytics",
-      icon: <PieChart className="w-5 h-5" />,
-      path: `/company/Analytics?job_id=${job_id}`,
-    },
+    { key: "details", label: "Job Details", icon: <FileText className="w-5 h-5" />, path: `/company/JobDetails?job_id=${job_id}` },
+    { key: "applicants", label: "Applicants", icon: <Briefcase className="w-5 h-5" />, path: null },
+    { key: "analytics", label: "Analytics", icon: <PieChart className="w-5 h-5" />, path: `/company/Analytics?job_id=${job_id}` },
   ];
 
   const currentTab = "applicants";
 
-  const handleViewChange = (mode) => {
-    setViewMode(mode);
-  };
-
   return (
-    <div className="flex w-screen h-screen overflow-hidden bg-white mx-auto">
+    <div className="flex h-screen bg-gray-50">
       <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
-      <button
-        className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-md"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
-
-      <div className="w-full px-10 pt-5 h-full overflow-y-auto">
-        <DasborderHeader />
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            <button
-              className="p-2 hover:bg-gray-100 rounded-lg"
-              onClick={() => router.back()}
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <h1 className="text-xl font-semibold">{jobTitle || "Loading..."}</h1>
-              <p className="text-gray-500">
-                Design • {jobType || "Full-Time"} • {filteredApplicants.Hired.length} / 11 Hired
-              </p>
-            </div>
-          </div>
-
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <div className="p-6 bg-white shadow-sm">
+          <DasborderHeader />
         </div>
 
-        <div className="border-b mb-6">
-          <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
-            {tabs.map((tab) => (
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <div className="flex items-center gap-4 mb-6">
               <button
-                key={tab.key}
-                className={`flex items-center justify-center flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${currentTab === tab.key
-                  ? "bg-white text-blue-600 shadow-sm"
-                  : "text-gray-600 hover:text-blue-600"
-                  }`}
-                onClick={() => tab.path && handleNavigation(tab.path)}
+                className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors"
+                onClick={() => router.back()}
               >
-                <span className="flex items-center">
-                  {tab.icon}
-                  <span className="ml-2">{tab.label}</span>
-                </span>
+                <ArrowLeft className="w-5 h-5 text-gray-600" />
               </button>
-            ))}
-          </nav>
-        </div>
-
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-lg font-medium">
-            Total Applicants: {Object.values(filteredApplicants).flat().length}
-          </div>
-          <div className="flex gap-4">
-            <div className="relative">
-              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search Applicants"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border rounded-lg w-64"
-              />
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">
+                  <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                    {jobTitle || "Loading..."}
+                  </span>
+                </h1>
+                <p className="text-gray-500">
+                  {jobType || "Full-Time"} • {filteredApplicants.Hired.length} / 11 Hired
+                </p>
+              </div>
             </div>
 
-            <div className="flex border rounded-lg overflow-hidden">
-              <button
-                className={`px-4 py-2 ${viewMode === "pipeline" ? "bg-blue-600 text-white" : "hover:bg-gray-50"}`}
-                onClick={() => handleViewChange("pipeline")}
-              >
-                Pipeline View
-              </button>
-              <button
-                className={`px-4 py-2 ${viewMode === "table" ? "bg-blue-600 text-white" : "hover:bg-gray-50"}`}
-                onClick={() => handleViewChange("table")}
-              >
-                Table View
-              </button>
+            <div className="mb-8">
+              <nav className="flex p-1 bg-gray-100 rounded-xl">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    className={`flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${currentTab === tab.key
+                        ? "bg-white text-blue-600 shadow-sm"
+                        : "text-gray-600 hover:text-blue-600"
+                      }`}
+                    onClick={() => tab.path && handleNavigation(tab.path)}
+                  >
+                    <span className="flex items-center">
+                      {tab.icon}
+                      <span className="ml-2">{tab.label}</span>
+                    </span>
+                  </button>
+                ))}
+              </nav>
             </div>
-          </div>
-        </div>
 
-        {loading ? (
-          <p>Loading applicants...</p>
-        ) : Object.values(filteredApplicants).flat().length === 0 ? (
-          <p>Chưa có Applicant nào</p>
-        ) : viewMode === "pipeline" ? (
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-                  <span className="font-medium">In Review</span>
-                  <span className="text-gray-500">{filteredApplicants.InReview.length}</span>
-                </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
+            <div className="flex justify-between items-center mb-6">
+              <div className="text-lg font-semibold text-gray-800">
+                Total Applicants: {Object.values(filteredApplicants).flat().length}
               </div>
-              {filteredApplicants.InReview.map((applicant) => (
-                <ApplicantCard
-                  key={applicant._id}
-                  fullName={applicant.fullName}
-                  appliedDate={applicant.createdAt}
-                  score={applicant.score}
-                  _id={applicant._id}
-                />
-              ))}
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-                  <span className="font-medium">In Reviewing</span>
-                  <span className="text-gray-500">{filteredApplicants.Reviewing.length}</span>
+              <div className="flex gap-4 items-center">
+                <div className="relative">
+                  <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search Applicants"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 w-64"
+                  />
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
-              </div>
-              {filteredApplicants.Reviewing.map((applicant) => (
-                <ApplicantCard
-                  key={applicant._id}
-                  fullName={applicant.fullName}
-                  appliedDate={applicant.createdAt}
-                  score={applicant.score}
-                  _id={applicant._id}
-                />
-              ))}
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-                  <span className="font-medium">Shortlisted</span>
-                  <span className="text-gray-500">{filteredApplicants.Shortlisted.length}</span>
+                <div className="flex border rounded-lg overflow-hidden shadow-sm">
+                  <button
+                    className={`px-4 py-2 font-medium transition-colors ${viewMode === "pipeline"
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                        : "hover:bg-gray-100"
+                      }`}
+                    onClick={() => setViewMode("pipeline")}
+                  >
+                    Pipeline View
+                  </button>
+                  <button
+                    className={`px-4 py-2 font-medium transition-colors ${viewMode === "table"
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                        : "hover:bg-gray-100"
+                      }`}
+                    onClick={() => setViewMode("table")}
+                  >
+                    Table View
+                  </button>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
               </div>
-              {filteredApplicants.Shortlisted.map((applicant) => (
-                <ApplicantCard
-                  key={applicant._id}
-                  fullName={applicant.fullName}
-                  appliedDate={applicant.createdAt}
-                  score={applicant.score}
-                  _id={applicant._id}
-                />
-              ))}
             </div>
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                  <span className="font-medium">Hired</span>
-                  <span className="text-gray-500">{filteredApplicants.Hired.length}</span>
-                </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
+
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
               </div>
-              {filteredApplicants.Hired.map((applicant) => (
-                <ApplicantCard
-                  key={applicant._id}
-                  fullName={applicant.fullName}
-                  appliedDate={applicant.createdAt}
-                  score={applicant.score}
-                  _id={applicant._id}
-                />
-              ))}
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                  <span className="font-medium">Rejected</span>
-                  <span className="text-gray-500">{filteredApplicants.Rejected.length}</span>
-                </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
+            ) : Object.values(filteredApplicants).flat().length === 0 ? (
+              <div className="text-center text-gray-500 py-10">No applicants yet.</div>
+            ) : viewMode === "pipeline" ? (
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                {[
+                  { title: "In Review", data: filteredApplicants.InReview, color: "bg-yellow-400" },
+                  { title: "In Reviewing", data: filteredApplicants.Reviewing, color: "bg-blue-600" },
+                  { title: "Shortlisted", data: filteredApplicants.Shortlisted, color: "bg-blue-400" },
+                  { title: "Hired", data: filteredApplicants.Hired, color: "bg-green-400" },
+                  { title: "Rejected", data: filteredApplicants.Rejected, color: "bg-red-500" },
+                ].map((section) => (
+                  <div key={section.title}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${section.color}`}></div>
+                        <span className="font-semibold text-gray-800">{section.title}</span>
+                        <span className="text-gray-500">({section.data.length})</span>
+                      </div>
+                      <MoreVertical className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                    </div>
+                    {section.data.map((applicant) => (
+                      <ApplicantCard
+                        key={applicant._id}
+                        fullName={applicant.fullName}
+                        appliedDate={applicant.createdAt}
+                        score={applicant.score}
+                        _id={applicant._id}
+                      />
+                    ))}
+                  </div>
+                ))}
               </div>
-              {filteredApplicants.Rejected.map((applicant) => (
-                <ApplicantCard
-                  key={applicant._id}
-                  fullName={applicant.fullName}
-                  appliedDate={applicant.createdAt}
-                  score={applicant.score}
-                  _id={applicant._id}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border rounded-lg">
-              <thead>
-                <tr className="bg-gray-100 text-gray-600 text-sm">
-                  <th className="py-3 px-4 text-left">Full Name</th>
-                  <th className="py-3 px-4 text-left">Applied Date</th>
-                  <th className="py-3 px-4 text-left">Score</th>
-                  <th className="py-3 px-4 text-left">Status</th>
-                  <th className="py-3 px-4 text-left">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.values(filteredApplicants)
-                  .flat()
-                  .map((applicant) => (
-                    <tr key={applicant._id} className="border-t hover:bg-gray-50">
-                      <td className="py-3 px-4">{applicant.fullName}</td>
-                      <td className="py-3 px-4">
-                        {new Date(applicant.createdAt).toLocaleDateString("en-GB")}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="flex items-center">
-                          <span className="mr-1">★</span>
-                          {(applicant.score || 0).toFixed(1)}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${applicant.status === "In Review"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : applicant.status === "In Reviewing"
-                              ? "bg-blue-100 text-blue-800"
-                              : applicant.status === "Shortlisted"
-                                ? "bg-blue-200 text-blue-800"
-                                : applicant.status === "Hired"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                            }`}
-                        >
-                          {applicant.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <button
-                          className="text-blue-600 hover:underline"
-                          onClick={() => handleSeeApplication(applicant._id)}
-                        >
-                          View Profile
-                        </button>
-                      </td>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white rounded-lg shadow-md">
+                  <thead>
+                    <tr className="bg-gray-100 text-gray-600 text-sm">
+                      <th className="py-3 px-4 text-left">Full Name</th>
+                      <th className="py-3 px-4 text-left">Applied Date</th>
+                      <th className="py-3 px-4 text-left">Score</th>
+                      <th className="py-3 px-4 text-left">Status</th>
+                      <th className="py-3 px-4 text-left">Action</th>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {Object.values(filteredApplicants)
+                      .flat()
+                      .map((applicant) => (
+                        <tr key={applicant._id} className="border-t hover:bg-gray-50 transition-colors">
+                          <td className="py-3 px-4 font-medium text-gray-800">{applicant.fullName}</td>
+                          <td className="py-3 px-4">{new Date(applicant.createdAt).toLocaleDateString("en-GB")}</td>
+                          <td className="py-3 px-4">
+                            <span className="flex items-center text-yellow-600">
+                              <span className="mr-1">★</span>
+                              {(applicant.score || 0).toFixed(1)}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${applicant.status === "In Review"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : applicant.status === "In Reviewing"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : applicant.status === "Shortlisted"
+                                      ? "bg-blue-200 text-blue-800"
+                                      : applicant.status === "Hired"
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-red-100 text-red-800"
+                                }`}
+                            >
+                              {applicant.status}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <button
+                              className="text-blue-600 hover:underline font-medium"
+                              onClick={() => handleSeeApplication(applicant._id)}
+                            >
+                              View Profile
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
