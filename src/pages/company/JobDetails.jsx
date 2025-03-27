@@ -101,22 +101,22 @@ const JobDetails = () => {
 
   const tabs = [
     {
-      key: "applicants",
-      label: "Applicants",
-      icon: <Briefcase className="w-5 h-5" />,
-      path: "/company/ApplicantsTracking",
-    },
-    {
       key: "details",
       label: "Job Details",
       icon: <FileText className="w-5 h-5" />,
       path: null,
     },
     {
+      key: "applicants",
+      label: "Applicants",
+      icon: <Briefcase className="w-5 h-5" />,
+      path: `/company/ApplicantsTracking?job_id=${job_id}`,
+    },
+    {
       key: "analytics",
       label: "Analytics",
       icon: <PieChart className="w-5 h-5" />,
-      path: "/company/Analytics",
+      path: `/company/Analytics?job_id=${job_id}`,
     },
   ];
 
@@ -152,7 +152,7 @@ const JobDetails = () => {
           </div>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
-            onClick={() => router.push("/company/JobListingCompany")}
+            onClick={() => router.push(`/company/JobListingCompany`)}
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Return to Job Listings
@@ -238,11 +238,10 @@ const JobDetails = () => {
                 {tabs.map((tab) => (
                   <button
                     key={tab.key}
-                    className={`flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
-                      currentTab === tab.key
-                        ? "bg-white text-blue-600 shadow-sm"
-                        : "text-gray-600 hover:text-blue-600"
-                    }`}
+                    className={`flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${currentTab === tab.key
+                      ? "bg-white text-blue-600 shadow-sm"
+                      : "text-gray-600 hover:text-blue-600"
+                      }`}
                     onClick={() => tab.path && handleNavigation(tab.path)}
                   >
                     <span className="flex items-center">
