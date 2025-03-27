@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import img1 from "../assets/the-simpsons-electric-chair.gif";
+import img1 from "../assets/image.png";
 import Image from "next/image";
 
 function ApplyJobForm({ job, isOpen, onClose }) {
@@ -96,7 +96,6 @@ function ApplyJobForm({ job, isOpen, onClose }) {
 
         <div className="p-6">
           <h2 className="text-lg font-medium mb-4">Submit your application</h2>
-
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">

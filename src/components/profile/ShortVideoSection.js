@@ -15,17 +15,18 @@ const ShortVideoSection = ({ isEditing, video, setVideo }) => {
         />
       ) : (
         <div className="mt-4">
-          {video.includes("youtube.com") || video.includes("youtu.be") ? (
-            // Hiển thị video từ YouTube
+          {video &&
+          (video.includes("youtube.com") || video.includes("youtu.be")) ? (
             <iframe
               className="w-full aspect-video rounded-md"
               src={video.replace("watch?v=", "embed/")}
               title="Short Video"
               allowFullScreen
             ></iframe>
-          ) : (
-            // Hiển thị video trực tiếp từ file (MP4, WEBM, v.v.)
+          ) : video ? (
             <video className="w-full rounded-md" controls src={video}></video>
+          ) : (
+            <p className="text-gray-500">No video available</p>
           )}
         </div>
       )}

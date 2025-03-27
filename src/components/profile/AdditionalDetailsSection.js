@@ -50,26 +50,16 @@ const AdditionalDetailsSection = ({
           {isEditing ? (
             <input
               type="text"
-              value={(languages || []).join(", ")} // Đảm bảo languages không undefined
+              value={languages} // Đảm bảo languages không undefined
               onChange={(e) =>
                 setLanguages(
-                  e.target.value
-                    .split(",")
-                    .map((lang) => lang.trim())
-                    .filter(Boolean)
+                  e.target.value.length <= 50 ? e.target.value : languages // Giới hạn độ dài tối đa là 50 ký tự
                 )
               }
               className="border rounded-md p-1 w-full"
             />
           ) : (
-            <span className="text-sm text-gray-600">
-              {(languages || []).map((lang, index) => (
-                <span key={index}>
-                  {lang}
-                  {index !== (languages || []).length - 1 ? ", " : ""}
-                </span>
-              ))}
-            </span>
+            <span className="text-sm text-gray-600">{languages}</span>
           )}
         </div>
       </div>

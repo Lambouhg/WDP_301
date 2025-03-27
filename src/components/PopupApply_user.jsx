@@ -1,6 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
-import img1 from "../assets/the-simpsons-electric-chair.gif";
+import img1 from "../assets/image.png";
 import Image from "next/image";
 
 const JobApplicationPopup = ({ job, isOpen, onClose }) => {
