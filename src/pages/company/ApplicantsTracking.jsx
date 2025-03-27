@@ -36,12 +36,13 @@ const ApplicantTracking = () => {
   });
   const [jobTitle, setJobTitle] = useState("");
   const [jobType, setJobType] = useState("");
+  const [jobNeeds, setJobNeeds] = useState(null); // Thêm state mới cho job.needs
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState("pipeline");
 
-  // Fetch user role and applicant data (giữ nguyên logic)
+  // Fetch user role
   useEffect(() => {
     if (user) {
       const fetchUserRole = async () => {
@@ -57,6 +58,7 @@ const ApplicantTracking = () => {
     }
   }, [user]);
 
+  // Fetch applicant data and job details
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -86,6 +88,7 @@ const ApplicantTracking = () => {
           const jobData = await jobResponse.json();
           setJobType(jobData.job.jobType || "");
           setJobTitle(jobData.job.title || "");
+          setJobNeeds(jobData.job.needs || null); // Lấy needs từ job data
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -96,6 +99,7 @@ const ApplicantTracking = () => {
     fetchData();
   }, [job_id]);
 
+  // Filter applicants based on search term
   useEffect(() => {
     const filterApplicants = () => {
       const lowerSearchTerm = searchTerm.toLowerCase();
@@ -194,7 +198,7 @@ const ApplicantTracking = () => {
                   </span>
                 </h1>
                 <p className="text-gray-500">
-                  {jobType || "Full-Time"} • {filteredApplicants.Hired.length} / 11 Hired
+                  {jobType || "Full-Time"} • {filteredApplicants.Hired.length} / {jobNeeds} Hired
                 </p>
               </div>
             </div>
@@ -205,8 +209,8 @@ const ApplicantTracking = () => {
                   <button
                     key={tab.key}
                     className={`flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${currentTab === tab.key
-                        ? "bg-white text-blue-600 shadow-sm"
-                        : "text-gray-600 hover:text-blue-600"
+                      ? "bg-white text-blue-600 shadow-sm"
+                      : "text-gray-600 hover:text-blue-600"
                       }`}
                     onClick={() => tab.path && handleNavigation(tab.path)}
                   >
@@ -237,8 +241,8 @@ const ApplicantTracking = () => {
                 <div className="flex border rounded-lg overflow-hidden shadow-sm">
                   <button
                     className={`px-4 py-2 font-medium transition-colors ${viewMode === "pipeline"
-                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                        : "hover:bg-gray-100"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                      : "hover:bg-gray-100"
                       }`}
                     onClick={() => setViewMode("pipeline")}
                   >
@@ -246,8 +250,8 @@ const ApplicantTracking = () => {
                   </button>
                   <button
                     className={`px-4 py-2 font-medium transition-colors ${viewMode === "table"
-                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                        : "hover:bg-gray-100"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                      : "hover:bg-gray-100"
                       }`}
                     onClick={() => setViewMode("table")}
                   >
@@ -321,14 +325,14 @@ const ApplicantTracking = () => {
                           <td className="py-3 px-4">
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-medium ${applicant.status === "In Review"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : applicant.status === "In Reviewing"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : applicant.status === "Shortlisted"
-                                      ? "bg-blue-200 text-blue-800"
-                                      : applicant.status === "Hired"
-                                        ? "bg-green-100 text-green-800"
-                                        : "bg-red-100 text-red-800"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : applicant.status === "In Reviewing"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : applicant.status === "Shortlisted"
+                                    ? "bg-blue-200 text-blue-800"
+                                    : applicant.status === "Hired"
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
                                 }`}
                             >
                               {applicant.status}
