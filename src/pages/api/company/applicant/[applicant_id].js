@@ -1,13 +1,14 @@
+import mongoose from "mongoose";
 import connectDB from "../../../../lib/mongodb";
 import Applicant from "../../../../models/applicant";
 import User from "../../../../models/User";
 import { getAuth } from "@clerk/nextjs/server";
-import getRawBody from "raw-body"; // Import thư viện raw-body để đọc body
+import axios from "axios"; // Import axios
+import getRawBody from "raw-body";
 
-// Tắt bodyParser của Next.js để sử dụng raw-body
 export const config = {
   api: {
-    bodyParser: false, // Tắt bodyParser của Next.js
+    bodyParser: false,
   },
 };
 
@@ -19,12 +20,14 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: "Unauthorized: No valid token" });
   }
 
-  // Xử lý phương thức GET
   if (req.method === "GET") {
     try {
-      const { applicant_id } = req.query; // Lấy applicant_id từ URL
+      const { applicant_id } = req.query;
 
-      // Kiểm tra người dùng có phải là công ty không
+      if (!mongoose.Types.ObjectId.isValid(applicant_id)) {
+        return res.status(400).json({ message: "Invalid applicant ID" });
+      }
+
       const user = await User.findOne({ clerkId: userId });
       if (!user || user.role !== "company") {
         return res.status(403).json({
@@ -32,29 +35,84 @@ export default async function handler(req, res) {
         });
       }
 
-      // Tìm ứng viên dựa trên applicant_id
       const applicant = await Applicant.findById(applicant_id)
-        .populate("userID","name email phone avatar appliedJobs socialLinks jobType categories appliedJobs")
+        .populate("userID", "name email phone avatar appliedJobs socialLinks skills experience")
+        .populate("jobID", "title jobDescription requiredSkills responsibilities whoYouAre niceToHaves")
         .select("+resume");
 
-      if (!applicant) {
-        return res.status(404).json({ message: "Applicant not found" });
+      if (!applicant || !applicant.userID || !applicant.jobID) {
+        return res.status(404).json({ message: "Applicant or related data not found" });
       }
 
-      // Kiểm tra quyền công ty
       if (applicant.companyID.toString() !== user.companyId.toString()) {
         return res.status(403).json({
           message: "You are not authorized to view this applicant.",
         });
       }
 
+      // Tính điểm bằng OpenRouter nếu chưa có score
+      if (applicant.score === 0 || !applicant.scoreReason) {
+        const job = applicant.jobID;
+        const jobText = `
+          Job Title: ${job.title}
+          Description: ${job.jobDescription}
+          Required Skills: ${job.requiredSkills.join(", ")}
+          Responsibilities: ${job.responsibilities}
+          Who You Are: ${job.whoYouAre}
+          Nice to Haves: ${job.niceToHaves || "None"}
+        `;
+        const applicantText = `
+          Resume: ${applicant.resume || "Not provided"}
+          Additional Info: ${applicant.additionalInfo || "Not provided"}
+          Skills: ${(applicant.userID.skills || []).join(", ")}
+          Experience: ${JSON.stringify(applicant.userID.experience || [])}
+        `;
+
+        const prompt = `
+        Evaluate the candidate's suitability for the job based on:
+        - Job information: "${jobText}"
+        - Candidate information: "${applicantText}"
+        Return a score from 1.0 to 5.0 (can be a decimal such as 2.3, 3.5) and a brief reason in the format: "Score: X.X - Reason".
+      `;
+
+        // Gọi API OpenRouter
+        const response = await axios.post(
+          "https://openrouter.ai/api/v1/chat/completions",
+          {
+            model: "openai/gpt-3.5-turbo", // Chọn model, ví dụ GPT-3.5
+            messages: [
+              { role: "user", content: prompt },
+            ],
+            max_tokens: 150,
+            temperature: 0.7,
+          },
+          {
+            headers: {
+              "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const aiResult = response.data.choices[0].message.content.trim();
+        // Cập nhật regex để chấp nhận số thực
+        const scoreMatch = aiResult.match(/Score: (\d+\.\d+|\d+) - (.*)/);
+        const score = scoreMatch ? parseFloat(scoreMatch[1]) : 0; // Parse thành số thực
+        const reason = scoreMatch ? scoreMatch[2] : "Evaluated by AI";
+
+        // Giới hạn score trong khoảng 1.0 - 5.0
+        applicant.score = Math.min(Math.max(score, 1.0), 5.0);
+        applicant.scoreReason = reason;
+        await applicant.save();
+      }
+
       res.status(200).json({
         message: "Applicant details fetched successfully",
         applicant: {
           _id: applicant._id,
-          userID: applicant.userID,
+          userID: applicant.userID._id,
           status: applicant.status,
-          jobID: applicant.jobID,
+          jobID: applicant.jobID._id,
           fullName: applicant.fullName,
           email: applicant.email,
           phoneNumber: applicant.phoneNumber,
@@ -68,40 +126,29 @@ export default async function handler(req, res) {
           avatar: applicant.userID.avatar,
           name: applicant.userID.name,
           appliedJobs: applicant.userID.appliedJobs,
-          status: applicant.status,
-          email: applicant.userID.email,
-          phone: applicant.userID.phone,
           socialLinks: applicant.userID.socialLinks,
+          skills: applicant.userID.skills,
+          experience: applicant.userID.experience,
+          score: applicant.score,
+          scoreReason: applicant.scoreReason,
         },
       });
     } catch (error) {
       console.error("Error fetching applicant:", error);
       res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
-  }
-
-  // Xử lý phương thức PUT (giữ nguyên code gốc)
-  else if (req.method === "PUT") {
-    const { applicant_id } = req.query; // Lấy applicant_id từ URL
-
+  } else if (req.method === "PUT") {
+    const { applicant_id } = req.query;
     try {
       const rawBody = await getRawBody(req);
       const parsedBody = JSON.parse(rawBody.toString("utf-8"));
-
       const { status } = parsedBody;
-      console.log("Received status:", status);
 
       if (!status) {
         return res.status(400).json({ message: "Status is required" });
       }
 
-      const validStatuses = [
-        "In Review",
-        "In Reviewing",
-        "Shortlisted",
-        "Hired",
-        "Rejected",
-      ];
+      const validStatuses = ["In Review", "In Reviewing", "Shortlisted", "Hired", "Rejected"];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({
           message: `Invalid status. Valid statuses are: ${validStatuses.join(", ")}`,
@@ -109,11 +156,7 @@ export default async function handler(req, res) {
       }
 
       const user = await User.findOne({ clerkId: userId });
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      if (user.role !== "company") {
+      if (!user || user.role !== "company") {
         return res.status(403).json({
           message: "Access denied. Only companies can update applicants' status.",
         });

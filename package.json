@@ -36,6 +36,7 @@
     "mongoose": "^8.9.6",
     "next": "^15.2.0",
     "next-connect": "^1.0.0",
+    "openai": "^4.89.1",
     "raw-body": "^3.0.0",
     "react": "^19.0.0",
     "react-big-calendar": "^1.18.0",

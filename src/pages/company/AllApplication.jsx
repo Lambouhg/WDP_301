@@ -172,7 +172,7 @@ const ApplicantList = () => {
                       <td className="py-4">
                         <div className="flex items-center">
                           <input type="checkbox" className="mr-4 h-4 w-4" />
-                          <div className="w-8 h-8 bg-gray-200 rounded-full mr-3"></div>
+                          
                           {applicant.fullName}
                         </div>
                       </td>

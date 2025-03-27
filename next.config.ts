@@ -6,7 +6,16 @@ const nextConfig: NextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['img.clerk.com'],
+    remotePatterns: [
+      {
+        protocol: 'https', // Chỉ áp dụng cho HTTPS
+        hostname: '**', // Cho phép tất cả hostname
+      },
+      {
+        protocol: 'http', // Hỗ trợ HTTP nếu cần (không khuyến khích)
+        hostname: '**',
+      },
+    ],
   },
 };
 
