@@ -1,9 +1,8 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import DashboardHeader from "../components/DashboardHeader";
 import Image from "next/image";
-import img1 from "../assets/the-simpsons-electric-chair.gif";
+import img1 from "../assets/image.png";
 import JobApplicationPopup from "../components/PopupApply_user";
 import CompanySidebar from "../components/SidebarCompany";
 import Sidebar from "../components/Sidebar";
@@ -86,7 +85,7 @@ export default function FindJobDetail() {
           jobDescription: job.jobDescription,
           responsibilities: job.responsibilities,
           whoYouAre: job.whoYouAre,
-          niceToHaves: job.niceToHaves
+          niceToHaves: job.niceToHaves,
         }),
       });
 
@@ -98,7 +97,6 @@ export default function FindJobDetail() {
       } else {
         setAnalysisResult("Đã xảy ra lỗi khi phân tích.");
       }
-
     } catch (err) {
       console.error(err);
       setAnalysisResult("Lỗi kết nối đến server.");
@@ -106,7 +104,6 @@ export default function FindJobDetail() {
       setAnalyzing(false);
     }
   };
-
 
   return (
     <div className="flex bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-sans">
@@ -207,13 +204,16 @@ export default function FindJobDetail() {
                 {analysisResult && (
                   <div className="bg-white p-6 rounded-xl shadow-lg mt-6">
                     <h3 className="text-xl font-semibold text-green-500 mb-4">
-                      Here are some of the requirements needed to have a chance at getting the job.
+                      Here are some of the requirements needed to have a chance
+                      at getting the job.
                     </h3>
                     {typeof analysisResult === "object" ? (
                       <div className="space-y-4">
                         {Object.entries(analysisResult).map(([key, value]) => (
                           <div key={key}>
-                            <h4 className="text-md font-semibold text-gray-800">{key}</h4>
+                            <h4 className="text-md font-semibold text-gray-800">
+                              {key}
+                            </h4>
                             {Array.isArray(value) ? (
                               <ul className="list-disc pl-5 text-gray-700 space-y-1">
                                 {value.map((item, idx) => (
@@ -231,10 +231,8 @@ export default function FindJobDetail() {
                         {analysisResult}
                       </pre>
                     )}
-
                   </div>
                 )}
-
               </div>
 
               {/* Right Column */}
@@ -327,7 +325,11 @@ export default function FindJobDetail() {
       </div>
 
       {/* Popup */}
-      <JobApplicationPopup job={job} isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <JobApplicationPopup
+        job={job}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
     </div>
   );
 }

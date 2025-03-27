@@ -28,7 +28,7 @@ const UserProfile = () => {
   const [aboutMe, setAboutMe] = useState("Have't data yet");
   const [email, setEmail] = useState("Have't data yet");
   const [phone, setPhone] = useState("Have't data yet");
-  const [languages, setLanguages] = useState([]);
+  const [languages, setLanguages] = useState("Have't data yet");
   const [instagram, setInstagram] = useState("Have't data yet");
   const [twitter, setTwitter] = useState("Have't data yet");
   const [website, setWebsite] = useState("Have't data yet");
@@ -52,7 +52,7 @@ const UserProfile = () => {
         setAboutMe(userData.aboutMe || "Have't data yet");
         setEmail(userData.email || "Have't data yet");
         setPhone(userData.phone || "Have't data yet");
-        setLanguages(userData.Languages || []);
+        setLanguages(userData.Languages || "Have't data yet");
         setInstagram(userData.socialLinks.instagram || "Have't data yet");
         setTwitter(userData.socialLinks.twitter || "Have't data yet");
         setWebsite(userData.socialLinks.facebook || "Have't data yet");
@@ -143,6 +143,8 @@ const UserProfile = () => {
                 expereince={expereince}
                 education={education}
                 skills={skills}
+                video={video}
+                setVideo={setVideo}
               />
             </div>
 
