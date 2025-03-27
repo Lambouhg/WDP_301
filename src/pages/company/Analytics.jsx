@@ -17,7 +17,6 @@ const Analytics = () => {
   const [isOpen, setIsOpen] = useState(true);
   const { job_id } = router.query;
 
-
   const handleNavigation = (path) => {
     router.push(path);
   };
@@ -42,158 +41,163 @@ const Analytics = () => {
   ];
 
   return (
-    <div className="mx-auto h-screen w-screen flex overflow-hidden">
+    <div className="flex h-screen bg-gray-50">
       <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
-      <div className="w-full px-10 pt-5 h-full overflow-y-auto">
-        <HeaderCompany />
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-start gap-3">
-            <button type="button" className="p-2 hover:bg-gray-100 rounded-lg">
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <h1 className="text-xl font-semibold mb-1">
-                Social Media Assistant
-              </h1>
-              <p className="text-gray-500">Design • Full-Time • 4 / 11 Hired</p>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2"
-          >
-            More Action
-            <ChevronDown className="w-4 h-4" />
-          </button>
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <div className="p-6 bg-white shadow-sm">
+          <HeaderCompany />
         </div>
 
-        {/* Tabs */}
-        <div className="border-b mb-6">
-          <header className="bg-white rounded-2xl shadow-sm mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Settings</h1>
-
-            <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
-
-              <button
-                className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600"
-                onClick={() => handleNavigation(`/company/JobDetails?job_id=${job_id}`)}
-              >
-                Job Details
-              </button>
-              <button
-                className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600"
-                onClick={() => handleNavigation(`/company/ApplicantsTracking?job_id=${job_id}`)}
-              >
-                Applicants
-              </button>
-              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-white text-blue-600 shadow-sm">
-                Analytics
-              </button>
-            </nav>
-          </header>
-        </div>
-
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Total Views */}
-          <div className="p-4 border rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Eye className="w-5 h-5 text-blue-500" />
-              <span className="text-gray-600">Total Views</span>
-            </div>
-            <div className="flex items-baseline gap-3">
-              <h2 className="text-3xl font-semibold">23,564</h2>
-              <span className="text-green-500 text-sm">6.4% ↑</span>
-            </div>
-            <p className="text-sm text-gray-500 mt-1">vs last day</p>
-          </div>
-
-          {/* Total Applied */}
-          <div className="p-4 border rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Mail className="w-5 h-5 text-purple-500" />
-              <span className="text-gray-600">Total Applied</span>
-            </div>
-            <div className="flex items-baseline gap-3">
-              <h2 className="text-3xl font-semibold">132</h2>
-              <span className="text-red-500 text-sm">0.4% ↓</span>
-            </div>
-            <p className="text-sm text-gray-500 mt-1">vs last day</p>
-          </div>
-
-          {/* Traffic Channel */}
-          <div className="p-4 border rounded-lg">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="font-semibold">Traffic channel</h3>
-              <div className="bg-gray-700 text-white px-2 py-1 rounded text-sm">
-                243
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Direct</span>
-                <span className="text-sm font-medium">48%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Social</span>
-                <span className="text-sm font-medium">23%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Organic</span>
-                <span className="text-sm font-medium">24%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Other</span>
-                <span className="text-sm font-medium">5%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Chart Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2 border rounded-lg p-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-semibold">Job Listing View stats</h3>
-              <button
-                type="button"
-                className="px-4 py-2 border rounded-lg text-sm"
-              >
-                Last 7 days
-              </button>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <LineChart width={700} height={300} data={viewData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="views"
-                  stroke="#10B981"
-                  strokeWidth={2}
-                  dot={{ fill: "#10B981", strokeWidth: 2 }}
-                />
-              </LineChart>
-            </div>
-          </div>
-
-          {/* Visitors by Country */}
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-4">Visitors by country</h3>
-            <div className="space-y-4">
-              {countryData.map((item, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <span>{item.flag}</span>
-                    <span>{item.country}</span>
-                  </div>
-                  <span className="font-medium">
-                    {item.count.toLocaleString()}
-                  </span>
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-4">
+                <button
+                  className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors"
+                  onClick={() => router.back()}
+                >
+                  <ArrowLeft className="w-5 h-5 text-gray-600" />
+                </button>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-800">
+                    <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                      Social Media Assistant
+                    </span>
+                  </h1>
+                  <p className="text-gray-500">Design • Full-Time • 4 / 11 Hired</p>
                 </div>
-              ))}
+              </div>
+              <button
+                className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium flex items-center gap-2"
+              >
+                More Action
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Tabs */}
+            <div className="mb-8">
+              <nav className="flex p-1 bg-gray-100 rounded-xl">
+                <button
+                  className="flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium text-gray-600 hover:text-blue-600 transition-all duration-200"
+                  onClick={() => handleNavigation(`/company/JobDetails?job_id=${job_id}`)}
+                >
+                  <span className="flex items-center">Job Details</span>
+                </button>
+                <button
+                  className="flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium text-gray-600 hover:text-blue-600 transition-all duration-200"
+                  onClick={() => handleNavigation(`/company/ApplicantsTracking?job_id=${job_id}`)}
+                >
+                  <span className="flex items-center">Applicants</span>
+                </button>
+                <button className="flex items-center justify-center flex-1 py-3 px-4 rounded-lg font-medium bg-white text-blue-600 shadow-sm transition-all duration-200">
+                  <span className="flex items-center">Analytics</span>
+                </button>
+              </nav>
+            </div>
+
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {/* Total Views */}
+              <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Eye className="w-5 h-5 text-blue-500" />
+                  <span className="text-gray-600 font-medium">Total Views</span>
+                </div>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-3xl font-bold text-gray-800">23,564</h2>
+                  <span className="text-green-500 text-sm font-medium">6.4% ↑</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-1">vs last day</p>
+              </div>
+
+              {/* Total Applied */}
+              <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Mail className="w-5 h-5 text-purple-500" />
+                  <span className="text-gray-600 font-medium">Total Applied</span>
+                </div>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-3xl font-bold text-gray-800">132</h2>
+                  <span className="text-red-500 text-sm font-medium">0.4% ↓</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-1">vs last day</p>
+              </div>
+
+              {/* Traffic Channel */}
+              <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-semibold text-gray-800">Traffic Channel</h3>
+                  <div className="bg-gray-700 text-white px-2 py-1 rounded text-sm font-medium">243</div>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {[
+                    { label: "Direct", value: "48%" },
+                    { label: "Social", value: "23%" },
+                    { label: "Organic", value: "24%" },
+                    { label: "Other", value: "5%" },
+                  ].map((item, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">{item.label}</span>
+                      <span className="text-sm font-medium text-gray-800">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Chart Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 bg-white rounded-lg shadow-md p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-semibold text-gray-800 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                    Job Listing View Stats
+                  </h3>
+                  <button
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors"
+                  >
+                    Last 7 days
+                  </button>
+                </div>
+                <div className="w-full overflow-x-auto">
+                  <LineChart width={700} height={300} data={viewData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis dataKey="date" stroke="#6b7280" />
+                    <YAxis stroke="#6b7280" />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="views"
+                      stroke="#10B981"
+                      strokeWidth={2}
+                      dot={{ fill: "#10B981", strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </div>
+              </div>
+
+              {/* Visitors by Country */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="font-semibold text-gray-800 mb-4 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                  Visitors by Country
+                </h3>
+                <div className="space-y-4">
+                  {countryData.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{item.flag}</span>
+                        <span className="text-gray-700">{item.country}</span>
+                      </div>
+                      <span className="font-medium text-gray-800">{item.count.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
