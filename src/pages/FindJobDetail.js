@@ -16,6 +16,8 @@ export default function FindJobDetail() {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -71,6 +73,40 @@ export default function FindJobDetail() {
       </div>
     );
   }
+
+  const handleAnalyzeJob = async () => {
+    setAnalyzing(true);
+    setAnalysisResult(null);
+
+    try {
+      const res = await fetch("/api/analyzejob/analyze-job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobDescription: job.jobDescription,
+          responsibilities: job.responsibilities,
+          whoYouAre: job.whoYouAre,
+          niceToHaves: job.niceToHaves
+        }),
+      });
+
+      const data = await res.json();
+      const parsedResult = JSON.parse(data.result);
+
+      if (res.ok) {
+        setAnalysisResult(parsedResult);
+      } else {
+        setAnalysisResult("Đã xảy ra lỗi khi phân tích.");
+      }
+
+    } catch (err) {
+      console.error(err);
+      setAnalysisResult("Lỗi kết nối đến server.");
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
 
   return (
     <div className="flex bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-sans">
@@ -153,6 +189,52 @@ export default function FindJobDetail() {
                     <li key={index}>{item}</li>
                   ))}
                 />
+                <div className="bg-white p-6 rounded-xl shadow-lg">
+                  <div className="flex justify-between items-center w-full">
+                    <p className="text-red-500 text-lg font-medium animate-pulse">
+                      Support: Click the button to analyze the job description.
+                    </p>
+                    <button
+                      className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg transform hover:scale-105 transition-all animate-pulse"
+                      onClick={handleAnalyzeJob}
+                      disabled={analyzing}
+                    >
+                      {analyzing ? "Analyzing..." : "Analyze"}
+                    </button>
+                  </div>
+                </div>
+
+                {analysisResult && (
+                  <div className="bg-white p-6 rounded-xl shadow-lg mt-6">
+                    <h3 className="text-xl font-semibold text-green-500 mb-4">
+                      Here are some of the requirements needed to have a chance at getting the job.
+                    </h3>
+                    {typeof analysisResult === "object" ? (
+                      <div className="space-y-4">
+                        {Object.entries(analysisResult).map(([key, value]) => (
+                          <div key={key}>
+                            <h4 className="text-md font-semibold text-gray-800">{key}</h4>
+                            {Array.isArray(value) ? (
+                              <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                                {value.map((item, idx) => (
+                                  <li key={idx}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p className="text-gray-700">{value}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <pre className="whitespace-pre-wrap text-gray-700">
+                        {analysisResult}
+                      </pre>
+                    )}
+
+                  </div>
+                )}
+
               </div>
 
               {/* Right Column */}
