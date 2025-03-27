@@ -1,207 +1,472 @@
-import React from 'react';
-import { ArrowLeft, MoreHorizontal, Search, ChevronDown, Filter } from 'lucide-react';
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+  Search,
+  MoreVertical,
+  Menu,
+  X,
+  ArrowLeft,
+  FileText,
+  Briefcase,
+  PieChart,
+} from "lucide-react";
+import DasborderHeader from "../../components/HeaderCompany";
 import SidebarCompany from "../../components/SidebarCompany";
-import HeaderCompany from "../../components/HeaderCompany";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
+import { useUser } from "@clerk/nextjs";
 
 const ApplicantTracking = () => {
-
   const router = useRouter();
+  const { user } = useUser();
+  const { job_id } = router.query;
+  const [role, setRole] = useState(null);
+  const [applicants, setApplicants] = useState({
+    InReview: [],
+    Reviewing: [],
+    Shortlisted: [],
+    Hired: [],
+    Rejected: [],
+  });
+  const [filteredApplicants, setFilteredApplicants] = useState({
+    InReview: [],
+    Reviewing: [],
+    Shortlisted: [],
+    Hired: [],
+    Rejected: [],
+  });
+  const [jobTitle, setJobTitle] = useState(""); // State mới để lưu jobTitle
+  const [jobType, setJobType] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [viewMode, setViewMode] = useState("pipeline");
 
-    const handleNavigation = (path) => {
-      router.push(path);
+  useEffect(() => {
+    if (user) {
+      const fetchUserRole = async () => {
+        try {
+          const response = await fetch("/api/auth/callback/route");
+          const data = await response.json();
+          if (data.user?.role) setRole(data.user.role);
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+        }
+      };
+      fetchUserRole();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const applicantResponse = await fetch(
+          job_id ? `/api/company/applicant?job_id=${job_id}` : "/api/company/applicant"
+        );
+        const applicantData = await applicantResponse.json();
+
+        if (!applicantResponse.ok) {
+          throw new Error(applicantData.message || "Failed to fetch applicants");
+        }
+
+        if (applicantData?.applicants && applicantData.applicants.length > 0) {
+          const jobSpecificApplicants = job_id
+            ? applicantData.applicants.filter((applicant) => applicant.jobID?._id.toString() === job_id)
+            : applicantData.applicants;
+
+          const groupedApplicants = {
+            InReview: jobSpecificApplicants.filter((a) => a.status === "In Review"),
+            Reviewing: jobSpecificApplicants.filter((a) => a.status === "In Reviewing"),
+            Shortlisted: jobSpecificApplicants.filter((a) => a.status === "Shortlisted"),
+            Hired: jobSpecificApplicants.filter((a) => a.status === "Hired"),
+            Rejected: jobSpecificApplicants.filter((a) => a.status === "Rejected"),
+          };
+          setApplicants(groupedApplicants);
+          setFilteredApplicants(groupedApplicants);
+        } else {
+          setApplicants({
+            InReview: [],
+            Reviewing: [],
+            Shortlisted: [],
+            Hired: [],
+            Rejected: [],
+          });
+          setFilteredApplicants({
+            InReview: [],
+            Reviewing: [],
+            Shortlisted: [],
+            Hired: [],
+            Rejected: [],
+          });
+        }
+
+        if (job_id) {
+          const jobResponse = await fetch(`/api/job/${job_id}`);
+          if (!jobResponse.ok) throw new Error("Failed to fetch job details");
+          const jobData = await jobResponse.json();
+          setJobType(jobData.job.jobType || ""); // Lưu jobType
+          setJobTitle(jobData.job.title || ""); // Lưu jobTitle
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+    fetchData();
+  }, [job_id]);
 
-  const applicants = {
-    inReview: [
-      { name: 'Jake Gyll', appliedDate: '13 July, 2021', score: 4.0 },
-      { name: 'Jenny Wilson', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Jacob Jones', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Wade Warren', appliedDate: '13 July, 2021', score: 0.0 },
-    ],
-    shortlisted: [
-      { name: 'Jane Cooper', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Courtney Henry', appliedDate: '13 July, 2021', score: 0.0 },
-    ],
-    interview: [
-      { name: 'Floyd Miles', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Devon Lane', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Marvin McKin...', appliedDate: '13 July, 2021', score: 0.0 },
-    ],
-    hired: [
-      { name: 'Annette Black', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Brooklyn Sim...', appliedDate: '13 July, 2021', score: 0.0 },
-      { name: 'Ronald Richa...', appliedDate: '13 July, 2021', score: 0.0 },
-    ]
+  useEffect(() => {
+    const filterApplicants = () => {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      const filtered = {
+        InReview: applicants.InReview.filter((applicant) =>
+          applicant.fullName.toLowerCase().includes(lowerSearchTerm)
+        ),
+        Reviewing: applicants.Reviewing.filter((applicant) =>
+          applicant.fullName.toLowerCase().includes(lowerSearchTerm)
+        ),
+        Shortlisted: applicants.Shortlisted.filter((applicant) =>
+          applicant.fullName.toLowerCase().includes(lowerSearchTerm)
+        ),
+        Hired: applicants.Hired.filter((applicant) =>
+          applicant.fullName.toLowerCase().includes(lowerSearchTerm)
+        ),
+        Rejected: applicants.Rejected.filter((applicant) =>
+          applicant.fullName.toLowerCase().includes(lowerSearchTerm)
+        ),
+      };
+      setFilteredApplicants(filtered);
+    };
+    filterApplicants();
+  }, [searchTerm, applicants]);
+
+  const handleSeeApplication = (applicantId) => {
+    router.push(`/company/applicant-details?applicantId=${applicantId}`);
   };
 
-  const ApplicantCard = ({ name, appliedDate, score }) => (
+  const handleNavigation = (path) => {
+    router.push(path);
+  };
+
+  const toggleMobileFilter = () => {
+    setIsMobileFilterOpen(!isMobileFilterOpen);
+  };
+
+  const ApplicantCard = ({ fullName, appliedDate, score, _id }) => (
     <div className="bg-white p-4 rounded-lg border mb-4">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
-            <img src="/api/placeholder/48/48" alt={name} className="w-full h-full object-cover" />
-          </div>
+          <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden"></div>
           <div>
-            <h3 className="font-medium">{name}</h3>
-            <button className="text-blue-600 text-sm">View Profile</button>
+            <h3 className="font-medium">{fullName}</h3>
+            <button
+              className="text-blue-600 text-sm"
+              onClick={() => handleSeeApplication(_id)}
+            >
+              View Profile
+            </button>
           </div>
         </div>
         <div className="text-gray-500">
-          <MoreHorizontal className="w-5 h-5" />
+          <MoreVertical className="w-5 h-5" />
         </div>
       </div>
       <div className="mt-4 flex justify-between text-sm text-gray-500">
         <div>
           <div>Applied on</div>
-          <div>{appliedDate}</div>
+          <div>{new Date(appliedDate).toLocaleDateString("en-GB")}</div>
         </div>
         <div className="text-right">
           <div>Score</div>
           <div className="flex items-center">
             <span className="mr-1">★</span>
-            {score.toFixed(1)}
+            {(score || 0).toFixed(1)}
           </div>
         </div>
       </div>
     </div>
   );
 
+  const tabs = [
+    {
+      key: "details",
+      label: "Job Details",
+      icon: <FileText className="w-5 h-5" />,
+      path: `/company/JobDetails?job_id=${job_id}`,
+    },
+    {
+      key: "applicants",
+      label: "Applicants",
+      icon: <Briefcase className="w-5 h-5" />,
+      path: null,
+    },
+    {
+      key: "analytics",
+      label: "Analytics",
+      icon: <PieChart className="w-5 h-5" />,
+      path: `/company/Analytics?job_id=${job_id}`,
+    },
+  ];
+
+  const currentTab = "applicants";
+
+  const handleViewChange = (mode) => {
+    setViewMode(mode);
+  };
+
   return (
-    <div className="mx-auto h-screen w-screen flex overflow-hidden">
-      <SidebarCompany/>
+    <div className="flex w-screen h-screen overflow-hidden bg-white mx-auto">
+      <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-md"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+
       <div className="w-full px-10 pt-5 h-full overflow-y-auto">
-        <HeaderCompany/>
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-xl font-semibold">Social Media Assistant</h1>
-            <p className="text-gray-500">Design • Full-Time • 4 / 11 Hired</p>
+        <DasborderHeader />
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-4">
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg"
+              onClick={() => router.back()}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-xl font-semibold">{jobTitle || "Loading..."}</h1>
+              <p className="text-gray-500">
+                Design • {jobType || "Full-Time"} • {filteredApplicants.Hired.length} / 11 Hired
+              </p>
+            </div>
           </div>
+
         </div>
-        <button className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2">
-          More Action
-          <ChevronDown className="w-4 h-4" />
-        </button>
-      </div>
 
-      {/* Tabs */}
-      <div className="border-b mb-6">
-        <header className="bg-white rounded-2xl shadow-sm mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Settings</h1>
-
-            <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
-              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-white text-blue-600 shadow-sm">
-                Applicants
+        <div className="border-b mb-6">
+          <nav className="flex mt-6 space-x-1 bg-gray-100 p-1 rounded-xl">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                className={`flex items-center justify-center flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${currentTab === tab.key
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-gray-600 hover:text-blue-600"
+                  }`}
+                onClick={() => tab.path && handleNavigation(tab.path)}
+              >
+                <span className="flex items-center">
+                  {tab.icon}
+                  <span className="ml-2">{tab.label}</span>
+                </span>
               </button>
-              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600"
-                onClick={() => handleNavigation("/company/JobDetails")}>
-                Job Details
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-lg font-medium">
+            Total Applicants: {Object.values(filteredApplicants).flat().length}
+          </div>
+          <div className="flex gap-4">
+            <div className="relative">
+              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search Applicants"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border rounded-lg w-64"
+              />
+            </div>
+
+            <div className="flex border rounded-lg overflow-hidden">
+              <button
+                className={`px-4 py-2 ${viewMode === "pipeline" ? "bg-blue-600 text-white" : "hover:bg-gray-50"}`}
+                onClick={() => handleViewChange("pipeline")}
+              >
+                Pipeline View
               </button>
-              <button className="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600" 
-              onClick={() => handleNavigation("/company/Analytics")}>
-                Analytics
+              <button
+                className={`px-4 py-2 ${viewMode === "table" ? "bg-blue-600 text-white" : "hover:bg-gray-50"}`}
+                onClick={() => handleViewChange("table")}
+              >
+                Table View
               </button>
-            </nav>
-          </header>
-      </div>
-
-      {/* Search and View Toggle */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="text-lg font-medium">Total Applicants: 19</div>
-        <div className="flex gap-4">
-          <div className="relative">
-            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search Applicants"
-              className="pl-10 pr-4 py-2 border rounded-lg w-64"
-            />
-          </div>
-          <button className="px-4 py-2 border rounded-lg flex items-center gap-2">
-            <Filter className="w-4 h-4" />
-            Filter
-          </button>
-          <div className="flex border rounded-lg overflow-hidden">
-            <button className="px-4 py-2 bg-blue-600 text-white">Pipeline View</button>
-            <button className="px-4 py-2 hover:bg-gray-50">Table View</button>
-          </div>
-        </div>
-      </div>
-
-      {/* Pipeline Grid */}
-      <div className="grid grid-cols-4 gap-4">
-        {/* In Review Column */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-              <span className="font-medium">In Review</span>
-              <span className="text-gray-500">10</span>
             </div>
-            <button className="text-gray-400 hover:text-gray-600">
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
           </div>
-          {applicants.inReview.map((applicant, index) => (
-            <ApplicantCard key={index} {...applicant} />
-          ))}
         </div>
 
-        {/* Shortlisted Column */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-              <span className="font-medium">Shortlisted</span>
-              <span className="text-gray-500">8</span>
+        {loading ? (
+          <p>Loading applicants...</p>
+        ) : Object.values(filteredApplicants).flat().length === 0 ? (
+          <p>Chưa có Applicant nào</p>
+        ) : viewMode === "pipeline" ? (
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
+                  <span className="font-medium">In Review</span>
+                  <span className="text-gray-500">{filteredApplicants.InReview.length}</span>
+                </div>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </div>
+              {filteredApplicants.InReview.map((applicant) => (
+                <ApplicantCard
+                  key={applicant._id}
+                  fullName={applicant.fullName}
+                  appliedDate={applicant.createdAt}
+                  score={applicant.score}
+                  _id={applicant._id}
+                />
+              ))}
             </div>
-            <button className="text-gray-400 hover:text-gray-600">
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
-          </div>
-          {applicants.shortlisted.map((applicant, index) => (
-            <ApplicantCard key={index} {...applicant} />
-          ))}
-        </div>
-
-        {/* Interview Column */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-              <span className="font-medium">Interview</span>
-              <span className="text-gray-500">11</span>
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                  <span className="font-medium">In Reviewing</span>
+                  <span className="text-gray-500">{filteredApplicants.Reviewing.length}</span>
+                </div>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </div>
+              {filteredApplicants.Reviewing.map((applicant) => (
+                <ApplicantCard
+                  key={applicant._id}
+                  fullName={applicant.fullName}
+                  appliedDate={applicant.createdAt}
+                  score={applicant.score}
+                  _id={applicant._id}
+                />
+              ))}
             </div>
-            <button className="text-gray-400 hover:text-gray-600">
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
-          </div>
-          {applicants.interview.map((applicant, index) => (
-            <ApplicantCard key={index} {...applicant} />
-          ))}
-        </div>
-
-        {/* Hired Column */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-400"></div>
-              <span className="font-medium">Hired</span>
-              <span className="text-gray-500">3</span>
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                  <span className="font-medium">Shortlisted</span>
+                  <span className="text-gray-500">{filteredApplicants.Shortlisted.length}</span>
+                </div>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </div>
+              {filteredApplicants.Shortlisted.map((applicant) => (
+                <ApplicantCard
+                  key={applicant._id}
+                  fullName={applicant.fullName}
+                  appliedDate={applicant.createdAt}
+                  score={applicant.score}
+                  _id={applicant._id}
+                />
+              ))}
             </div>
-            <button className="text-gray-400 hover:text-gray-600">
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                  <span className="font-medium">Hired</span>
+                  <span className="text-gray-500">{filteredApplicants.Hired.length}</span>
+                </div>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </div>
+              {filteredApplicants.Hired.map((applicant) => (
+                <ApplicantCard
+                  key={applicant._id}
+                  fullName={applicant.fullName}
+                  appliedDate={applicant.createdAt}
+                  score={applicant.score}
+                  _id={applicant._id}
+                />
+              ))}
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                  <span className="font-medium">Rejected</span>
+                  <span className="text-gray-500">{filteredApplicants.Rejected.length}</span>
+                </div>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </div>
+              {filteredApplicants.Rejected.map((applicant) => (
+                <ApplicantCard
+                  key={applicant._id}
+                  fullName={applicant.fullName}
+                  appliedDate={applicant.createdAt}
+                  score={applicant.score}
+                  _id={applicant._id}
+                />
+              ))}
+            </div>
           </div>
-          {applicants.hired.map((applicant, index) => (
-            <ApplicantCard key={index} {...applicant} />
-          ))}
-        </div>
-      </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border rounded-lg">
+              <thead>
+                <tr className="bg-gray-100 text-gray-600 text-sm">
+                  <th className="py-3 px-4 text-left">Full Name</th>
+                  <th className="py-3 px-4 text-left">Applied Date</th>
+                  <th className="py-3 px-4 text-left">Score</th>
+                  <th className="py-3 px-4 text-left">Status</th>
+                  <th className="py-3 px-4 text-left">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.values(filteredApplicants)
+                  .flat()
+                  .map((applicant) => (
+                    <tr key={applicant._id} className="border-t hover:bg-gray-50">
+                      <td className="py-3 px-4">{applicant.fullName}</td>
+                      <td className="py-3 px-4">
+                        {new Date(applicant.createdAt).toLocaleDateString("en-GB")}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="flex items-center">
+                          <span className="mr-1">★</span>
+                          {(applicant.score || 0).toFixed(1)}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${applicant.status === "In Review"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : applicant.status === "In Reviewing"
+                              ? "bg-blue-100 text-blue-800"
+                              : applicant.status === "Shortlisted"
+                                ? "bg-blue-200 text-blue-800"
+                                : applicant.status === "Hired"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                            }`}
+                        >
+                          {applicant.status}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <button
+                          className="text-blue-600 hover:underline"
+                          onClick={() => handleSeeApplication(applicant._id)}
+                        >
+                          View Profile
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
