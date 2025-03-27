@@ -12,7 +12,7 @@ const ApplicantDetails = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("resume");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(applicant?.status);
+  const [selectedStatus, setSelectedStatus] = useState(null); // Khởi tạo null để tránh lỗi ban đầu
 
   // Handle tab change
   const handleTabChange = (tab) => {
@@ -24,18 +24,24 @@ const ApplicantDetails = () => {
     { value: "In Reviewing", color: "text-blue-500 bg-blue-100" },
     { value: "Shortlisted", color: "text-blue-500 bg-blue-100" },
     { value: "Hired", color: "text-gray-500 bg-gray-100" },
-    { value: "Rejected", color: "text-blue bg-blue-500" },
+    { value: "Rejected", color: "text-red-500 bg-red-100" }, // Sửa màu cho Rejected
   ];
+
   // Fetch applicant data from API
   useEffect(() => {
     const fetchApplicant = async () => {
       try {
         if (!applicantId) return;
+        setLoading(true);
         const response = await fetch(`/api/company/applicant/${applicantId}`);
-        if (!response.ok) throw new Error("Failed to fetch applicant details");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to fetch applicant details");
+        }
         const data = await response.json();
         console.log("Fetched Applicant Data:", data.applicant); // Log dữ liệu từ API
         setApplicant(data.applicant);
+        setSelectedStatus(data.applicant.status); // Cập nhật trạng thái ban đầu
       } catch (err) {
         setError(err.message || "Failed to load applicant details");
       } finally {
@@ -72,6 +78,7 @@ const ApplicantDetails = () => {
       setIsDropdownOpen(false);
     }
   };
+
   return (
     <div className="flex bg-gray-50 min-h-screen">
       {/* Sidebar */}
@@ -100,9 +107,7 @@ const ApplicantDetails = () => {
               </svg>
               Back to All Applications
             </button>
-            <h1 className="text-2xl font-bold text-gray-800">
-              Applicant Details
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-800">Applicant Details</h1>
           </div>
 
           {/* Main Content Area */}
@@ -139,7 +144,7 @@ const ApplicantDetails = () => {
                     {applicant?.name || "N/A"}
                   </h2>
                   <p className="text-gray-500 text-sm">
-                    {applicant?.userID.email || "N/A"}
+                    {applicant?.email || "N/A"} {/* Sửa từ applicant.userID.email */}
                   </p>
                   <div className="flex items-center gap-1 mt-2">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -147,6 +152,20 @@ const ApplicantDetails = () => {
                     </span>
                   </div>
                 </div>
+              </div>
+
+              {/* Applicant Score */}
+              <div className="mt-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4">Applicant Score</h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-yellow-500 text-2xl">★</span>
+                  <span className="text-xl font-semibold text-gray-800">
+                    {applicant?.score !== undefined ? applicant.score : "N/A"}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  {applicant?.scoreReason || "No evaluation provided yet"}
+                </p>
               </div>
 
               {/* Stage */}
@@ -165,7 +184,7 @@ const ApplicantDetails = () => {
                   className="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all cursor-pointer"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  {/* Progress bar with enhanced segments */}
+                  {/* Progress bar */}
                   <div className="w-full flex gap-2 mb-3">
                     {["In Review", "In Reviewing", "Shortlisted", "Hired"].map(
                       (stage, index) => {
@@ -182,15 +201,14 @@ const ApplicantDetails = () => {
                           applicant?.status !== "Rejected";
                         const isRejected = applicant?.status === "Rejected";
 
-                        // Custom gradients for active segments
                         const activeGradient =
                           index === 0
                             ? "bg-gradient-to-r from-blue-400 to-blue-500"
                             : index === 1
-                            ? "bg-gradient-to-r from-blue-500 to-blue-600"
-                            : index === 2
-                            ? "bg-gradient-to-r from-blue-600 to-blue-700"
-                            : "bg-gradient-to-r from-blue-700 to-blue-800";
+                              ? "bg-gradient-to-r from-blue-500 to-blue-600"
+                              : index === 2
+                                ? "bg-gradient-to-r from-blue-600 to-blue-700"
+                                : "bg-gradient-to-r from-blue-700 to-blue-800";
 
                         const rejectedGradient =
                           "bg-gradient-to-r from-red-400 to-red-500";
@@ -201,19 +219,18 @@ const ApplicantDetails = () => {
                             className="flex-1 h-3 rounded-full bg-gray-200 overflow-hidden"
                           >
                             <div
-                              className={`h-full transition-all duration-500 ${
-                                isActive
-                                  ? activeGradient
-                                  : isRejected && index === 3
+                              className={`h-full transition-all duration-500 ${isActive
+                                ? activeGradient
+                                : isRejected && index === 3
                                   ? rejectedGradient
                                   : ""
-                              }`}
+                                }`}
                               style={{
                                 width: isActive
                                   ? "100%"
                                   : isRejected && index === 3
-                                  ? "100%"
-                                  : "0%",
+                                    ? "100%"
+                                    : "0%",
                               }}
                             ></div>
                           </div>
@@ -222,7 +239,6 @@ const ApplicantDetails = () => {
                     )}
                   </div>
 
-                  {/* Optional: Stage labels below progress bar */}
                   <div className="w-full flex gap-2">
                     {["In Review", "In Reviewing", "Shortlisted", "Hired"].map(
                       (stage, index) => {
@@ -246,15 +262,14 @@ const ApplicantDetails = () => {
                             className="flex-1 flex justify-center"
                           >
                             <span
-                              className={`text-xs font-medium transition-all ${
-                                isCurrent
-                                  ? "text-blue-600"
-                                  : isActive
+                              className={`text-xs font-medium transition-all ${isCurrent
+                                ? "text-blue-600"
+                                : isActive
                                   ? "text-blue-500"
                                   : isRejected && index === 3
-                                  ? "text-red-500"
-                                  : "text-gray-400"
-                              }`}
+                                    ? "text-red-500"
+                                    : "text-gray-400"
+                                }`}
                             >
                               {stage.replace("In ", "")}
                             </span>
@@ -265,7 +280,7 @@ const ApplicantDetails = () => {
                   </div>
                 </div>
 
-                {/* Enhanced dropdown with better animation */}
+                {/* Dropdown */}
                 {isDropdownOpen && (
                   <div className="absolute mt-3 w-56 bg-white rounded-lg shadow-lg z-10 border border-gray-100 py-1.5 animate-fadeIn">
                     <div className="absolute -top-2 right-8 w-4 h-4 bg-white transform rotate-45 border-t border-l border-gray-100"></div>
@@ -273,20 +288,18 @@ const ApplicantDetails = () => {
                       {statuses.map((status) => (
                         <li
                           key={status.value}
-                          className={`px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-all ${
-                            applicant?.status === status.value
-                              ? "bg-blue-50"
-                              : ""
-                          }`}
+                          className={`px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-all ${applicant?.status === status.value
+                            ? "bg-blue-50"
+                            : ""
+                            }`}
                           onClick={() => handleStatusChange(status.value)}
                         >
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-2 h-2 rounded-full ${
-                                status.value === "Rejected"
-                                  ? "bg-red-500"
-                                  : "bg-blue-500"
-                              }`}
+                              className={`w-2 h-2 rounded-full ${status.value === "Rejected"
+                                ? "bg-red-500"
+                                : "bg-blue-500"
+                                }`}
                             ></div>
                             <span className={`${status.color} font-medium`}>
                               {status.value}
@@ -298,6 +311,7 @@ const ApplicantDetails = () => {
                   </div>
                 )}
               </div>
+
               {/* Contact Information */}
               <div className="mt-8">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">
@@ -475,31 +489,28 @@ const ApplicantDetails = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex-1">
               <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-100 pb-4">
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === "resume"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === "resume"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
                   onClick={() => handleTabChange("resume")}
                 >
                   Resume
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === "hiring-progress"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === "hiring-progress"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
                   onClick={() => handleTabChange("hiring-progress")}
                 >
                   Hiring Progress
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === "interview-schedule"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === "interview-schedule"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
                   onClick={() => handleTabChange("interview-schedule")}
                 >
                   Interview Schedule
@@ -507,8 +518,29 @@ const ApplicantDetails = () => {
               </div>
 
               {loading && (
-                <div className="flex items-center justify-center h-64">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                <div className="flex flex-col items-center justify-center h-64 gap-4">
+                  <div className="flex items-center gap-2">
+                    <svg
+                      className="w-8 h-8 text-blue-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
+                    </svg>
+                    <div className="flex gap-2">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0s" }}></div>
+                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 font-medium">Analyzing with AI...</p>
                 </div>
               )}
 
@@ -674,11 +706,10 @@ const ApplicantDetails = () => {
                           </p>
                           <div className="flex items-center mt-2">
                             <span
-                              className={`inline-block w-3 h-3 rounded-full mr-2 ${
-                                applicant?.status
-                                  ? "bg-green-500"
-                                  : "bg-gray-400"
-                              }`}
+                              className={`inline-block w-3 h-3 rounded-full mr-2 ${applicant?.status
+                                ? "bg-green-500"
+                                : "bg-gray-400"
+                                }`}
                             ></span>
                             <p className="font-semibold text-gray-800">
                               {applicant?.status || "N/A"}
@@ -713,27 +744,6 @@ const ApplicantDetails = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  {activeTab === "hiring-progress" && (
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                      <h2 className="text-xl font-bold mb-4">
-                        Hiring Progress
-                      </h2>
-                      <div>
-                        <p className="font-semibold">Current Stage:</p>
-                        <p>{applicant?.status || "N/A"}</p>
-                      </div>
-                    </div>
-                  )}
-                  {activeTab === "interview-schedule" && (
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                      <h2 className="text-xl font-bold mb-4">
-                        Interview Schedule
-                      </h2>
-                      <p className="text-gray-600">
-                        No interview scheduled yet.
-                      </p>
                     </div>
                   )}
                 </div>
