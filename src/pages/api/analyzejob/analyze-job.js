@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const apiKey = process.env.OPENROUTER_API_KEY;
 
     const prompt = `
-    From the following content, list the skills, experience, tools, qualifications, soft skills... required for the job.
+    From the following content, list the skills, experience, qualifications, soft skills... required for the job.
     Return the result in JSON format with each category as a array. For example:
     {
       "Skills": [...],
