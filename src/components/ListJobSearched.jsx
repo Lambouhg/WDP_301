@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ApplyJobForm from "./ApplyJobForm";
 import Pagination from "./FindJobs/Pagination";
 import JobFilters from "./FindJobs/JobFilters";
@@ -35,6 +36,17 @@ function ListJobSearched() {
       console.error("Error fetching jobs:", error);
     }
   };
+
+  // Lấy query từ URL khi component mount
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search).get("query");
+    if (query) {
+      setSearchQuery(decodeURIComponent(query));
+    }
+    const role = localStorage.getItem("role");
+    setUserRole(role);
+    fetchJobs();
+  }, []);
 
   // Đếm số lượng công việc theo loại
   const countJobsByType = (type) => {
@@ -174,7 +186,7 @@ function ListJobSearched() {
       <JobSearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        handleSearch={handleSearch}
+        handleSearch={() => setCurrentPage(1)}
       />
       <div className="flex flex-col md:flex-row gap-6">
         <JobFilters
