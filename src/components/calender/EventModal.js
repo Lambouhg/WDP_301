@@ -24,7 +24,7 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         {isEditing ? (
-          <>
+          <div>
             <h2 className="text-xl font-bold mb-4">Edit event</h2>
             <div className="mb-4">
               <label
@@ -87,9 +87,9 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
                 Save
               </button>
             </div>
-          </>
+          </div>
         ) : (
-          <>
+          <div>
             <h2 className="text-xl font-bold mb-4">{event.title}</h2>
             <p className="mb-2">
               <strong>Description:</strong> {event.description || "None"}
@@ -101,8 +101,8 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
               <strong>Date:</strong> {moment(event.start).format("DD/MM/YYYY")}
             </p>
             <p className="mb-2">
-              <strong>Time:</strong> {moment(event.start).format("HH:mm")}{" "}
-              - {moment(event.end).format("HH:mm")}
+              <strong>Time:</strong> {moment(event.start).format("HH:mm")} -{" "}
+              {moment(event.end).format("HH:mm")}
             </p>
             <div className="flex justify-end mt-4">
               <button
@@ -124,7 +124,7 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
                 Close
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

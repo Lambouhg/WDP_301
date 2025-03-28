@@ -199,7 +199,7 @@ const Settings = () => {
 
   if (!company) {
     return (
-      <div className="flex bg-gray-50 min-h-screen">
+      <div className="flex bg-gray-50 h-screen overflow-y-hidden">
         <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex-1 p-6 overflow-y-auto">
           <HeaderCompany />
@@ -307,7 +307,11 @@ const Settings = () => {
                 </div>
                 <div className="flex items-center space-x-6">
                   {company?.logo ? (
-                    <img src={company.logo} alt="Company logo" className="w-24 h-24" />
+                    <img
+                      src={company.logo}
+                      alt="Company logo"
+                      className="w-24 h-24"
+                    />
                   ) : (
                     <div className="w-24 h-24 bg-gray-200 flex items-center justify-center">
                       <Camera className="w-8 h-8 text-gray-400" />
@@ -637,7 +641,7 @@ const Settings = () => {
                           disabled={isSaving}
                         >
                           {isSaving ? (
-                            <>
+                            <div>
                               <svg
                                 className="animate-spin h-5 w-5 text-white"
                                 viewBox="0 0 24 24"
@@ -657,7 +661,7 @@ const Settings = () => {
                                 />
                               </svg>
                               Saving...
-                            </>
+                            </div>
                           ) : (
                             "Confirm"
                           )}

@@ -36,7 +36,7 @@ const CompanySidebar = ({ isOpen, setIsOpen }) => {
   }
 
   return (
-    <>
+    <div>
       <button
         className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-md"
         onClick={toggleSidebar}
@@ -133,7 +133,7 @@ const CompanySidebar = ({ isOpen, setIsOpen }) => {
           </button>
         </div>
       </aside>
-    </>
+    </div>
   );
 };
 

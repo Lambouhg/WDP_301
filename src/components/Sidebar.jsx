@@ -37,7 +37,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   }
 
   return (
-    <>
+    <div>
       {/* Nút mở menu trên Mobile */}
       <button
         className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-md"
@@ -47,7 +47,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </button>
 
       {/* Sidebar cho Desktop */}
-      <aside className="hidden md:flex w-64 bg-white shadow-md p-6 flex-col justify-between">
+      <aside className="hidden md:flex w-64 bg-white shadow-md p-6 flex-col justify-between h-full">
         <div>
           <h2
             className="text-3xl font-bold text-blue-600 mb-8 cursor-pointer"
@@ -105,16 +105,21 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <div className="flex items-center space-x-3">
             <UserButton />
             <div>
-              <p className="text-sm font-semibold">{user.fullName}</p>
+              <p className="text-sm font-semibold">
+                {user?.fullName || "Unknown User"}
+              </p>
               <p className="text-xs text-gray-500">
-                {user.primaryEmailAddress?.emailAddress}
+                {user?.primaryEmailAddress?.emailAddress ||
+                  "No email available"}
               </p>
             </div>
           </div>
           <button
             onClick={() => {
-              localStorage.removeItem("user"); // Xóa dữ liệu người dùng
-              signOut({ redirectUrl: "/" }); // Đăng xuất và chuyển hướng về trang chủ
+              localStorage.removeItem("user");
+              if (signOut) {
+                signOut({ redirectUrl: "/" });
+              }
             }}
             className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-100 w-full"
           >
@@ -127,7 +132,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       {/* Sidebar Overlay cho Mobile */}
       <div
         className={`fixed inset-0 z-40 bg-black bg-opacity-50 ${
-          isOpen ? "block" : "hidden"
+          !!isOpen ? "block" : "hidden"
         } md:hidden`}
         onClick={toggleSidebar}
       >
@@ -192,7 +197,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -209,7 +214,7 @@ function NavItem({ icon, label, href, active }) {
             : "text-gray-700 hover:bg-gray-200"
         }`}
     >
-      <span className="text-lg">{icon}</span>
+      <span className="text-lg">{icon || <FiHome />}</span>
       <span className="text-sm font-medium">{label}</span>
     </div>
   );

@@ -129,7 +129,7 @@ const ApplicantList = () => {
         ) : applicants.length === 0 ? (
           <p>Chưa có Applicant nào</p>
         ) : (
-          <>
+          <div>
             {/* Desktop Table */}
             <div className="hidden md:block">
               <table className="w-full">
@@ -172,7 +172,7 @@ const ApplicantList = () => {
                       <td className="py-4">
                         <div className="flex items-center">
                           <input type="checkbox" className="mr-4 h-4 w-4" />
-                          
+
                           {applicant.fullName}
                         </div>
                       </td>
@@ -274,7 +274,7 @@ const ApplicantList = () => {
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

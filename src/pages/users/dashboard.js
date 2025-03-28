@@ -27,10 +27,10 @@ export default function Dashboard() {
 
   // Hiệu ứng chuyển hướng khi chưa đăng nhập
   useEffect(() => {
-    if (!user) {
-      router.push("/");
+    if (isLoaded && !user) {
+      router.push("/"); // Chuyển hướng về trang chủ nếu chưa đăng nhập
     }
-  }, [user, router]);
+  }, [isLoaded, user, router]);
 
   // Lấy số lượng thông báo chưa đọc
   useEffect(() => {
@@ -173,7 +173,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen w-full overflow-hidden relative">
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} className="h-full" />
       <div className="w-full overflow-y-auto md:h-screen pb-10">
         <main className="flex-1">
           <div className="w-full mt-6 px-4 border-b-2 border-gray-200 mb-12">
@@ -181,26 +181,35 @@ export default function Dashboard() {
           </div>
           <div className="ml-4 md:ml-6 mr-4 md:mr-6">
             <h1 className="text-xl font-bold mt-5">
-              Welcome back, {user.fullName}!
+              Welcome back, {user?.fullName || "User"}!
             </h1>
             <p className="text-gray-600">
-              Here is what is happening with your job search applications from today.
+              Here is what is happening with your job search applications from
+              today.
             </p>
 
             {/* Stats Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
               <div className="flex flex-col gap-y-4 md:gap-y-16">
-                <StatCard title="Total Jobs Applied" value={stats.totalApplied} />
+                <StatCard
+                  title="Total Jobs Applied"
+                  value={stats.totalApplied}
+                />
                 <StatCard title="Interviewed" value={stats.interviewed} />
               </div>
               <CardChart
                 title="Jobs Applied Status"
-                data={[stats.totalApplied - stats.interviewed, stats.interviewed]}
+                data={[
+                  stats.totalApplied - stats.interviewed,
+                  stats.interviewed,
+                ]}
                 className="col-span-1 md:col-span-1"
               />
               <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
                 <div className="flex items-center justify-between border-b-2 border-blue-50 pb-4 mb-4">
-                  <h2 className="text-xl font-bold text-gray-800">Upcoming Interviews</h2>
+                  <h2 className="text-xl font-bold text-gray-800">
+                    Upcoming Interviews
+                  </h2>
                   <span className="text-gray-400 text-sm">
                     {new Date().toLocaleDateString("en-US", {
                       day: "numeric",
@@ -248,7 +257,9 @@ export default function Dashboard() {
                 </div>
                 {upcomingInterviews.length === 0 ? (
                   <div className="text-center py-6 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500 text-sm">No interviews scheduled for today</p>
+                    <p className="text-gray-500 text-sm">
+                      No interviews scheduled for today
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -260,9 +271,14 @@ export default function Dashboard() {
                       >
                         <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-4 relative">
                           <div className="absolute bottom-0 left-0 right-0 h-2 bg-white"></div>
-                          <p className="text-base font-semibold text-white">{interview.title}</p>
+                          <p className="text-base font-semibold text-white">
+                            {interview.title}
+                          </p>
                           <p className="text-sm text-blue-100 opacity-80 mt-1">
-                            {interview.time} • {interview.date || interview.location}
+                            {interview.time || "Unknown time"} •{" "}
+                            {interview.date ||
+                              interview.location ||
+                              "Unknown location"}
                           </p>
                         </div>
                         <div className="p-4 flex justify-between items-center bg-gray-50">
@@ -287,7 +303,9 @@ export default function Dashboard() {
                                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                               />
                             </svg>
-                            <p className="text-sm text-gray-700">{interview.location}</p>
+                            <p className="text-sm text-gray-700">
+                              {interview.location}
+                            </p>
                           </div>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -313,20 +331,29 @@ export default function Dashboard() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                   <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
                     <div className="bg-blue-600 text-white p-6">
-                      <h3 className="text-xl font-bold">{selectedInterview.title}</h3>
+                      <h3 className="text-xl font-bold">
+                        {selectedInterview.title}
+                      </h3>
                       <p className="text-sm text-blue-100 mt-1">
                         {`${selectedInterview.time} ${selectedInterview.date}`}
                       </p>
                     </div>
                     <div className="p-6">
                       <div className="mb-4">
-                        <p className="text-sm font-semibold text-gray-700 mb-1">Location:</p>
-                        <p className="text-gray-600">{selectedInterview.location || "Not specified"}</p>
+                        <p className="text-sm font-semibold text-gray-700 mb-1">
+                          Location:
+                        </p>
+                        <p className="text-gray-600">
+                          {selectedInterview.location || "Not specified"}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-700 mb-1">Description:</p>
+                        <p className="text-sm font-semibold text-gray-700 mb-1">
+                          Description:
+                        </p>
                         <p className="text-gray-600">
-                          {selectedInterview.description || "No additional details"}
+                          {selectedInterview.description ||
+                            "No additional details"}
                         </p>
                       </div>
                       <div className="mt-6 flex justify-end space-x-3">
@@ -345,48 +372,65 @@ export default function Dashboard() {
 
             {/* Recent Applications */}
             <div className="mt-8">
-              <h3 className="text-lg font-medium mb-4">Recent Applications History</h3>
+              <h3 className="text-lg font-medium mb-4">
+                Recent Applications History
+              </h3>
               <div className="border rounded-lg shadow-sm">
                 <div className="p-0">
                   <div className="divide-y">
-                    {applications.slice(0, 3).map((app) => ( // Chỉ hiển thị 3 ứng tuyển gần nhất
-                      <div
-                        key={app._id}
-                        className="p-4 flex flex-col md:grid md:grid-cols-2 gap-4 items-center justify-between"
-                      >
-                        <div className="flex items-center gap-4 w-full">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                            <Image
-                              src={app.companyID?.logo || img1} // Logo công ty hoặc ảnh mặc định
-                              className="w-full h-full object-cover"
-                              alt={app.jobID?.title || "Job"} // Tên công việc làm alt text
-                            />
+                    {applications.slice(0, 3).map(
+                      (
+                        app // Chỉ hiển thị 3 ứng tuyển gần nhất
+                      ) => (
+                        <div
+                          key={app._id}
+                          className="p-4 flex flex-col md:grid md:grid-cols-2 gap-4 items-center justify-between"
+                        >
+                          <div className="flex items-center gap-4 w-full">
+                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                              <Image
+                                src={app.companyID?.logo || img1}
+                                className="w-full h-full object-cover"
+                                alt={app.jobID?.title || "Job"}
+                                onError={(e) => (e.target.src = img1)} // Thay thế bằng ảnh mặc định nếu lỗi
+                              />
+                            </div>
+                            <div>
+                              <h4 className="font-medium">
+                                {app.jobID?.title || "Unknown Role"}
+                              </h4>
+                              <p className="text-sm text-gray-500">
+                                {app.companyID?.name || "Unknown Company"}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="font-medium">{app.jobID?.title || "Unknown Role"}</h4>
-                            <p className="text-sm text-gray-500">
-                              {app.companyID?.name || "Unknown Company"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full space-y-2 md:space-y-0">
-                          <div>
-                            <p className="text-sm text-gray-500 mb-1">Date Applied</p>
-                            <p className="text-sm">{new Date(app.createdAt).toLocaleDateString()}</p>
-                          </div>
-                          <div
-                            className={`px-3 py-1 rounded-full text-sm ${app.status === "Hired" ? "bg-green-50 text-green-600" :
-                              app.status === "Rejected" ? "bg-red-50 text-red-600" :
-                                "bg-orange-50 text-orange-500"
+                          <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full space-y-2 md:space-y-0">
+                            <div>
+                              <p className="text-sm text-gray-500 mb-1">
+                                Date Applied
+                              </p>
+                              <p className="text-sm">
+                                {app.createdAt
+                                  ? new Date(app.createdAt).toLocaleDateString()
+                                  : "Unknown date"}
+                              </p>
+                            </div>
+                            <div
+                              className={`px-3 py-1 rounded-full text-sm ${
+                                app.status === "Hired"
+                                  ? "bg-green-50 text-green-600"
+                                  : app.status === "Rejected"
+                                  ? "bg-red-50 text-red-600"
+                                  : "bg-orange-50 text-orange-500"
                               }`}
-                          >
-                            {app.status}
+                            >
+                              {app.status || "Unknown status"}
+                            </div>
+                            <button className="p-2 hover:bg-gray-100 rounded-full" />
                           </div>
-                          <button className="p-2 hover:bg-gray-100 rounded-full" />
-
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -447,7 +491,9 @@ export default function Dashboard() {
           </div>
           <div className="max-h-96 overflow-y-auto">
             {notificationsList.length === 0 && (
-              <div className="p-4 text-center text-gray-500">Chưa có thông báo mới</div>
+              <div className="p-4 text-center text-gray-500">
+                Chưa có thông báo mới
+              </div>
             )}
             {notificationsList.map((notification) => (
               <div
@@ -463,7 +509,9 @@ export default function Dashboard() {
                   ></div>
                   <div>
                     <p className="text-sm font-medium text-gray-800">
-                      {notification.title || notification.message}
+                      {notification.title ||
+                        notification.message ||
+                        "No title available"}
                     </p>
                     <p className="text-xs text-gray-500">
                       {`${notification.date} ${notification.time}`}
@@ -477,7 +525,12 @@ export default function Dashboard() {
                   }}
                   className="text-red-500 hover:text-red-700"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -519,7 +572,9 @@ export default function Dashboard() {
             </div>
             <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-6 pb-8 relative">
               <div className="absolute bottom-0 left-0 right-0 h-4 bg-white rounded-t-3xl"></div>
-              <h3 className="text-2xl font-bold mb-1">{selectedNotification.title}</h3>
+              <h3 className="text-2xl font-bold mb-1">
+                {selectedNotification.title}
+              </h3>
               <p className="text-sm text-blue-100 opacity-80">
                 {`${selectedNotification.time} • ${selectedNotification.date}`}
               </p>
@@ -547,7 +602,9 @@ export default function Dashboard() {
                   />
                 </svg>
                 <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-1">Location</p>
+                  <p className="text-sm font-semibold text-gray-700 mb-1">
+                    Location
+                  </p>
                   <p className="text-gray-600">
                     {selectedNotification.location || "Location not specified"}
                   </p>
@@ -569,9 +626,12 @@ export default function Dashboard() {
                   />
                 </svg>
                 <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-1">Description</p>
+                  <p className="text-sm font-semibold text-gray-700 mb-1">
+                    Description
+                  </p>
                   <p className="text-gray-600">
-                    {selectedNotification.description || "No additional details available"}
+                    {selectedNotification.description ||
+                      "No additional details available"}
                   </p>
                 </div>
               </div>
@@ -649,7 +709,9 @@ function CardChart({ title, data }) {
       <div className="relative w-36 h-36 mx-auto">
         <Doughnut data={chartData} options={options} />
         <div className="absolute inset-0 flex items-center justify-center text-lg font-bold">
-          {Math.round((data[1] / (data[0] + data[1])) * 100)}%
+          {data[0] + data[1] > 0
+            ? `${Math.round((data[1] / (data[0] + data[1])) * 100)}%`
+            : "No Data"}
         </div>
       </div>
       <div className="flex justify-center gap-5 mt-5">

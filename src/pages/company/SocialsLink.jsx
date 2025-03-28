@@ -306,10 +306,10 @@ const SocialsLink = () => {
                   {isLoading ? (
                     "Adding..."
                   ) : (
-                    <>
+                    <div>
                       <PlusCircle className="w-5 h-5 mr-2" />
                       Add Link
-                    </>
+                    </div>
                   )}
                 </button>
               </div>

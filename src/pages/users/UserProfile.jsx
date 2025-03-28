@@ -17,8 +17,6 @@ import img1 from "../../assets/b79144e03dc4996ce319ff59118caf65.jpg";
 import { set } from "mongoose";
 import ShortVideoSection from "../../components/profile/ShortVideoSection";
 const UserProfile = () => {
-  const router = useRouter();
-  const { role } = router.query;
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,7 +26,7 @@ const UserProfile = () => {
   const [aboutMe, setAboutMe] = useState("Have't data yet");
   const [email, setEmail] = useState("Have't data yet");
   const [phone, setPhone] = useState("Have't data yet");
-  const [Languages, setLanguages] = useState("Have't data yet");
+  const [Languages, setLanguages] = useState([]);
   const [instagram, setInstagram] = useState("Have't data yet");
   const [twitter, setTwitter] = useState("Have't data yet");
   const [expereince, setExperiences] = useState([]);
@@ -42,28 +40,54 @@ const UserProfile = () => {
   const [youtube, setYoutube] = useState("Have't data yet");
   const [facebook, setFacebook] = useState("Have't data yet");
   const [video, setVideo] = useState("");
+  const [newLanguage, setNewLanguage] = useState("");
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
         const res = await axios.get("/api/user");
         const userData = res.data.user;
-        setName(userData.name || "Have't data yet");
+        setName(
+          typeof userData.name === "string" ? userData.name : "Have't data yet"
+        );
         setAvatar(userData.avatar || img1);
-        setLocation(userData.location || "Have't data yet");
-        setAboutMe(userData.aboutMe || "Have't data yet");
-        setEmail(userData.email || "Have't data yet");
-        setPhone(userData.phone || "Have't data yet");
-        setLanguages(userData.Languages || "Have't data yet");
-        setInstagram(userData.socialLinks.instagram || "Have't data yet");
-        setTwitter(userData.socialLinks.twitter || "Have't data yet");
-        setFacebook(userData.socialLinks.facebook || "Have't data yet");
-        setLinkedin(userData.socialLinks.linkedin || "Have't data yet");
-        setYoutube(userData.socialLinks.youtube || "Have't data yet");
-        setExperiences(userData.expereince || []);
-        setEducations(userData.education || []);
-        setSkills(userData.skills || []);
-        setVideo(userData.video || "");
+        setLocation(
+          typeof userData.location === "string"
+            ? userData.location
+            : "Have't data yet"
+        );
+        setAboutMe(
+          typeof userData.aboutMe === "string"
+            ? userData.aboutMe
+            : "Have't data yet"
+        );
+        setEmail(
+          typeof userData.email === "string"
+            ? userData.email
+            : "Have't data yet"
+        );
+        setPhone(
+          typeof userData.phone === "string"
+            ? userData.phone
+            : "Have't data yet"
+        );
+        setLanguages(
+          Array.isArray(userData.Languages) ? userData.Languages : []
+        );
+        const socialLinks = userData.socialLinks || {};
+        setInstagram(socialLinks.instagram || "Have't data yet");
+        setTwitter(socialLinks.twitter || "Have't data yet");
+        setFacebook(socialLinks.facebook || "Have't data yet");
+        setLinkedin(socialLinks.linkedin || "Have't data yet");
+        setYoutube(socialLinks.youtube || "Have't data yet");
+        setExperiences(
+          Array.isArray(userData.expereince) ? userData.expereince : []
+        );
+        setEducations(
+          Array.isArray(userData.education) ? userData.education : []
+        );
+        setSkills(Array.isArray(userData.skills) ? userData.skills : []);
+        setVideo(typeof userData.video === "string" ? userData.video : "");
       } catch (err) {
         setError("Không thể tải dữ liệu người dùng.");
       } finally {
@@ -73,14 +97,6 @@ const UserProfile = () => {
 
     fetchUserData();
   }, []);
-
-  const addExperience = (newExp) => {
-    setExperiences((prev) => [...prev, newExp]);
-  };
-
-  const addEducation = (newEdu) => {
-    setEducations((prev) => [...prev, newEdu]);
-  };
   const addSkill = () => {
     if (newSkill.trim()) {
       setSkills((prev) => [...prev, newSkill.trim()]);
@@ -206,6 +222,8 @@ const UserProfile = () => {
                 setPhone={setPhone}
                 Languages={Languages}
                 setLanguages={setLanguages}
+                newLanguage={newLanguage}
+                setNewLanguage={setNewLanguage}
               />
             </div>
 
