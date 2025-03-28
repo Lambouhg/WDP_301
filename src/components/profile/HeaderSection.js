@@ -15,26 +15,33 @@ const HeaderSection = ({
   setLocation,
   isEditing,
   setIsEditing,
-  role,
   email,
   aboutMe,
   setEmail,
   phone,
   setPhone,
-  languages,
+  Languages,
   instagram,
   setInstagram,
   twitter,
   setTwitter,
-  website,
-  setWebsite,
   expereince,
   education,
+  setLanguages,
   skills,
+  video,
+  setVideo,
+  linkedin,
+  setLinkedin,
+  youtube,
+  setYoutube,
+  facebook,
+  setFacebook,
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role || "role undefined";
   const handleEditClick = () => {
     setIsEditing(true);
   };
@@ -46,27 +53,35 @@ const HeaderSection = ({
       email,
       phone,
       aboutMe,
-      languages,
+      Languages,
       socialLinks: {
         instagram,
         twitter,
-        facebook: website,
+        facebook,
+        linkedin,
+        youtube,
       },
       expereince,
       education,
       skills,
+      video,
     };
     const res = await axios.patch("/api/user", {
       user: updateData,
     });
     const updatedUser = res.data.user;
+
     setName(updatedUser.name);
     setLocation(updatedUser.location);
     setEmail(updatedUser.email);
     setPhone(updatedUser.phone);
     setInstagram(updatedUser.socialLinks.instagram);
     setTwitter(updatedUser.socialLinks.twitter);
-    setWebsite(updatedUser.socialLinks.facebook);
+    setVideo(updatedUser.video);
+    setFacebook(updatedUser.socialLinks.facebook);
+    setLinkedin(updatedUser.socialLinks.linkedin);
+    setYoutube(updatedUser.socialLinks.youtube);
+    setLanguages(updatedUser.Languages);
     setIsEditing(false);
   };
 

@@ -8,7 +8,7 @@ const AdditionalDetailsSection = ({
   setEmail,
   phone,
   setPhone,
-  languages,
+  Languages,
   setLanguages,
 }) => {
   return (
@@ -50,16 +50,16 @@ const AdditionalDetailsSection = ({
           {isEditing ? (
             <input
               type="text"
-              value={languages} // Đảm bảo languages không undefined
+              value={Languages} // Đảm bảo languages không undefined
               onChange={(e) =>
                 setLanguages(
-                  e.target.value.length <= 50 ? e.target.value : languages // Giới hạn độ dài tối đa là 50 ký tự
+                  e.target.value.length <= 50 ? e.target.value : Languages // Giới hạn độ dài tối đa là 50 ký tự
                 )
               }
               className="border rounded-md p-1 w-full"
             />
           ) : (
-            <span className="text-sm text-gray-600">{languages}</span>
+            <span className="text-sm text-gray-600">{Languages}</span>
           )}
         </div>
       </div>

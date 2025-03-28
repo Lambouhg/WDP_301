@@ -24,7 +24,6 @@ export default function Home() {
           });
 
           const data = await response.json();
-          console.log("User info saved:", data);
 
           if (data.user) {
             // 🛑 Lưu user vào localStorage hoặc sessionStorage
@@ -56,7 +55,6 @@ export default function Home() {
       } else if (role === "company") {
         router.push("/company/companydashboard");
       }
-      console.log("User role:", role);
     } else {
       document.querySelector("[data-clerk-sign-in-button]").click();
     }
