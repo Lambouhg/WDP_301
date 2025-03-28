@@ -36,10 +36,12 @@ const ApplicantDetails = () => {
         const response = await fetch(`/api/company/applicant/${applicantId}`);
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to fetch applicant details");
+          throw new Error(
+            errorData.message || "Failed to fetch applicant details"
+          );
         }
         const data = await response.json();
-        console.log("Fetched Applicant Data:", data.applicant); // Log dữ liệu từ API
+        // Log dữ liệu từ API
         setApplicant(data.applicant);
         setSelectedStatus(data.applicant.status); // Cập nhật trạng thái ban đầu
       } catch (err) {
@@ -107,7 +109,9 @@ const ApplicantDetails = () => {
               </svg>
               Back to All Applications
             </button>
-            <h1 className="text-2xl font-bold text-gray-800">Applicant Details</h1>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Applicant Details
+            </h1>
           </div>
 
           {/* Main Content Area */}
@@ -144,7 +148,8 @@ const ApplicantDetails = () => {
                     {applicant?.name || "N/A"}
                   </h2>
                   <p className="text-gray-500 text-sm">
-                    {applicant?.email || "N/A"} {/* Sửa từ applicant.userID.email */}
+                    {applicant?.email || "N/A"}{" "}
+                    {/* Sửa từ applicant.userID.email */}
                   </p>
                   <div className="flex items-center gap-1 mt-2">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -156,7 +161,9 @@ const ApplicantDetails = () => {
 
               {/* Applicant Score */}
               <div className="mt-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Applicant Score</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-4">
+                  Applicant Score
+                </h3>
                 <div className="flex items-center gap-2">
                   <span className="text-yellow-500 text-2xl">★</span>
                   <span className="text-xl font-semibold text-gray-800">
@@ -205,10 +212,10 @@ const ApplicantDetails = () => {
                           index === 0
                             ? "bg-gradient-to-r from-blue-400 to-blue-500"
                             : index === 1
-                              ? "bg-gradient-to-r from-blue-500 to-blue-600"
-                              : index === 2
-                                ? "bg-gradient-to-r from-blue-600 to-blue-700"
-                                : "bg-gradient-to-r from-blue-700 to-blue-800";
+                            ? "bg-gradient-to-r from-blue-500 to-blue-600"
+                            : index === 2
+                            ? "bg-gradient-to-r from-blue-600 to-blue-700"
+                            : "bg-gradient-to-r from-blue-700 to-blue-800";
 
                         const rejectedGradient =
                           "bg-gradient-to-r from-red-400 to-red-500";
@@ -219,18 +226,19 @@ const ApplicantDetails = () => {
                             className="flex-1 h-3 rounded-full bg-gray-200 overflow-hidden"
                           >
                             <div
-                              className={`h-full transition-all duration-500 ${isActive
-                                ? activeGradient
-                                : isRejected && index === 3
+                              className={`h-full transition-all duration-500 ${
+                                isActive
+                                  ? activeGradient
+                                  : isRejected && index === 3
                                   ? rejectedGradient
                                   : ""
-                                }`}
+                              }`}
                               style={{
                                 width: isActive
                                   ? "100%"
                                   : isRejected && index === 3
-                                    ? "100%"
-                                    : "0%",
+                                  ? "100%"
+                                  : "0%",
                               }}
                             ></div>
                           </div>
@@ -262,14 +270,15 @@ const ApplicantDetails = () => {
                             className="flex-1 flex justify-center"
                           >
                             <span
-                              className={`text-xs font-medium transition-all ${isCurrent
-                                ? "text-blue-600"
-                                : isActive
+                              className={`text-xs font-medium transition-all ${
+                                isCurrent
+                                  ? "text-blue-600"
+                                  : isActive
                                   ? "text-blue-500"
                                   : isRejected && index === 3
-                                    ? "text-red-500"
-                                    : "text-gray-400"
-                                }`}
+                                  ? "text-red-500"
+                                  : "text-gray-400"
+                              }`}
                             >
                               {stage.replace("In ", "")}
                             </span>
@@ -288,18 +297,20 @@ const ApplicantDetails = () => {
                       {statuses.map((status) => (
                         <li
                           key={status.value}
-                          className={`px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-all ${applicant?.status === status.value
-                            ? "bg-blue-50"
-                            : ""
-                            }`}
+                          className={`px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-all ${
+                            applicant?.status === status.value
+                              ? "bg-blue-50"
+                              : ""
+                          }`}
                           onClick={() => handleStatusChange(status.value)}
                         >
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-2 h-2 rounded-full ${status.value === "Rejected"
-                                ? "bg-red-500"
-                                : "bg-blue-500"
-                                }`}
+                              className={`w-2 h-2 rounded-full ${
+                                status.value === "Rejected"
+                                  ? "bg-red-500"
+                                  : "bg-blue-500"
+                              }`}
                             ></div>
                             <span className={`${status.color} font-medium`}>
                               {status.value}
@@ -489,28 +500,31 @@ const ApplicantDetails = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex-1">
               <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-100 pb-4">
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === "resume"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    activeTab === "resume"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
                   onClick={() => handleTabChange("resume")}
                 >
                   Resume
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === "hiring-progress"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    activeTab === "hiring-progress"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
                   onClick={() => handleTabChange("hiring-progress")}
                 >
                   Hiring Progress
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === "interview-schedule"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    activeTab === "interview-schedule"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
                   onClick={() => handleTabChange("interview-schedule")}
                 >
                   Interview Schedule
@@ -535,12 +549,23 @@ const ApplicantDetails = () => {
                       />
                     </svg>
                     <div className="flex gap-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0s" }}></div>
-                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                      <div
+                        className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "0s" }}
+                      ></div>
+                      <div
+                        className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                      <div
+                        className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.4s" }}
+                      ></div>
                     </div>
                   </div>
-                  <p className="text-gray-600 font-medium">Analyzing with AI...</p>
+                  <p className="text-gray-600 font-medium">
+                    Analyzing with AI...
+                  </p>
                 </div>
               )}
 
@@ -706,10 +731,11 @@ const ApplicantDetails = () => {
                           </p>
                           <div className="flex items-center mt-2">
                             <span
-                              className={`inline-block w-3 h-3 rounded-full mr-2 ${applicant?.status
-                                ? "bg-green-500"
-                                : "bg-gray-400"
-                                }`}
+                              className={`inline-block w-3 h-3 rounded-full mr-2 ${
+                                applicant?.status
+                                  ? "bg-green-500"
+                                  : "bg-gray-400"
+                              }`}
                             ></span>
                             <p className="font-semibold text-gray-800">
                               {applicant?.status || "N/A"}

@@ -28,10 +28,9 @@ const UserProfile = () => {
   const [aboutMe, setAboutMe] = useState("Have't data yet");
   const [email, setEmail] = useState("Have't data yet");
   const [phone, setPhone] = useState("Have't data yet");
-  const [languages, setLanguages] = useState("Have't data yet");
+  const [Languages, setLanguages] = useState("Have't data yet");
   const [instagram, setInstagram] = useState("Have't data yet");
   const [twitter, setTwitter] = useState("Have't data yet");
-  const [website, setWebsite] = useState("Have't data yet");
   const [expereince, setExperiences] = useState([]);
   const [education, setEducations] = useState([]);
   const [showExperienceForm, setShowExperienceForm] = useState(false);
@@ -39,6 +38,9 @@ const UserProfile = () => {
   const [skills, setSkills] = useState([]);
   const [showSkillForm, setShowSkillForm] = useState(false);
   const [newSkill, setNewSkill] = useState("");
+  const [linkedin, setLinkedin] = useState("Have't data yet");
+  const [youtube, setYoutube] = useState("Have't data yet");
+  const [facebook, setFacebook] = useState("Have't data yet");
   const [video, setVideo] = useState("");
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,7 +57,9 @@ const UserProfile = () => {
         setLanguages(userData.Languages || "Have't data yet");
         setInstagram(userData.socialLinks.instagram || "Have't data yet");
         setTwitter(userData.socialLinks.twitter || "Have't data yet");
-        setWebsite(userData.socialLinks.facebook || "Have't data yet");
+        setFacebook(userData.socialLinks.facebook || "Have't data yet");
+        setLinkedin(userData.socialLinks.linkedin || "Have't data yet");
+        setYoutube(userData.socialLinks.youtube || "Have't data yet");
         setExperiences(userData.expereince || []);
         setEducations(userData.education || []);
         setSkills(userData.skills || []);
@@ -127,24 +131,27 @@ const UserProfile = () => {
                 setLocation={setLocation}
                 isEditing={isEditing}
                 setIsEditing={setIsEditing}
-                role={role}
                 email={email}
                 setEmail={setEmail}
                 phone={phone}
                 setPhone={setPhone}
-                languages={languages}
+                Languages={Languages}
                 setLanguages={setLanguages}
                 instagram={instagram}
                 setInstagram={setInstagram}
                 twitter={twitter}
                 setTwitter={setTwitter}
-                website={website}
-                setWebsite={setWebsite}
                 expereince={expereince}
                 education={education}
                 skills={skills}
                 video={video}
                 setVideo={setVideo}
+                linkedin={linkedin}
+                setLinkedin={setLinkedin}
+                youtube={youtube}
+                setYoutube={setYoutube}
+                facebook={facebook}
+                setFacebook={setFacebook}
               />
             </div>
 
@@ -197,7 +204,7 @@ const UserProfile = () => {
                 setEmail={setEmail}
                 phone={phone}
                 setPhone={setPhone}
-                languages={languages}
+                Languages={Languages}
                 setLanguages={setLanguages}
               />
             </div>
@@ -210,8 +217,12 @@ const UserProfile = () => {
                 setInstagram={setInstagram}
                 twitter={twitter}
                 setTwitter={setTwitter}
-                website={website}
-                setWebsite={setWebsite}
+                facebook={facebook}
+                setFacebook={setFacebook}
+                linkedin={linkedin}
+                setLinkedin={setLinkedin}
+                youtube={youtube}
+                setYoutube={setYoutube}
               />
             </div>
             <div className="bg-white rounded-lg shadow p-6">

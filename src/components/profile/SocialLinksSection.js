@@ -1,6 +1,13 @@
 // components/SocialLinksSection.js
 import React from "react";
-import { ArrowRight, Instagram, Twitter, Globe } from "lucide-react";
+import {
+  ArrowRight,
+  Instagram,
+  Twitter,
+  Facebook,
+  Linkedin,
+  Youtube,
+} from "lucide-react";
 
 const SocialLinksSection = ({
   isEditing,
@@ -8,8 +15,12 @@ const SocialLinksSection = ({
   setInstagram,
   twitter,
   setTwitter,
-  website,
-  setWebsite,
+  facebook,
+  setFacebook,
+  linkedin,
+  setLinkedin,
+  youtube,
+  setYoutube,
 }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -29,7 +40,7 @@ const SocialLinksSection = ({
             />
           ) : (
             <span className="text-sm text-blue-600 cursor-pointer">
-              {instagram}
+              {instagram || "none"}
             </span>
           )}
         </div>
@@ -44,22 +55,53 @@ const SocialLinksSection = ({
             />
           ) : (
             <span className="text-sm text-blue-600 cursor-pointer">
-              {twitter}
+              {twitter || "none"}
             </span>
           )}
         </div>
+
         <div className="flex items-center gap-3">
-          <Globe className="w-5 h-5 text-gray-400" />
+          <Facebook className="w-5 h-5 text-gray-400" />
           {isEditing ? (
             <input
               type="text"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
+              value={facebook}
+              onChange={(e) => setFacebook(e.target.value)}
               className="border rounded-md p-1"
             />
           ) : (
             <span className="text-sm text-blue-600 cursor-pointer">
-              {website}
+              {facebook || "none"}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <Linkedin className="w-5 h-5 text-gray-400" />
+          {isEditing ? (
+            <input
+              type="text"
+              value={linkedin}
+              onChange={(e) => setLinkedin(e.target.value)}
+              className="border rounded-md p-1"
+            />
+          ) : (
+            <span className="text-sm text-blue-600 cursor-pointer">
+              {linkedin || "none"}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <Youtube className="w-5 h-5 text-gray-400" />
+          {isEditing ? (
+            <input
+              type="text"
+              value={youtube}
+              onChange={(e) => setYoutube(e.target.value)}
+              className="border rounded-md p-1"
+            />
+          ) : (
+            <span className="text-sm text-blue-600 cursor-pointer">
+              {youtube || "none"}
             </span>
           )}
         </div>
