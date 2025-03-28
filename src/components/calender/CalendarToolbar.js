@@ -1,4 +1,6 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { neumorphicButton, gradientText } from "./NeumorphicStyles";
 
 const CalendarToolbar = ({ onNavigate, onView, label, view }) => {
   if (!onNavigate || !onView) {
@@ -6,69 +8,70 @@ const CalendarToolbar = ({ onNavigate, onView, label, view }) => {
     return null;
   }
 
-  const goToBack = () => {
-    console.log("Navigating to previous");
-    onNavigate("PREV"); // Sửa "PREVIOUS" thành "PREV"
-  };
+  const goToBack = () => onNavigate("PREV");
+  const goToNext = () => onNavigate("NEXT");
+  const goToCurrent = () => onNavigate("TODAY");
 
-  const goToNext = () => {
-    console.log("Navigating to next");
-    onNavigate("NEXT");
-  };
-
-  const goToCurrent = () => {
-    console.log("Navigating to today");
-    onNavigate("TODAY");
+  const buttonVariants = {
+    hover: { scale: 1.05, boxShadow: "inset 3px 3px 10px #d1d5db" },
+    tap: { scale: 0.95 },
   };
 
   return (
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center space-x-2">
-        <button
-          type="button"
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-center justify-between mb-6 p-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-[5px_5px_15px_#d1d5db,-5px_-5px_15px_#ffffff]"
+    >
+      <div className="flex items-center space-x-4">
+        <motion.button
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="tap"
           onClick={goToCurrent}
-          className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm"
+          className={`${neumorphicButton} font-medium`}
         >
           Today
-        </button>
-        <button
-          type="button"
+        </motion.button>
+        <motion.button
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="tap"
           onClick={goToBack}
-          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-sm"
+          className={neumorphicButton}
         >
           Previous
-        </button>
-        <button
-          type="button"
+        </motion.button>
+        <motion.button
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="tap"
           onClick={goToNext}
-          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-sm"
+          className={neumorphicButton}
         >
           Next
-        </button>
+        </motion.button>
       </div>
 
-      <h3 className="text-lg font-medium">{label || "Calendar"}</h3>
+      <h3 className={`text-xl font-semibold ${gradientText}`}>{label || "Calendar"}</h3>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-4">
         {["month", "week", "day"].map((key) => (
-          <button
+          <motion.button
             key={key}
-            type="button"
-            onClick={() => {
-              console.log(`Changing view to ${key}`);
-              onView(key);
-            }}
-            className={`px-3 py-1 rounded-md text-sm ${
-              view === key
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            onClick={() => onView(key)}
+            className={`${neumorphicButton} ${
+              view === key ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white" : ""
             }`}
           >
             {key.charAt(0).toUpperCase() + key.slice(1)}
-          </button>
+          </motion.button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

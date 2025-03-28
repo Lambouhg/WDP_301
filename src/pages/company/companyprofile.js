@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useRouter } from "next/navigation";
 import {
   FaFacebook,
   FaLinkedin,
@@ -18,7 +18,7 @@ import Sidebar from "../../components/SidebarCompany";
 
 const CompanyProfile = () => {
   const { user } = useUser();
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -71,14 +71,13 @@ const CompanyProfile = () => {
     }
   };
 
-  // Function to handle navigation to Settings page
   const handleProfileSettingsClick = () => {
     router.push("/company/Settings");
   };
 
   if (loading) {
     return (
-      <div className="flex bg-gray-50 min-h-screen">
+      <div className="flex min-h-screen bg-gray-100">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex-1 p-6 overflow-y-auto">
           <HeaderCompany />
@@ -92,7 +91,7 @@ const CompanyProfile = () => {
 
   if (!company) {
     return (
-      <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen w-full overflow-hidden">
+      <div className="flex min-h-screen bg-gray-100">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex-1 p-6 overflow-y-auto">
           <HeaderCompany />
@@ -112,9 +111,14 @@ const CompanyProfile = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen w-full overflow-hidden">
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar chiếm toàn bộ chiều cao */}
+      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-10">
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      </div>
+
+      {/* Nội dung chính */}
+      <div className="flex-1 ml-64 p-6 overflow-y-auto">
         <div className="max-w-8xl mx-auto px-4 sm:px-6 py-6">
           <HeaderCompany />
 
@@ -148,7 +152,7 @@ const CompanyProfile = () => {
                   Public View
                 </button>
                 <button
-                  onClick={handleProfileSettingsClick} // Add onClick handler
+                  onClick={handleProfileSettingsClick}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200"
                 >
                   Profile Settings
@@ -238,7 +242,9 @@ const CompanyProfile = () => {
             <div className="lg:col-span-4 space-y-6">
               {/* Tech Stack */}
               <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">Tech Stack</h2>
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                  Tech Stack
+                </h2>
                 {company.techStack && company.techStack.length > 0 ? (
                   <div className="flex flex-wrap gap-3">
                     {company.techStack.map((tech, index) => {
@@ -251,11 +257,12 @@ const CompanyProfile = () => {
                         "bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-100",
                       ];
 
-                      // Tạo một key duy nhất dựa trên tên công nghệ để màu cố định
                       const techColorMap = {};
                       if (!techColorMap[tech]) {
                         techColorMap[tech] =
-                          colorVariants[Math.floor(Math.random() * colorVariants.length)];
+                          colorVariants[
+                            Math.floor(Math.random() * colorVariants.length)
+                          ];
                       }
 
                       return (
@@ -269,9 +276,11 @@ const CompanyProfile = () => {
                     })}
                   </div>
                 ) : (
-                  <p className="text-gray-500 italic">No tech stack information available</p>
+                  <p className="text-gray-500 italic">
+                    No tech stack information available
+                  </p>
                 )}
-</div>
+              </div>
 
               {/* Contact Information */}
               <div className="bg-white p-6 rounded-lg shadow">

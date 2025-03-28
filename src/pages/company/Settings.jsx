@@ -18,6 +18,7 @@ import HeaderCompany from "../../components/HeaderCompany";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { useUser } from "@clerk/nextjs";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Settings = () => {
   const { user } = useUser();
@@ -25,9 +26,11 @@ const Settings = () => {
   const [newTech, setNewTech] = useState("");
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLogoInputVisible, setIsLogoInputVisible] = useState(false);
   const router = useRouter();
 
-  // Fetch dữ liệu công ty
   useEffect(() => {
     const fetchCompanyData = async () => {
       if (!user) return;
@@ -57,7 +60,6 @@ const Settings = () => {
     fetchCompanyData();
   }, [user]);
 
-  // Xử lý thay đổi input
   const handleInputChange = (field, value, subField = null) => {
     if (subField) {
       setCompany((prev) => ({
@@ -75,21 +77,20 @@ const Settings = () => {
     }
   };
 
-  // Điều hướng
   const handleNavigation = (path) => {
     router.push(path);
   };
 
-  // Cập nhật công ty
   const handleUpdateCompany = async () => {
     if (!company?._id) {
       toast.error("Company ID not found!");
       return;
     }
+    setIsModalOpen(true);
+  };
 
-    const confirmUpdate = window.confirm("Do you want to update this company?");
-    if (!confirmUpdate) return;
-
+  const confirmUpdate = async () => {
+    setIsSaving(true);
     try {
       const response = await fetch(`/api/company/${company._id}`, {
         method: "PATCH",
@@ -101,17 +102,23 @@ const Settings = () => {
 
       if (response.ok) {
         toast.success("Company updated successfully!");
+        setTimeout(() => {
+          setIsSaving(false);
+          setIsModalOpen(false);
+          window.location.reload();
+        }, 1000);
       } else {
         const data = await response.json();
         toast.error(data.message || "Failed to update company");
+        setIsSaving(false);
       }
     } catch (error) {
       console.error("Error updating company:", error);
       toast.error("An error occurred while updating the company");
+      setIsSaving(false);
     }
   };
 
-  // Xóa công ty
   const handleDeleteCompany = async () => {
     if (!company?._id) {
       toast.error("Company ID not found!");
@@ -139,7 +146,6 @@ const Settings = () => {
     }
   };
 
-  // Thêm tech stack
   const handleAddTech = async () => {
     if (!newTech.trim() || !company?._id) return;
 
@@ -164,7 +170,6 @@ const Settings = () => {
     }
   };
 
-  // Xóa tech stack
   const handleRemoveTech = async (techToRemove) => {
     if (!company?._id) return;
 
@@ -289,7 +294,6 @@ const Settings = () => {
             </aside>
 
             <div className="lg:col-span-3 space-y-6">
-              {/* Company Logo */}
               <section id="logo" className="bg-white rounded-2xl shadow-sm p-6">
                 <div className="flex items-start justify-between mb-6">
                   <div>
@@ -303,34 +307,40 @@ const Settings = () => {
                 </div>
                 <div className="flex items-center space-x-6">
                   {company?.logo ? (
-                    <img
-                      src={company.logo}
-                      alt="Company logo"
-                      className="w-24 h-24"
-                    />
+                    <img src={company.logo} alt="Company logo" className="w-24 h-24" />
                   ) : (
-                    <span></span>
+                    <div className="w-24 h-24 bg-gray-200 flex items-center justify-center">
+                      <Camera className="w-8 h-8 text-gray-400" />
+                    </div>
                   )}
                   <div className="flex-1">
                     <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center">
-                      <p className="text-sm text-gray-600 mb-1">
-                        Enter logo URL here
-                      </p>
-                      <input
-                        type="url"
-                        className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="https://example.com/logo.png"
-                        value={company?.logo || ""}
-                        onChange={(e) =>
-                          handleInputChange("logo", e.target.value)
-                        }
-                      />
+                      {!isLogoInputVisible ? (
+                        <button
+                          onClick={() => setIsLogoInputVisible(true)}
+                          className="flex items-center justify-center w-full py-2 text-gray-600 hover:text-blue-600"
+                        >
+                          <Camera className="w-6 h-6 mr-2" />
+                          <span>Change Logo</span>
+                        </button>
+                      ) : (
+                        <input
+                          type="url"
+                          className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="https://example.com/logo.png"
+                          value={company?.logo || ""}
+                          onChange={(e) =>
+                            handleInputChange("logo", e.target.value)
+                          }
+                          onBlur={() => setIsLogoInputVisible(false)}
+                          autoFocus // Tự động focus khi input xuất hiện
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
               </section>
 
-              {/* Company Details */}
               <section
                 id="details"
                 className="bg-white rounded-2xl shadow-sm p-6"
@@ -411,7 +421,6 @@ const Settings = () => {
                     </div>
                   </div>
 
-                  {/* Thêm Date Founded */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Date Founded
@@ -435,7 +444,6 @@ const Settings = () => {
                     </div>
                   </div>
 
-                  {/* Thêm Contact Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -479,7 +487,6 @@ const Settings = () => {
                     </div>
                   </div>
 
-                  {/* Tech Stack */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Tech Stack
@@ -522,7 +529,6 @@ const Settings = () => {
                 </div>
               </section>
 
-              {/* About Company */}
               <section
                 id="about"
                 className="bg-white rounded-2xl shadow-sm p-6"
@@ -576,16 +582,91 @@ const Settings = () => {
                 </div>
               </section>
 
-              {/* Action Buttons */}
               <div className="flex justify-end space-x-4">
-                <button
+                <motion.button
                   type="button"
-                  className="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
                   onClick={handleUpdateCompany}
                 >
-                  Save Changes
-                </button>
+                  <span>Save Changes</span>
+                </motion.button>
               </div>
+
+              <AnimatePresence>
+                {isModalOpen && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    <motion.div
+                      initial={{ scale: 0.9, y: 20 }}
+                      animate={{ scale: 1, y: 0 }}
+                      exit={{ scale: 0.9, y: 20 }}
+                      className="bg-white rounded-2xl p-6 w-full max-w-md"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Confirm Changes
+                      </h3>
+                      <p className="text-gray-600 mb-6">
+                        Are you sure you want to save these changes to your
+                        company profile?
+                      </p>
+                      <div className="flex justify-end space-x-4">
+                        <button
+                          className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                          onClick={() => setIsModalOpen(false)}
+                          disabled={isSaving}
+                        >
+                          Cancel
+                        </button>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`px-4 py-2 rounded-xl bg-blue-600 text-white flex items-center gap-2 ${
+                            isSaving
+                              ? "opacity-75 cursor-not-allowed"
+                              : "hover:bg-blue-700"
+                          }`}
+                          onClick={confirmUpdate}
+                          disabled={isSaving}
+                        >
+                          {isSaving ? (
+                            <>
+                              <svg
+                                className="animate-spin h-5 w-5 text-white"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                              Saving...
+                            </>
+                          ) : (
+                            "Confirm"
+                          )}
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
