@@ -1,6 +1,5 @@
-// components/AdditionalDetailsSection.js
 import React from "react";
-import { ArrowRight, Mail, Phone, Globe } from "lucide-react";
+import { ArrowRight, Mail, Phone, Globe, Plus, X } from "lucide-react"; // Thêm Plus và X từ lucide-react
 
 const AdditionalDetailsSection = ({
   isEditing,
@@ -10,7 +9,22 @@ const AdditionalDetailsSection = ({
   setPhone,
   Languages,
   setLanguages,
+  newLanguage,
+  setNewLanguage,
 }) => {
+  const addLanguage = () => {
+    if (newLanguage.trim() && !Languages.includes(newLanguage)) {
+      setLanguages([...Languages, newLanguage]);
+      setNewLanguage("");
+    }
+  };
+
+  const removeLanguage = (languageToRemove) => {
+    setLanguages(
+      Languages.filter((Languages) => Languages !== languageToRemove)
+    );
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-4">
@@ -47,20 +61,64 @@ const AdditionalDetailsSection = ({
         </div>
         <div className="flex items-center gap-3">
           <Globe className="w-5 h-5 text-gray-400" />
-          {isEditing ? (
-            <input
-              type="text"
-              value={Languages} // Đảm bảo languages không undefined
-              onChange={(e) =>
-                setLanguages(
-                  e.target.value.length <= 50 ? e.target.value : Languages // Giới hạn độ dài tối đa là 50 ký tự
-                )
-              }
-              className="border rounded-md p-1 w-full"
-            />
-          ) : (
-            <span className="text-sm text-gray-600">{Languages}</span>
-          )}
+          <div className="w-full">
+            {isEditing ? (
+              <div>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {Array.isArray(Languages) && Languages.length > 0 ? (
+                    Languages.map((language) => (
+                      <div
+                        key={language}
+                        className="flex items-center px-3 py-1 bg-gray-100 rounded-full text-sm border border-gray-300"
+                      >
+                        <span>{language}</span>
+                        <X
+                          className="ml-2 w-4 h-4 text-gray-500 cursor-pointer"
+                          onClick={() => removeLanguage(language)}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <span className="text-sm text-gray-500">
+                      No languages added yet.
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={newLanguage}
+                    onChange={(e) => setNewLanguage(e.target.value)}
+                    className="border rounded-md p-1 w-full"
+                    placeholder="Enter a new language"
+                  />
+                  <Plus
+                    onClick={addLanguage}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Add
+                  </Plus>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {Languages.length > 0 ? (
+                  Languages.map((language) => (
+                    <span
+                      key={language}
+                      className="px-3 py-1 bg-gray-100 rounded-full text-sm border border-gray-300"
+                    >
+                      {language}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-sm text-gray-500">
+                    No languages added yet.
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

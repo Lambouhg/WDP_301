@@ -65,7 +65,7 @@ const JobFilters = ({
 
       {/* Hiển thị filters nếu isFiltersVisible = true hoặc trên màn hình lớn */}
       {(!isMobile || isFiltersVisible) && (
-        <>
+        <div>
           {/* Type of Employment */}
           <div className="mb-6">
             <div
@@ -154,7 +154,7 @@ const JobFilters = ({
               Clear Filters
             </Button>
           )}
-        </>
+        </div>
       )}
     </div>
   );

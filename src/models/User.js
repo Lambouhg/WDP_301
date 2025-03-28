@@ -6,15 +6,14 @@ const UserSchema = new mongoose.Schema({
   name: { type: String },
   avatar: { type: String },
   location: { type: String, default: "none" },
-  gender: {
-    type: String,
-    enum: ["female", "male", "other"],
-    default: "other",
-  },
+  // gender: {
+  //   type: String,
+  //   enum: ["female", "male", "other"],
+  //   default: "other",
+  // },
   aboutMe: { type: String, default: "none" },
   phone: { type: String, default: "none" },
   video: { type: String, default: "none" }, // Đường dẫn đến video giới thiệu
-  CV: { type: String, default: "none" }, // Đường dẫn đến CV
   socialLinks: {
     // Các liên kết mạng xã hội
     instagram: { type: String, default: null },
@@ -42,7 +41,8 @@ const UserSchema = new mongoose.Schema({
       description: { type: String },
     },
   ],
-  Languages: { type: String, default: "English" },
+  Languages: { type: [String], default: () => ["English"] },
+
   role: { type: String, enum: ["admin", "company", "user"], default: "user" },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,

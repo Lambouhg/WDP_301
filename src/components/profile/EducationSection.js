@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @next/next/no-img-element */
 // components/EducationSection.js
 import React from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import EducationForm from "./EducationForm";
-
+import { School } from "lucide-react";
 const EducationSection = ({
   educations,
   setEducations,
@@ -54,11 +53,7 @@ const EducationSection = ({
             <div key={index} className="flex gap-4">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-red-900 flex items-center justify-center rounded">
-                  <img
-                    src="/api/placeholder/48/48"
-                    alt="School Logo"
-                    className="w-8 h-8"
-                  />
+                  <School className="w-8 h-8 text-white" />
                 </div>
               </div>
               <div>

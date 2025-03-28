@@ -262,15 +262,15 @@ const PostJobCompany = () => {
                 className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm"
               >
                 {activeTab === "BenefitsPage" ? (
-                  <>
+                  <div>
                     Submit
                     <Check className="w-5 h-5 ml-2" />
-                  </>
+                  </div>
                 ) : (
-                  <>
+                  <div>
                     Next
                     <ChevronRight className="w-5 h-5 ml-2" />
-                  </>
+                  </div>
                 )}
               </button>
             </div>
