@@ -96,7 +96,7 @@ export default function Dashboard() {
         ).length;
         setStats({ totalApplied, interviewed });
       } catch (error) {
-        console.error("Lỗi lấy danh sách ứng tuyển:", error);
+        console.log(error)
       }
     };
     if (user) {
@@ -416,13 +416,12 @@ export default function Dashboard() {
                               </p>
                             </div>
                             <div
-                              className={`px-3 py-1 rounded-full text-sm ${
-                                app.status === "Hired"
-                                  ? "bg-green-50 text-green-600"
-                                  : app.status === "Rejected"
+                              className={`px-3 py-1 rounded-full text-sm ${app.status === "Hired"
+                                ? "bg-green-50 text-green-600"
+                                : app.status === "Rejected"
                                   ? "bg-red-50 text-red-600"
                                   : "bg-orange-50 text-orange-500"
-                              }`}
+                                }`}
                             >
                               {app.status || "Unknown status"}
                             </div>
