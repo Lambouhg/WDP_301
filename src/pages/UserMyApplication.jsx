@@ -87,8 +87,8 @@ const UserMyApplication = () => {
       count: applications.filter((app) => app.status === "In Review").length,
     },
     {
-      name: "Interviewing",
-      count: applications.filter((app) => app.status === "Interviewing").length,
+      name: "In Reviewing",
+      count: applications.filter((app) => app.status === "In Reviewing").length,
     },
     {
       name: "Shortlisted",
@@ -124,11 +124,10 @@ const UserMyApplication = () => {
                 <button
                   key={tab.name}
                   onClick={() => handleTabChange(tab.name)}
-                  className={`pb-4 px-1 ${
-                    tab.name === selectedTab
+                  className={`pb-4 px-1 ${tab.name === selectedTab
                       ? "border-b-2 border-purple-600 text-purple-600"
                       : "text-gray-500"
-                  }`}
+                    }`}
                 >
                   {tab.name} ({tab.count})
                 </button>
@@ -192,11 +191,10 @@ const UserMyApplication = () => {
                       <td>{new Date(app.createdAt).toLocaleDateString()}</td>
                       <td>
                         <span
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            app.status === "Interviewing"
+                          className={`px-3 py-1 rounded-full text-sm ${app.status === "In Reviewing"
                               ? "bg-blue-50 text-blue-600"
                               : "bg-yellow-50 text-yellow-600"
-                          }`}
+                            }`}
                         >
                           {app.status}
                         </span>
