@@ -25,13 +25,13 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         {isEditing ? (
           <>
-            <h2 className="text-xl font-bold mb-4">Chỉnh sửa sự kiện</h2>
+            <h2 className="text-xl font-bold mb-4">Edit event</h2>
             <div className="mb-4">
               <label
                 htmlFor="title"
                 className="block text-sm font-medium text-gray-700"
               >
-                Tiêu đề
+                Title
               </label>
               <input
                 type="text"
@@ -47,7 +47,7 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
                 htmlFor="description"
                 className="block text-sm font-medium text-gray-700"
               >
-                Mô tả
+                Description
               </label>
               <textarea
                 id="description"
@@ -62,7 +62,7 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
                 htmlFor="location"
                 className="block text-sm font-medium text-gray-700"
               >
-                Địa điểm
+                Location
               </label>
               <input
                 type="text"
@@ -78,13 +78,13 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
                 className="mr-2 px-4 py-2 bg-gray-300 text-gray-800 rounded"
                 onClick={() => setIsEditing(false)}
               >
-                Hủy
+                Cancel
               </button>
               <button
                 className="px-4 py-2 bg-indigo-500 text-white rounded"
                 onClick={handleSave}
               >
-                Lưu
+                Save
               </button>
             </div>
           </>
@@ -92,16 +92,16 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
           <>
             <h2 className="text-xl font-bold mb-4">{event.title}</h2>
             <p className="mb-2">
-              <strong>Mô tả:</strong> {event.description || "Không có mô tả"}
+              <strong>Description:</strong> {event.description || "None"}
             </p>
             <p className="mb-2">
-              <strong>Địa điểm:</strong> {event.location || "Không có địa điểm"}
+              <strong>Location:</strong> {event.location || "None"}
             </p>
             <p className="mb-2">
-              <strong>Ngày:</strong> {moment(event.start).format("DD/MM/YYYY")}
+              <strong>Date:</strong> {moment(event.start).format("DD/MM/YYYY")}
             </p>
             <p className="mb-2">
-              <strong>Thời gian:</strong> {moment(event.start).format("HH:mm")}{" "}
+              <strong>Time:</strong> {moment(event.start).format("HH:mm")}{" "}
               - {moment(event.end).format("HH:mm")}
             </p>
             <div className="flex justify-end mt-4">
@@ -109,19 +109,19 @@ const EventModal = ({ event, onUpdate, onDelete, onClose }) => {
                 className="mr-2 px-4 py-2 bg-indigo-500 text-white rounded"
                 onClick={() => setIsEditing(true)}
               >
-                Chỉnh sửa
+                Edit
               </button>
               <button
                 className="mr-2 px-4 py-2 bg-red-500 text-white rounded"
                 onClick={onDelete}
               >
-                Xóa
+                Delete
               </button>
               <button
                 className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
                 onClick={onClose}
               >
-                Đóng
+                Close
               </button>
             </div>
           </>
