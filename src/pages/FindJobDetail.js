@@ -6,8 +6,10 @@ import Image from "next/image";
 import img1 from "../assets/image.png";
 import CompanySidebar from "../components/SidebarCompany";
 import Sidebar from "../components/Sidebar";
+import { useUser } from "@clerk/nextjs";
 
 export default function FindJobDetail() {
+  const { user } = useUser();
   const router = useRouter();
   const { jobId } = router.query;
   const [job, setJob] = useState(null);
@@ -209,9 +211,15 @@ export default function FindJobDetail() {
                     </span>
                   </p>
                 </div>
+                {/* filepath: d:\WDP_301\src\pages\FindJobDetail.js */}
                 <button
-                  className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold px-8 py-3 rounded-full shadow-md transform hover:scale-105 transition-all duration-300"
-                  onClick={() => setIsOpen(true)}
+                  className={`bg-gradient-to-r ${user
+                      ? "from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white"
+                      : "from-gray-400 to-gray-500 text-gray-300 cursor-not-allowed"
+                    } font-semibold px-8 py-3 rounded-full shadow-md transform ${user ? "hover:scale-105" : ""
+                    } transition-all duration-300`}
+                  onClick={() => user && setIsOpen(true)} // Chỉ mở form nếu có user
+                  disabled={!user} // Vô hiệu hóa nút nếu không có user
                 >
                   Apply Now
                 </button>

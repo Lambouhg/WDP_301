@@ -3,9 +3,11 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import img1 from "../../assets/image.png";
+import { useUser } from "@clerk/nextjs";
 
 const JobCards = ({ jobs, handleOpenApplyForm }) => {
   const router = useRouter();
+  const { user } = useUser();
 
   return (
     <div className="grid grid-cols-1 gap-6">
@@ -47,8 +49,12 @@ const JobCards = ({ jobs, handleOpenApplyForm }) => {
             </div>
             <div className="mt-4 sm:mt-0 sm:text-right flex flex-col items-center sm:items-end gap-3">
               <Button
-                className="w-32 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200"
-                onClick={() => handleOpenApplyForm(job)}
+                className={`w-32 py-2 px-4 rounded-md transition-colors duration-200 font-semibold ${user
+                    ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                  }`}
+                onClick={() => user && handleOpenApplyForm(job)} // Chỉ gọi hàm nếu có user
+                disabled={!user} // Vô hiệu hóa nút nếu không có user
               >
                 Apply Now
               </Button>
@@ -56,9 +62,7 @@ const JobCards = ({ jobs, handleOpenApplyForm }) => {
                 <div
                   className="absolute h-full bg-indigo-500 rounded-full transition-all duration-300"
                   style={{
-                    width: `calc(${job?.applicants ?? 0} / ${
-                      job?.needs ?? 10
-                    } * 100%)`,
+                    width: `calc(${job?.applicants ?? 0} / ${job?.needs ?? 10} * 100%)`,
                   }}
                 ></div>
               </div>
