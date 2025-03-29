@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
   const prompt = `
-    Từ nội dung sau, hãy liệt kê các kỹ năng, kinh nghiệm, trình độ, kỹ năng mềm, nhận xét công việc... cần thiết cho công việc.
+    Từ nội dung sau, hãy liệt kê các kỹ năng, kinh nghiệm, trình độ, kỹ năng mềm, nhận xét công việc... các yếu tố cần thiết cho để tạo việc.
     Trả về kết quả theo định dạng JSON với mỗi danh mục là một mảng. Ví dụ:
     {
     "Kỹ năng": [...],

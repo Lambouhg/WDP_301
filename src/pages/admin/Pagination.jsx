@@ -6,11 +6,10 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`p-2 rounded-full ${
-          currentPage === 1
-            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600 text-white"
-        }`}
+        className={`p-2 rounded-full ${currentPage === 1
+          ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+          : "bg-blue-500 hover:bg-blue-600 text-white"
+          }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -28,15 +27,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
 
       <div className="flex items-center gap-2">
         {totalPages > 3 ? (
-          <div>
+          <>
             {/* First page */}
             <button
               onClick={() => onPageChange(1)}
-              className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentPage === 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-              }`}
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage === 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                }`}
             >
               1
             </button>
@@ -59,26 +57,24 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
             {/* Last page */}
             <button
               onClick={() => onPageChange(totalPages)}
-              className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentPage === totalPages
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-              }`}
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage === totalPages
+                ? "bg-blue-500 text-white"
+                : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                }`}
             >
               {totalPages}
             </button>
-          </div>
+          </>
         ) : (
           // If 2 pages or less, show all page numbers
           [...Array(totalPages)].map((_, index) => (
             <button
               key={index + 1}
               onClick={() => onPageChange(index + 1)}
-              className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentPage === index + 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-              }`}
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage === index + 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                }`}
             >
               {index + 1}
             </button>
@@ -89,11 +85,10 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`p-2 rounded-full ${
-          currentPage === totalPages
-            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600 text-white"
-        }`}
+        className={`p-2 rounded-full ${currentPage === totalPages
+          ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+          : "bg-blue-500 hover:bg-blue-600 text-white"
+          }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

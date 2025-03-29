@@ -266,9 +266,8 @@ export default function FindJobDetail() {
 
                 {analysisResult && (
                   <div className="bg-white p-6 rounded-xl shadow-lg mt-6">
-                    <h3 className="text-xl font-semibold text-green-500 mb-4">
-                      Here are some of the requirements needed to have a chance
-                      at getting the job.
+                    <h3 className="font-semibold text-gray-800 mb-4">
+                      Chào bạn tôi sẽ giúp bạn phân tích công việc trên, dưới đây là mô tả các yêu cầu của công việc:
                     </h3>
                     {typeof analysisResult === "object" ? (
                       <div className="space-y-4">
