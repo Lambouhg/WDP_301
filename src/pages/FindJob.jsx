@@ -8,9 +8,10 @@ import {
   useUser,
 } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-
+import logo from "../assets/logo.png";
 import Footer from "../components/Footer";
 import ListJobSearched from "../components/ListJobSearched";
+import Image from "next/image";
 
 export default function SearchJob() {
   const { user } = useUser();
@@ -34,7 +35,13 @@ export default function SearchJob() {
       <nav className="flex flex-col sm:flex-row justify-between items-center mb-12 ml-4 sm:ml-6 mr-4 sm:mr-5 mt-6 space-y-4 sm:space-y-0">
         <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <Image
+              src={logo.src}
+              alt="Logo"
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
             <span
               className="font-bold text-2xl sm:text-3xl text-blue-500"
               style={{ cursor: "pointer" }}

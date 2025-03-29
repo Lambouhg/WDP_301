@@ -1,12 +1,18 @@
 "use client";
-import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Footer from "../components/Footer";
 import Image from "next/image";
 import img1 from "../assets/image.png";
-
+import logo from "../assets/logo.png";
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
@@ -122,7 +128,13 @@ export default function Home() {
         <nav className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-12 sm:space-x-4">
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-0">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <Image
+                src={logo.src}
+                alt="Logo"
+                width={30}
+                height={30}
+                className="rounded-full"
+              />
               <span
                 className="font-bold text-2xl text-blue-500 sm:text-3xl"
                 onClick={() => router.push("/")}
@@ -178,7 +190,8 @@ export default function Home() {
             </span>
           </h1>
           <p className="mb-6 sm:mb-8 text-base sm:text-xl">
-            Great platform for the job seeker that searching for new career heights and passionate about startups.
+            Great platform for the job seeker that searching for new career
+            heights and passionate about startups.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-8 relative">
             <input
@@ -195,7 +208,9 @@ export default function Home() {
                   <div
                     key={job._id}
                     className="p-4 hover:bg-gray-800 hover:text-white cursor-pointer flex items-center gap-4"
-                    onClick={() => router.push(`/FindJobDetail?jobId=${job._id}`)}
+                    onClick={() =>
+                      router.push(`/FindJobDetail?jobId=${job._id}`)
+                    }
                   >
                     <Image
                       src={job.companyId?.logo || img1}
@@ -207,7 +222,8 @@ export default function Home() {
                     <div>
                       <h3 className="text-sm font-semibold">{job.title}</h3>
                       <p className="text-xs">
-                        {job.companyId?.name || "Unknown Company"} • {job.location || "Unknown Location"}
+                        {job.companyId?.name || "Unknown Company"} •{" "}
+                        {job.location || "Unknown Location"}
                       </p>
                     </div>
                   </div>
@@ -220,14 +236,16 @@ export default function Home() {
               Companies we helped grow:
             </span>
             <div className="flex flex-wrap items-center justify-between space-x-4 sm:space-x-8 cursor-pointer">
-              {["Coinbase", "Intel", "Tesla", "AMD", "Talkit"].map((company) => (
-                <span
-                  key={company}
-                  className="text-2xl sm:text-4xl font-mono font-semibold tracking-widest uppercase mb-2"
-                >
-                  {company}
-                </span>
-              ))}
+              {["Coinbase", "Intel", "Tesla", "AMD", "Talkit"].map(
+                (company) => (
+                  <span
+                    key={company}
+                    className="text-2xl sm:text-4xl font-mono font-semibold tracking-widest uppercase mb-2"
+                  >
+                    {company}
+                  </span>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -253,13 +271,17 @@ export default function Home() {
                 <div
                   key={company._id}
                   className="bg-[#FFFFFFFF] p-4 sm:p-6 rounded-xl hover:bg-gray-800 hover:text-white transition-colors cursor-pointer"
-                  onClick={() => router.push(`/CompaniesDetail?companyId=${company._id}`)}
+                  onClick={() =>
+                    router.push(`/CompaniesDetail?companyId=${company._id}`)
+                  }
                 >
                   <h3 className="font-semibold mb-2 text-sm sm:text-base">
                     {company.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-400">
-                    {company.jobsCount ? `${company.jobsCount} Jobs` : "No Jobs"}
+                    {company.jobsCount
+                      ? `${company.jobsCount} Jobs`
+                      : "No Jobs"}
                   </p>
                 </div>
               ))}
@@ -301,7 +323,8 @@ export default function Home() {
                     {job.title}
                   </h3>
                   <p className="text-xs sm:text-sm mb-4">
-                    {job.companyId?.name || "Unknown Company"} • {job.location || "Unknown Location"}
+                    {job.companyId?.name || "Unknown Company"} •{" "}
+                    {job.location || "Unknown Location"}
                   </p>
                   <div className="flex justify-between items-center">
                     <span className="text-xs sm:text-sm bg-blue-600/20 px-2 sm:px-3 py-1 rounded-full">

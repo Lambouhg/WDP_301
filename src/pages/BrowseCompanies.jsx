@@ -1,13 +1,12 @@
 "use client";
-
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Footer from "../components/Footer";
 import ListCompaniesSearched from "../components/ListCompaniesSearched";
-
+import logo from "../assets/logo.png";
+import Image from "next/image";
 export default function BrowseCompanies() {
   const router = useRouter();
-
   const toDashboard = () => {
     router.push("/");
   };
@@ -19,7 +18,13 @@ export default function BrowseCompanies() {
         <div className="flex items-center space-x-4">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <Image
+              src={logo.src}
+              alt="Logo"
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
             <span
               className="font-bold text-xl sm:text-3xl text-blue-500 cursor-pointer"
               onClick={toDashboard}
