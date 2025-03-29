@@ -145,7 +145,8 @@ const MessageDetail = ({ conversation, user }) => {
     );
   }
   return (
-    <div className="flex flex-col h-full p-5 w-full">
+    <div className="flex flex-col h-full p-4 w-full bg-gray-50">
+      {/* Header */}
       <div className="h-auto">
         {loadingRecipient ? (
           <p className="text-gray-500 text-center py-2">Loading recipient...</p>
@@ -154,6 +155,7 @@ const MessageDetail = ({ conversation, user }) => {
         )}
       </div>
 
+      {/* Messages */}
       {loadingMessages ? (
         <div className="flex flex-col flex-1 justify-center items-center">
           <p className="text-gray-500">Loading messages...</p>

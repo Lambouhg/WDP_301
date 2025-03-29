@@ -5,7 +5,11 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { neumorphicCard, neumorphicButton, gradientText } from "../../components/calender/NeumorphicStyles";
+import {
+  neumorphicCard,
+  neumorphicButton,
+  gradientText,
+} from "../../components/calender/NeumorphicStyles";
 import SidebarCompany from "../../components/SidebarCompany";
 import DasborderHeader from "../../components/HeaderCompany";
 import EventForm from "../../components/calender/EventForm";
@@ -43,29 +47,69 @@ const Dialog = ({ type, message, onConfirm, onCancel, isOpen }) => {
         <div className="flex items-center mb-4">
           {type === "success" && (
             <div className="flex-shrink-0 bg-green-100 rounded-full p-2">
-              <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              <svg
+                className="h-6 w-6 text-green-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
           )}
           {type === "error" && (
             <div className="flex-shrink-0 bg-red-100 rounded-full p-2">
-              <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="h-6 w-6 text-red-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </div>
           )}
           {type === "info" && (
             <div className="flex-shrink-0 bg-blue-100 rounded-full p-2">
-              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="h-6 w-6 text-blue-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
           )}
           {type === "warning" && (
             <div className="flex-shrink-0 bg-yellow-100 rounded-full p-2">
-              <svg className="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="h-6 w-6 text-yellow-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
             </div>
           )}
@@ -153,17 +197,23 @@ const CalendarApp = () => {
       const res = await axios.get(`/api/calender`, {
         params: { companyId: userData.companyId },
       });
-      if (res.data) {
+
+      if (res.data && res.data.length > 0) {
         const formattedEvents = res.data.map((event) => ({
           ...event,
           id: event._id, // Đảm bảo có id duy nhất
           start: new Date(event.date + "T" + event.time),
-          end: new Date(new Date(event.date + "T" + event.time).getTime() + 60 * 60 * 1000),
+          end: new Date(
+            new Date(event.date + "T" + event.time).getTime() + 60 * 60 * 1000
+          ),
         }));
         setEvents(formattedEvents);
+      } else {
+        setEvents([]); // Đặt `events` thành mảng rỗng nếu không có dữ liệu
+        setError("No events found."); // Đặt thông báo lỗi
       }
     } catch (err) {
-      setError("Không thể tải sự kiện.");
+      setError("Unable to fetch events.");
     } finally {
       setLoading(false);
     }
@@ -172,6 +222,17 @@ const CalendarApp = () => {
   const fetchAplly = async () => {
     const storedUser = localStorage.getItem("user");
     const userData = JSON.parse(storedUser);
+    if (!userData.companyId) {
+      setError("Company ID is not available.");
+      setDialog({
+        isOpen: true,
+        type: "error",
+        message: "Company ID is not available.",
+        onConfirm: () => setDialog({ ...dialog, isOpen: false }),
+        onCancel: null,
+      });
+      return;
+    }
     const res = await axios.get(`/api/company/applicant/applyStatusCompany`, {
       params: { companyId: userData.companyId },
     });
@@ -213,7 +274,10 @@ const CalendarApp = () => {
         ...response.data,
         id: response.data._id, // Đảm bảo id được gán
         start: new Date(formValues.date + "T" + formValues.time),
-        end: new Date(new Date(formValues.date + "T" + formValues.time).getTime() + 60 * 60 * 1000),
+        end: new Date(
+          new Date(formValues.date + "T" + formValues.time).getTime() +
+            60 * 60 * 1000
+        ),
       };
 
       setEvents((prevEvents) => [...prevEvents, createdEvent]);
@@ -252,11 +316,15 @@ const CalendarApp = () => {
 
   const handleUpdateEvent = async (updatedData) => {
     try {
-      await axios.put(`/api/calender/`, { id: selectedEvent._id, updatedEvent: updatedData });
+      await axios.put(`/api/calender/`, {
+        id: selectedEvent._id,
+        updatedEvent: updatedData,
+      });
 
       setEvents((prevEvents) =>
-        prevEvents.map((evt) =>
-          evt.id === selectedEvent._id ? { ...evt, ...updatedData } : evt // Sử dụng _id để khớp
+        prevEvents.map(
+          (evt) =>
+            evt.id === selectedEvent._id ? { ...evt, ...updatedData } : evt // Sử dụng _id để khớp
         )
       );
 
@@ -287,8 +355,12 @@ const CalendarApp = () => {
       message: "Are you sure to delete this event?",
       onConfirm: async () => {
         try {
-          await axios.delete(`/api/calender/`, { data: { idCalender: selectedEvent._id } });
-          setEvents((prevEvents) => prevEvents.filter((evt) => evt.id !== selectedEvent._id));
+          await axios.delete(`/api/calender/`, {
+            data: { idCalender: selectedEvent._id },
+          });
+          setEvents((prevEvents) =>
+            prevEvents.filter((evt) => evt.id !== selectedEvent._id)
+          );
           setIsModalOpen(false);
           setDialog({
             isOpen: true,
@@ -376,16 +448,26 @@ const CalendarApp = () => {
             </motion.button>
 
             <div className={neumorphicCard}>
-              <h1 className={`text-2xl font-bold mb-6 ${gradientText}`}>Interview schedule</h1>
+              <h1 className={`text-2xl font-bold mb-6 ${gradientText}`}>
+                Interview schedule
+              </h1>
               {error && <p className="text-red-500 mb-4">{error}</p>}
               {loading ? (
                 <div className="flex justify-center items-center h-96">
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                     className="w-8 h-8 border-4 border-t-indigo-500 border-gray-200 rounded-full"
                   />
                 </div>
+              ) : events.length === 0 ? ( // Kiểm tra nếu không có sự kiện
+                <h2 className="text-center text-gray-500 text-lg">
+                  No events available.
+                </h2>
               ) : (
                 <Calendar
                   localizer={localizer}
@@ -400,7 +482,15 @@ const CalendarApp = () => {
                   onNavigate={(newDate) => setDate(newDate)}
                   onSelectSlot={handleSelectSlot}
                   onSelectEvent={handleSelectEvent}
-                  components={{ toolbar: (props) => <CalendarToolbar {...props} view={view} onView={setView} /> }}
+                  components={{
+                    toolbar: (props) => (
+                      <CalendarToolbar
+                        {...props}
+                        view={view}
+                        onView={setView}
+                      />
+                    ),
+                  }}
                 />
               )}
             </div>

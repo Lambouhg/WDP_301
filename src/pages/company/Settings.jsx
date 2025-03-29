@@ -30,7 +30,7 @@ const Settings = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLogoInputVisible, setIsLogoInputVisible] = useState(false);
   const router = useRouter();
-
+  const [errors, setErrors] = useState("");
   useEffect(() => {
     const fetchCompanyData = async () => {
       if (!user) return;
@@ -43,12 +43,24 @@ const Settings = () => {
           },
         });
 
+        if (response.status === 404) {
+          setCompany(null); // Không có dữ liệu công ty
+          setErrors("Company not found. Please create one.");
+          return;
+        }
+
         if (!response.ok) {
           throw new Error("Failed to fetch company data");
         }
 
         const data = await response.json();
-        setCompany(data);
+
+        if (!data || Object.keys(data).length === 0) {
+          setCompany(null);
+          setErrors("You have no company, let create one ~");
+        } else {
+          setCompany(data);
+        }
       } catch (error) {
         console.error("Error fetching company data:", error);
         toast.error("Failed to load company data");
@@ -59,7 +71,6 @@ const Settings = () => {
 
     fetchCompanyData();
   }, [user]);
-
   const handleInputChange = (field, value, subField = null) => {
     if (subField) {
       setCompany((prev) => ({
@@ -205,19 +216,20 @@ const Settings = () => {
           <HeaderCompany />
           <div className="flex justify-center items-center h-screen">
             <div className="text-center">
-              <h1 className="text-2xl font-bold mb-4">
-                Bạn chưa tạo hồ sơ công ty
-              </h1>
-              <p className="text-gray-600">
-                Hãy tạo hồ sơ công ty để xem nó ở đây.
-              </p>
+              <h1 className="text-2xl font-bold mb-4">You have no company</h1>
+              <p className="text-gray-600 mb-6">{errors}</p>
+              <button
+                onClick={() => router.push("/company/CreateCompany")}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Create Company
+              </button>
             </div>
           </div>
         </div>
       </div>
     );
   }
-
   return (
     <main className="mx-auto h-screen w-screen flex overflow-hidden">
       <SidebarCompany isOpen={isOpen} setIsOpen={setIsOpen} />

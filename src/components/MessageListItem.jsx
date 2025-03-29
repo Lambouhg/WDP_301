@@ -20,10 +20,10 @@ const MessageListItem = ({ id, name, time, preview, active, onClick }) => {
     >
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="flex justify-between items-center">
-          <h3 className="font-medium">{displayName}</h3>
+          <h3 className="font-medium text-sm md:text-base">{displayName}</h3>
           <span className="text-xs text-gray-500">{time}</span>
         </div>
-        <p className="text-sm text-gray-600 truncate">{preview}</p>
+        <p className="text-xs md:text-sm text-gray-600 truncate">{preview}</p>
       </div>
     </div>
   );

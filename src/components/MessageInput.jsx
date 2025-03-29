@@ -12,7 +12,7 @@ const MessageInput = ({ input = "", setInput, sendMessage }) => {
   return (
     <form
       onSubmit={sendMessage}
-      className="flex items-center bg-gray-100 rounded-lg p-2"
+      className="flex items-center bg-gray-100 rounded-lg p-2 w-full"
     >
       <input
         type="text"
@@ -20,7 +20,7 @@ const MessageInput = ({ input = "", setInput, sendMessage }) => {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Type a message..."
-        className="flex-1 bg-transparent outline-none p-2"
+        className="flex-1 bg-transparent outline-none p-2 text-sm"
       />
       <button
         type="submit"

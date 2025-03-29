@@ -10,11 +10,9 @@ import EducationSection from "../../components/profile/EducationSection";
 import SkillsSection from "../../components/profile/SkillsSection";
 import AdditionalDetailsSection from "../../components/profile/AdditionalDetailsSection";
 import SocialLinksSection from "../../components/profile/SocialLinksSection";
-import { useRouter } from "next/router";
 import axios from "axios";
 import { Loader } from "lucide-react"; // Sử dụng lucide-react để hiển thị loading icon
 import img1 from "../../assets/b79144e03dc4996ce319ff59118caf65.jpg";
-import { set } from "mongoose";
 import ShortVideoSection from "../../components/profile/ShortVideoSection";
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -41,6 +39,7 @@ const UserProfile = () => {
   const [facebook, setFacebook] = useState("Have't data yet");
   const [video, setVideo] = useState("");
   const [newLanguage, setNewLanguage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -126,7 +125,7 @@ const UserProfile = () => {
   return (
     <div className="flex w-screen h-screen overflow-hidden font-sans bg-gray-100">
       {/* Sidebar */}
-      <SidebarUser />
+      <SidebarUser isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-y-auto">
