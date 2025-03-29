@@ -35,12 +35,14 @@ const MessageCenter = () => {
   };
 
   return (
-    <div className="flex bg-white h-screen w-full overflow-hidden">
+    <div className="flex flex-col md:flex-row bg-white h-screen w-full overflow-hidden">
+      {/* Sidebar */}
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
+      {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden w-full">
         {/* Header */}
-        <div className="w-full mt-6 px-4 border-b-2 border-gray-200">
+        <div className="w-full px-4 py-3 border-b-2 border-gray-200">
           <DashboardHeader
             dashboardHeaderName={"Messages"}
             onBackClick={
@@ -49,13 +51,13 @@ const MessageCenter = () => {
           />
         </div>
 
-        <div className="flex flex-row flex-1 w-full overflow-hidden">
-          {/* Message List - Hidden on mobile when in message detail view */}
+        {/* Main Content */}
+        <div className="flex flex-1 w-full overflow-hidden">
+          {/* Message List */}
           <div
-            className={`
-            ${isMobileMessageDetailView ? "hidden md:flex" : "flex"}
-            flex-1 w-full md:w-1/3 border-r border-gray-300 overflow-y-auto
-          `}
+            className={`${
+              isMobileMessageDetailView ? "hidden md:flex" : "flex"
+            } flex-1 w-full md:w-1/3 border-r border-gray-300 overflow-y-auto`}
           >
             <MessageList
               onSelectConversation={handleSelectConversation}
@@ -64,12 +66,11 @@ const MessageCenter = () => {
             />
           </div>
 
-          {/* Message Detail - Full width on mobile, partial width on desktop */}
+          {/* Message Detail */}
           <div
-            className={`
-            ${isMobileMessageDetailView ? "w-full" : "hidden md:flex md:w-2/3"}
-            overflow-y-auto
-          `}
+            className={`${
+              isMobileMessageDetailView ? "w-full" : "hidden md:flex md:w-2/3"
+            } overflow-y-auto`}
           >
             {selectedConversation ? (
               <MessageDetail conversation={selectedConversation} user={user} />

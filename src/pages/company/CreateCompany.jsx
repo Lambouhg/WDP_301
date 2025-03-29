@@ -111,9 +111,9 @@ const CreateCompany = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100">
       {/* Sidebar cố định bên trái */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-10">
+      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-10 h-full">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
 

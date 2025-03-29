@@ -63,6 +63,7 @@ const CompanySidebar = ({ isOpen, setIsOpen }) => {
     md:static 
     md:translate-x-0 
     md:flex
+    md:h-screen
   `}
       >
         <div>

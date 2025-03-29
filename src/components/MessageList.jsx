@@ -81,10 +81,10 @@ const MessageList = ({
   );
 
   return (
-    <div className="flex flex-col bg-white shadow-sm min-w-[240px] w-[416px] max-md:px-5 border-r-2 gray-500 h-5/6 self-start">
-      <div className="flex gap-4 items-center px-4 py-3 w-full text-base leading-relaxed text-gray-400 bg-white border border-solid border-zinc-200 cursor-pointer">
+    <div className="flex flex-col bg-white shadow-sm w-full md:w-[416px] border-r-2 gray-500 h-full">
+      {/* Search Bar */}
+      <div className="flex gap-4 items-center px-4 py-3 w-full text-base leading-relaxed text-gray-400 bg-white border-b border-gray-200">
         <Search size={24} className="self-stretch my-auto" />
-
         <input
           type="text"
           placeholder="Search messages"
@@ -94,6 +94,7 @@ const MessageList = ({
         />
       </div>
 
+      {/* New Conversation Button */}
       <button
         className="w-full py-3 bg-blue-500 text-white font-medium mt-4 mb-4 rounded-md hover:bg-blue-600 transition-colors"
         onClick={() => toggleNewConversationDialog(true)}
@@ -101,7 +102,8 @@ const MessageList = ({
         Start a new conversation
       </button>
 
-      <div className="flex flex-col mt-2">
+      {/* Conversation List */}
+      <div className="flex flex-col mt-2 overflow-y-auto">
         {!loading &&
           filteredConversations?.map((conversation) => {
             const conversationData = conversation.data();
@@ -113,7 +115,7 @@ const MessageList = ({
               <MessageListItem
                 key={conversation.id}
                 id={conversation.id}
-                name={otherUser || "Unknown"} // Ensure a string or fallback
+                name={otherUser || "Unknown"}
                 time={
                   conversationData.lastMessageTime
                     ? new Date(
@@ -138,7 +140,6 @@ const MessageList = ({
             );
           })}
       </div>
-
       <Dialog
         open={isOpenNewConversationDialog}
         onClose={closeNewConversationDialog}

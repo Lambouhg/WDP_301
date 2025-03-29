@@ -14,7 +14,7 @@ const JobCards = ({ jobs, handleOpenApplyForm }) => {
           key={index}
           className="shadow-md rounded-xl border border-gray-100 hover:shadow-xl transition-all duration-300"
         >
-          <div className="flex flex-col sm:flex-row justify-between items-start p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start p-2">
             <div
               className="flex gap-4 cursor-pointer flex-1"
               onClick={() => router.push(`/FindJobDetail?jobId=${job._id}`)}
