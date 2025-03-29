@@ -2,7 +2,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Head from "next/head"; // Import Head từ next/head
 import "./globals.css";
 import ChatbaseWidget from "../components/ChatbaseWidget";
-import logo from "../assets/logo.png";
 const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 function MyApp({ Component, pageProps }) {
@@ -15,7 +14,7 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Job Finder</title> {/* Đặt title cho ứng dụng */}
         <meta name="description" content="This is my awesome app!" />
-        <link rel="icon" href={logo?.src} /> {/* Đường dẫn tới favicon */}
+        <link rel="icon" href="/logo.png" />
       </Head>
       <ChatbaseWidget />
       <Component {...pageProps} />

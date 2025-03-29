@@ -1,6 +1,6 @@
 // components/SkillsSection.js
 import React from "react";
-import { ArrowRight, Plus, X, PlusCircle } from "lucide-react";
+import { ArrowRight, Plus, X } from "lucide-react";
 
 const SkillsSection = ({
   isEditing,
@@ -68,12 +68,12 @@ const SkillsSection = ({
               className="border rounded-md p-1 w-full"
               placeholder="Enter a new skill"
             />
-            <PlusCircle
+            <button
               onClick={addSkill}
-              className="w-1/6 py-2 text-white rounded-md hover:bg-gray-200"
+              className="w-1/6 py-2 text-black bg-blue-500 rounded-md hover:opacity-80"
             >
               Add Skill
-            </PlusCircle>
+            </button>
             <button
               onClick={handleCancelClick}
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
