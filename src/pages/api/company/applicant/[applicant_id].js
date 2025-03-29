@@ -12,6 +12,8 @@ export const config = {
   },
 };
 
+const apiKey = process.env.OPENROUTER_API_KEY;
+
 export default async function handler(req, res) {
   await connectDB();
   const { userId } = getAuth(req);
@@ -69,35 +71,34 @@ export default async function handler(req, res) {
         `;
 
         const prompt = `
-        Evaluate the candidate's suitability for the job based on:
-        - Job information: "${jobText}"
-        - Candidate information: "${applicantText}"
-        Return a score from 1.0 to 5.0 (can be a decimal such as 2.3, 3.5) and a brief reason in the format: "Score: X.X - Reason".
-      `;
+        Đánh giá mức độ phù hợp của ứng viên với công việc dựa trên:
+        - Thông tin công việc: "${jobText}"
+        - Thông tin ứng viên: "${applicantText}"
+        Trả về một điểm số từ 1.0 đến 5.0 (có thể là số thập phân như 2.3, 3.5) và một lý do ngắn gọn bằng tiếng Việt theo định dạng: "Điểm: X.X - Lý do".
+        `;
 
         // Gọi API OpenRouter
         const response = await axios.post(
           "https://openrouter.ai/api/v1/chat/completions",
           {
-            model: "openai/gpt-3.5-turbo", // Chọn model, ví dụ GPT-3.5
+            model: "openai/gpt-3.5-turbo",
             messages: [
               { role: "user", content: prompt },
             ],
-            max_tokens: 150,
             temperature: 0.7,
           },
           {
             headers: {
-              "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+              "Authorization": `Bearer ${apiKey}`,
               "Content-Type": "application/json",
             },
           }
         );
 
         const aiResult = response.data.choices[0].message.content.trim();
-        // Cập nhật regex để chấp nhận số thực
-        const scoreMatch = aiResult.match(/Score: (\d+\.\d+|\d+) - (.*)/);
-        const score = scoreMatch ? parseFloat(scoreMatch[1]) : 0; // Parse thành số thực
+        // Sửa regex để khớp với "Điểm: X.X - Lý do"
+        const scoreMatch = aiResult.match(/Điểm: (\d+\.\d+|\d+) - (.*)/);
+        const score = scoreMatch ? parseFloat(scoreMatch[1]) : 0;
         const reason = scoreMatch ? scoreMatch[2] : "Evaluated by AI";
 
         // Giới hạn score trong khoảng 1.0 - 5.0
