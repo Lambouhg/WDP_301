@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { MapPin } from "lucide-react";
 import OptionOfCompanytoUser from "./OptionOfCompanytoUser";
-import Image from "next/image";
+//import Image from "next/image";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -229,7 +229,7 @@ const HeaderSection = ({
       <div className="h-32 bg-gradient-to-r from-pink-200 to-purple-600"></div>
       <div className="relative bg-white p-4">
         <div className="absolute -top-16 left-4">
-          <Image
+          <img
             src={avatar}
             alt="Profile"
             width={80}
