@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Footer from "../components/Footer";
-import Image from "next/image";
-import img1 from "../assets/image.png";
-import logo from "../assets/logo.png";
+import img1 from "../assets/image.png"; // Verify this path
+import logo from "../assets/logo.png"
+
 export default function Home() {
   const { user } = useUser();
   const router = useRouter();
@@ -31,9 +31,7 @@ export default function Home() {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           });
-
           const data = await response.json();
-
           if (data.user) {
             localStorage.setItem("user", JSON.stringify(data.user));
             if (data.user.role === "admin") {
@@ -46,7 +44,6 @@ export default function Home() {
           console.error("Error saving user to database:", error);
         }
       };
-
       saveUserToDatabase();
     }
   }, [user, router]);
@@ -111,7 +108,7 @@ export default function Home() {
   };
 
   const toUserSearch = () => {
-    router.push({ pathname: "/FindJob" });
+    router.push("/FindJob");
   };
 
   const handleSearch = (e) => {
@@ -122,18 +119,17 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Nội dung chính */}
       <div className="flex-1 bg-[#F5F5F5FF] text-gray p-4 sm:p-6">
-        {/* Header */}
+        {/* Navigation */}
         <nav className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-12 sm:space-x-4">
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-0">
             <div className="flex items-center space-x-2">
-              <Image
-                src={logo.src}
+              <img
+                src="logo"
                 alt="Logo"
-                width={30}
-                height={30}
-                className="rounded-full"
+                className="rounded-full object-cover"
+                width={50}
+                height={50}
               />
               <span
                 className="font-bold text-2xl text-blue-500 sm:text-3xl"
@@ -212,12 +208,12 @@ export default function Home() {
                       router.push(`/FindJobDetail?jobId=${job._id}`)
                     }
                   >
-                    <Image
-                      src={job.companyId?.logo || img1}
+                    <img
+                      src={job.companyId?.logo || "/assets/image.png"}
+                      alt={job.title}
+                      className="rounded-lg object-cover"
                       width={40}
                       height={40}
-                      className="rounded-lg object-cover"
-                      alt={job.title}
                     />
                     <div>
                       <h3 className="text-sm font-semibold">{job.title}</h3>
@@ -313,10 +309,12 @@ export default function Home() {
                   onClick={() => router.push(`/FindJobDetail?jobId=${job._id}`)}
                 >
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden mb-4">
-                    <Image
+                    <img 
                       src={job.companyId?.logo || img1}
-                      className="w-full h-full object-cover"
                       alt={job.title}
+                      className="object-cover"
+                      width={48}
+                      height={48}
                     />
                   </div>
                   <h3 className="font-semibold mb-2 text-sm sm:text-base">
@@ -337,8 +335,6 @@ export default function Home() {
           )}
         </div>
       </div>
-
-      {/* Footer nằm ngoài container chính */}
       <Footer />
     </div>
   );

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import axios from "axios";
-import Image from "next/image";
+//import Image from "next/image";
 import img1 from "../../assets/image.png";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -388,7 +388,7 @@ export default function Dashboard() {
                         >
                           <div className="flex items-center gap-4 w-full">
                             <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                              <Image
+                              <img
                                 src={app.companyID?.logo || img1}
                                 className="w-full h-full object-cover"
                                 alt={app.jobID?.title || "Job"}
