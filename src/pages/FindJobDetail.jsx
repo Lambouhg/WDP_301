@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import DashboardHeader from "../components/DashboardHeader";
-import Image from "next/image";
+
 import img1 from "../assets/image.png";
 import CompanySidebar from "../components/SidebarCompany";
 import Sidebar from "../components/Sidebar";
@@ -190,7 +190,7 @@ export default function FindJobDetail() {
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-xl shadow-lg p-8 mb-8 transform hover:scale-[1.01] transition-all duration-300">
               <div className="flex flex-col md:flex-row md:items-center gap-6">
-                <Image
+                <img
                   src={job.companyId?.logo || img1}
                   alt="Company logo"
                   width={80}
